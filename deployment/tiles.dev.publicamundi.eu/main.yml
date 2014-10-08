@@ -3,7 +3,18 @@
   tasks:
     - name: install ansible prerequisites
       script: ansible_prereqs.sh creates=/root/.ansible_prereqs_installed
-      register: ans_preq
-      changed_when: "'CHANGE' in ans_preq.stdout"
+      
+    - name: update apt packages cache
+      action: apt update_cache=yes
 
-
+    - name: install needed packages
+      action: apt pkg={{item}} state=installed
+      with_items:
+        - htop
+        - python
+        - python-virtualenv
+        - python-setuptools
+        - python-dev
+        - build-essential
+        - vim
+        - screen
