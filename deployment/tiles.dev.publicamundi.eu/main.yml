@@ -1,0 +1,9 @@
+- hosts: tiles
+  user: root
+  tasks:
+    - name: install ansible prerequisites
+      script: ansible_prereqs.sh creates=/root/.ansible_prereqs_installed
+      register: ans_preq
+      changed_when: "'CHANGE' in ans_preq.stdout"
+
+
