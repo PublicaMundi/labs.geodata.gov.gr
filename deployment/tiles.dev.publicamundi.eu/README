@@ -1,3 +1,6 @@
 For running ansible playbook:
 
+Add server IPs under /etc/ansible/hosts
+
+Then from terminal:
 ansible-playbook --private-key=~/.ssh/id_rsa.tzotsos-ipsy main.yml
