@@ -1,0 +1,30 @@
+127.0.0.1   localhost
+127.0.1.1   publicamundi-postgres
+
+83.212.118.60  publicamundi-sandbox-1
+83.212.123.237 publicamundi-postgres
+83.212.123.242 publicamundi-nfs
+83.212.104.87  publicamundi-ckan
+83.212.104.72  publicamundi-rasdaman
+83.212.104.63  publicamundi-geoserver
+83.212.104.82  publicamundi-proxy
+83.212.104.73  publicamundi-zoo
+83.212.104.79  publicamundi-tiles
+
+2001:648:2ffc:1225:a800:cff:fe02:b4a0 ip6-publicamundi-sandbox-1
+2001:648:2ffc:1225:a800:cff:fe6d:4018 ip6-publicamundi-postgres
+2001:648:2ffc:1225:a800:cff:fe65:9fd3 ip6-publicamundi-nfs
+2001:648:2ffc:1225:a800:cff:fe7a:92e0 ip6-publicamundi-ckan
+2001:648:2ffc:1225:a800:cff:fe0d:3aba ip6-publicamundi-rasdaman
+2001:648:2ffc:1225:a800:cff:fe9d:ece7 ip6-publicamundi-geoserver
+2001:648:2ffc:1225:a800:cff:feab:eee3 ip6-publicamundi-proxy
+2001:648:2ffc:1225:a800:cff:feef:6433 ip6-publicamundi-zoo
+2001:648:2ffc:1225:a800:cff:fe60:7e8e ip6-publicamundi-tiles
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
