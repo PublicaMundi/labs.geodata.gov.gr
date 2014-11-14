@@ -1,0 +1,21 @@
+Installing geodata.gov.gr 
+=========================
+
+Install ansible on your local machine (probably ok to do this globally)
+
+pip install ansible
+
+Have a bare debian box that you have ssh login too. We shall assume this machines ipaddress is 1.1.1.1
+
+Make a hosts file /etc/ansible/hosts that has the following entry
+
+```
+[build]
+1.1.1.1
+```
+
+Run the ansible playbook
+
+ansible-playbook geodatagovgr_dev.yml
+
+You may have to supply connection parameters to ansible-playbook i.e private-key or password to connect.  See ansible-playbook --help
