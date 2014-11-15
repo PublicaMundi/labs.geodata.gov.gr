@@ -1,4 +1,6 @@
 - hosts: dev
+  gather_facts: yes
+  #gather_facts: no #Enable on first run, cause Debian does not have python installed by default
   user: root
   tasks:
     - name: install ansible prerequisites
@@ -18,3 +20,51 @@
         - build-essential
         - vim
         - screen
+        - sudo
+        - less
+        - rsync
+        - curl
+        - wget
+
+# SOLR setup
+    - name: install tomcat
+      action: apt pkg={{item}} state=installed
+      with_items:
+        - openjdk-7-jdk
+        - tomcat6
+        - tomcat6-admin
+
+    - name: Stopping tomcat service
+      command: service tomcat6 stop
+
+    - name: Download Common Logging 1.1.3
+      get_url: url="http://apache.cc.uoc.gr//commons/logging/binaries/commons-logging-1.1.3-bin.tar.gz" dest="~/"
+
+    - name: Unpack common-logging
+      shell: "cd ~/ && tar -zxvf commons-logging-1.1.3-bin.tar.gz && cd commons-logging-1.1.3 && cp commons-logging-*.jar /usr/share/tomcat6/lib/"
+
+    - name: Download slf4j 1.7.5
+      get_url: url="http://www.slf4j.org/dist/slf4j-1.7.5.tar.gz" dest="~/"
+
+    - name: Unpack slf4j
+      shell: "cd ~/ && tar -zxvf slf4j-1.7.5.tar.gz && cd slf4j-1.7.5 && cp slf4j-*.jar /usr/share/tomcat6/lib/"
+
+    - name: Download SOLR 4.2.1
+      get_url: url="http://archive.apache.org/dist/lucene/solr/4.2.1/solr-4.2.1.tgz" dest="~/"
+
+    - name: Unpack SOLR
+      shell: "cd ~/ && tar -zxvf solr-4.2.1.tgz && cd solr-4.2.1/dist && cp solr-4.2.1.war /var/lib/tomcat6/webapps/solr.war"
+
+    - name: Setup SOLR home folder
+      shell: "mkdir /home/solr && cp -R ~/solr-4.2.1/example/solr/* /home/solr && chown -R tomcat6:tomcat6 /home/solr"
+
+    - name: Restarting tomcat service
+      command: service tomcat6 restart
+
+    - name: Copy SOLR config file
+      action: copy src=var/lib/tomcat6/webapps/solr/WEB-INF/web.xml dest=/var/lib/tomcat6/webapps/solr/WEB-INF/web.xml
+
+    - name: restarting tomcat service
+      command: service tomcat6 restart
+
+    # TODO: Add proper CKAN schema to SOLR
