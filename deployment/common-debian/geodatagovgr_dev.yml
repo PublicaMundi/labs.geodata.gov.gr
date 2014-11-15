@@ -3,13 +3,13 @@
   #gather_facts: no #Enable on first run, cause Debian does not have python installed by default
   user: root
   tasks:
-    - name: install ansible prerequisites
+    - name: Install ansible prerequisites
       script: ansible_prereqs.sh creates=/root/.ansible_prereqs_installed
 
-    - name: update apt packages cache
+    - name: Update apt packages cache
       action: apt update_cache=yes
 
-    - name: install needed packages
+    - name: Install needed packages
       action: apt pkg={{item}} state=installed
       with_items:
         - htop
@@ -19,6 +19,7 @@
         - python-dev
         - build-essential
         - vim
+        - git
         - screen
         - sudo
         - less
@@ -26,11 +27,15 @@
         - curl
         - wget
 
+    # Adding new ckaner user
+    - user: name=ckaner state=present shell=/bin/bash group=users createhome=no
+    #- user: name=ckaner state=absent
+
     ##############
     # SOLR setup #
     ##############
 
-    - name: install tomcat
+    - name: Install tomcat
       action: apt pkg={{item}} state=installed
       with_items:
         - openjdk-7-jdk
@@ -78,3 +83,36 @@
     - name: Restarting tomcat service
       command: service tomcat6 restart
 
+    ####################
+    # POSTGRESQL setup #
+    ####################
+
+    - name: Add PostgreSQL apt repository
+      action: copy src=etc/apt/sources.list.d/pgdg.list dest=/etc/apt/sources.list.d/pgdg.list
+
+    - apt_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc state=present validate_certs=no
+
+    - name: Update apt packages cache
+      action: apt update_cache=yes
+
+    - name: Install Postgres
+      action: apt pkg={{item}} state=installed
+      with_items:
+        - postgresql-9.3
+        - postgis
+        - postgresql-common
+        - libpq-dev
+        - libxml2-dev
+        - libxslt1-dev
+        - supervisor
+
+    - name: Backup default postgresql.conf
+      shell: "cd /etc/postgresql/9.3/main && mv postgresql.conf postgresql.conf.orig"
+
+    - name: Copy tuned postgresql files
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - etc/postgresql/9.3/main/postgresql.conf
+
+    - name: Restarting postgresql service
+      command: service postgresql restart
