@@ -64,7 +64,12 @@
     - name: Copy SOLR config file
       action: copy src=var/lib/tomcat6/webapps/solr/WEB-INF/web.xml dest=/var/lib/tomcat6/webapps/solr/WEB-INF/web.xml
 
+    - name: Download latest CKAN schema file for SOLR
+      get_url: url="https://github.com/PublicaMundi/ckan/raw/dev.publicamundi.eu/ckan/config/solr/schema-2.0.xml" dest="/home/solr/collection1/conf/schema-2.0.xml" validate_certs=no
+
+    - name: Replace schema xml
+      shell: "cd /home/solr/collection1/conf && mv schema.xml schema.xml.bak && cp schema-2.0.xml schema.xml && chown tomcat6:tomcat6 schema*"
+
     - name: restarting tomcat service
       command: service tomcat6 restart
 
-    # TODO: Add proper CKAN schema to SOLR
