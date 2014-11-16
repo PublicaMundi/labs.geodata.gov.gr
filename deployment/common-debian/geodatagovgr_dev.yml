@@ -213,5 +213,35 @@
       sudo: yes
       sudo_user: ckaner
 
+    - name: Get ckanext-archiver from git
+      action: git repo=https://github.com/PublicaMundi/ckanext-archiver.git dest=/var/local/ckan/default/pyenv/src/ckanext-archiver version=dev.publicamundi.eu
 
+    - name: Change owner of source folder
+      shell: chown -R ckaner:users /var/local/ckan/default/pyenv/src
+
+    - name: Run setup.py develop for ckanext-archiver
+      action: command chdir=/var/local/ckan/default/pyenv/src/ckanext-archiver/ ../../bin/python setup.py develop
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Install ckanext-archiver requirements
+      action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-archiver/pip-requirements.txt virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Get ckanext-datastorer from git
+      action: git repo=https://github.com/PublicaMundi/ckanext-datastorer.git dest=/var/local/ckan/default/pyenv/src/ckanext-datastorer version=dev.publicamundi.eu
+
+    - name: Change owner of source folder
+      shell: chown -R ckaner:users /var/local/ckan/default/pyenv/src
+
+    - name: Run setup.py develop for ckanext-datastorer
+      action: command chdir=/var/local/ckan/default/pyenv/src/ckanext-datastorer/ ../../bin/python setup.py develop
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Install ckanext-datastorer requirements
+      action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-datastorer/pip-requirements.txt virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
 
