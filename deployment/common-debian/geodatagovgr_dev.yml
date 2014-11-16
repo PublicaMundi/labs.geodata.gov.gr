@@ -245,3 +245,34 @@
       sudo: yes
       sudo_user: ckaner
 
+    - name: Get ckanext-spatial from git
+      action: git repo=https://github.com/PublicaMundi/ckanext-spatial.git dest=/var/local/ckan/default/pyenv/src/ckanext-spatial version=dev.publicamundi.eu
+
+    - name: Change owner of source folder
+      shell: chown -R ckaner:users /var/local/ckan/default/pyenv/src
+
+    - name: Run setup.py develop for ckanext-spatial
+      action: command chdir=/var/local/ckan/default/pyenv/src/ckanext-spatial/ ../../bin/python setup.py develop
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Install ckanext-spatial requirements
+      action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-spatial/pip-requirements.txt virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Get ckanext-publicamundi from git
+      action: git repo=https://github.com/PublicaMundi/ckanext-publicamundi.git dest=/var/local/ckan/default/pyenv/src/ckanext-publicamundi version=dev.publicamundi.eu
+
+    - name: Change owner of source folder
+      shell: chown -R ckaner:users /var/local/ckan/default/pyenv/src
+
+    - name: Run setup.py develop for ckanext-publicamundi
+      action: command chdir=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/ ../../bin/python setup.py develop
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Install ckanext-publicamundi requirements
+      action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/pip-requirements.txt virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
