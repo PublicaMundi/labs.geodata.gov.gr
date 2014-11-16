@@ -101,6 +101,7 @@
         - postgresql-9.3
         - postgis
         - postgresql-common
+        - python-psycopg2
         - libpq-dev
         - libxml2-dev
         - libxslt1-dev
@@ -113,6 +114,19 @@
       action: copy src={{item}} dest=/{{item}}
       with_items:
         - etc/postgresql/9.3/main/postgresql.conf
+        - etc/postgresql/9.3/main/pg_hba.conf
 
     - name: Restarting postgresql service
       command: service postgresql restart
+
+    - name: Create ckaner role
+      action: postgresql_user user=ckaner password=ckaner role_attr_flags=NOCREATEDB,LOGIN state=present
+
+    - name: Create ckan_datastorer role
+      action: postgresql_user user=ckan_datastorer password=ckan_datastorer role_attr_flags=NOCREATEDB,LOGIN state=present
+
+    - name: Create geoserver role
+      action: postgresql_user user=geoserver password=geoserver role_attr_flags=NOCREATEDB,LOGIN state=present
+
+    - name: Create rasdaman role
+      action: postgresql_user user=rasdaman password=rasdaman role_attr_flags=NOCREATEDB,LOGIN state=present
