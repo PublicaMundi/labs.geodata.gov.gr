@@ -175,3 +175,43 @@
       action: command psql -d ckan_tests -c 'ALTER TABLE spatial_ref_sys OWNER TO ckaner'
       sudo: yes
       sudo_user: postgres
+
+    ##############
+    # CKAN setup #
+    ##############
+
+    - name: Add CKAN path
+      action: file path=/var/local/ckan/default state=directory
+
+    - name: Add deployment folders
+      shell: "cd /var/local/ckan/default && mkdir log && mkdir run && mkdir files"
+
+    - name: Create virtualenv for CKAN
+      shell: virtualenv --setuptools /var/local/ckan/default/pyenv
+
+    - name: Change owner of virtualenv to ckaner
+      shell: chown -R ckaner:users /var/local/ckan/default
+
+    - name: Install latest pip
+      action: pip name=pip virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Get CKAN from git
+      action: git repo=https://github.com/PublicaMundi/ckan.git dest=/var/local/ckan/default/pyenv/src/ckan version=dev.publicamundi.eu
+
+    - name: Change owner of source folder
+      shell: chown -R ckaner:users /var/local/ckan/default/pyenv/src/ckan
+
+    - name: Install CKAN requirements
+      action: pip requirements=/var/local/ckan/default/pyenv/src/ckan/requirements.txt virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Run setup.py develop for CKAN
+      action: command chdir=/var/local/ckan/default/pyenv/src/ckan/ ../../bin/python setup.py develop
+      sudo: yes
+      sudo_user: ckaner
+
+
+
