@@ -276,3 +276,35 @@
       action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/pip-requirements.txt virtualenv=/var/local/ckan/default/pyenv/
       sudo: yes
       sudo_user: ckaner
+
+    ###############
+    # pycsw setup #
+    ###############
+
+    - name: Get pycsw
+      action: git repo=https://github.com/PublicaMundi/pycsw.git dest=/var/local/ckan/default/pyenv/src/pycsw version=dev.publicamundi.eu
+
+    - name: Change owner of source folder
+      shell: chown -R ckaner:users /var/local/ckan/default/pyenv/src
+
+    - name: Run setup build for pycsw
+      action: command chdir=/var/local/ckan/default/pyenv/src/pycsw/ ../../bin/python setup.py build
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Run setup install for pycsw
+      action: command chdir=/var/local/ckan/default/pyenv/src/pycsw/ ../../bin/python setup.py install
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Install pyproj
+      action: pip name=pyproj virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Install geolinks
+      action: pip name=geolinks virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
+
+
