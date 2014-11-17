@@ -26,13 +26,14 @@
         - rsync
         - curl
         - wget
+        - libproj-dev
 
     # Adding new user
     - user: name=mapproxy state=present shell=/bin/bash group=users createhome=yes
 
-    ##################
-    # MapProxy setup #
-    ##################
+    # ##################
+    # # MapProxy setup #
+    # ##################
 
     - name: Create virtualenv for mapproxy
       shell: virtualenv --setuptools /var/local/mapproxy
@@ -55,6 +56,11 @@
       sudo: yes
       sudo_user: mapproxy
 
+    - name: Install pyproj
+      action: pip name=pyproj virtualenv=/var/local/mapproxy/
+      sudo: yes
+      sudo_user: mapproxy
+
     - name: Install MapProxy
       action: pip name=MapProxy virtualenv=/var/local/mapproxy/
       sudo: yes
@@ -64,5 +70,16 @@
     # MapProxy configuration #
     ##########################
 
+    - name: Create initial configuration for MapProxy
+      action: command chdir=/var/local/mapproxy ./bin/mapproxy-util create -t base-config etc
+      sudo: yes
+      sudo_user: mapproxy
 
+    - name: Copy MapProxy configuration files
+      action: copy src={{item}} dest=/{{item}} mode=644
+      with_items:
+        - etc/supervisor/conf.d/mapproxy.conf
+        - var/local/mapproxy/etc/config.py
 
+    - name: Restarting supervisor service
+      command: service supervisor restart
