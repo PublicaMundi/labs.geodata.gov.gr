@@ -370,3 +370,14 @@
         - libapache2-mod-wsgi
         - python-gdal
 
+    - name: Remove apache configuration file
+      action: file path=/etc/apache2/sites-available/default state=absent
+
+    - name: Copy apache configuration files
+      action: copy src={{item}} dest=/{{item}} mode=644
+      with_items:
+        - etc/apache2/sites-available/default
+
+    - name: Restarting apache service
+      command: service apache2 restart
+
