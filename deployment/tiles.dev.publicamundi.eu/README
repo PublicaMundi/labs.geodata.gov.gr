@@ -1,3 +1,6 @@
+Install ansible (preferably from your package manager):
+http://docs.ansible.com/intro_installation.html
+
 For running ansible playbook:
 
 Add server IPs under /etc/ansible/hosts
