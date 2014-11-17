@@ -393,3 +393,9 @@
     - name: Restarting apache service
       command: service apache2 restart
 
+    ###########
+    # cleanup #
+    ###########
+
+    # - name: Autoremove unused packages
+    #   command: apt-get -y autoremove
