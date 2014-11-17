@@ -1,13 +1,14 @@
 - hosts: tiles
+  gather_facts: yes
   user: root
   tasks:
-    - name: install ansible prerequisites
+    - name: Install ansible prerequisites
       script: ansible_prereqs.sh creates=/root/.ansible_prereqs_installed
-      
-    - name: update apt packages cache
+
+    - name: Update apt packages cache
       action: apt update_cache=yes
 
-    - name: install needed packages
+    - name: Install needed packages
       action: apt pkg={{item}} state=installed
       with_items:
         - htop
@@ -16,5 +17,52 @@
         - python-setuptools
         - python-dev
         - build-essential
+        - supervisor
         - vim
+        - git
         - screen
+        - sudo
+        - less
+        - rsync
+        - curl
+        - wget
+
+    # Adding new user
+    - user: name=mapproxy state=present shell=/bin/bash group=users createhome=yes
+
+    ##################
+    # MapProxy setup #
+    ##################
+
+    - name: Create virtualenv for mapproxy
+      shell: virtualenv --setuptools /var/local/mapproxy
+
+    - name: Change owner of virtualenv to mapproxy
+      shell: chown -R mapproxy:users /var/local/mapproxy
+
+    - name: Install latest pip
+      action: pip name=pip virtualenv=/var/local/mapproxy/
+      sudo: yes
+      sudo_user: mapproxy
+
+    - name: Install gunicorn
+      action: pip name=gunicorn virtualenv=/var/local/mapproxy/
+      sudo: yes
+      sudo_user: mapproxy
+
+    - name: Install eventlet
+      action: pip name=eventlet virtualenv=/var/local/mapproxy/
+      sudo: yes
+      sudo_user: mapproxy
+
+    - name: Install MapProxy
+      action: pip name=MapProxy virtualenv=/var/local/mapproxy/
+      sudo: yes
+      sudo_user: mapproxy
+
+    ##########################
+    # MapProxy configuration #
+    ##########################
+
+
+
