@@ -186,7 +186,7 @@
       action: file path=/var/local/ckan/default state=directory
 
     - name: Add deployment folders
-      shell: "cd /var/local/ckan/default && mkdir log && mkdir run && mkdir files"
+      shell: "cd /var/local/ckan/default && mkdir log && mkdir run && mkdir -p files/resources && mkdir -p files/storage"
 
     - name: Create virtualenv for CKAN
       shell: virtualenv --setuptools /var/local/ckan/default/pyenv
@@ -369,6 +369,18 @@
         - apache2
         - libapache2-mod-wsgi
         - python-gdal
+
+    - name: Change owner of storage folder
+      shell: chown -R ckaner:www-data /var/local/ckan/default/files/storage
+
+    - name: Change permissions of storage folder
+      action: file path=/var/local/ckan/default/files/storage mode=0775
+
+    - name: Change owner of resources folder
+      shell: chown -R www-data:www-data /var/local/ckan/default/files/resources
+
+    - name: Change permissions of resources folder
+      action: file path=/var/local/ckan/default/files/resources mode=0755
 
     - name: Remove apache configuration file
       action: file path=/etc/apache2/sites-available/default state=absent
