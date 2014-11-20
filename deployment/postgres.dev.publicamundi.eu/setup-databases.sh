@@ -14,6 +14,7 @@ sudo -u postgres createdb -e -O ckan_datastorer -D tablespace_1 -E utf8 ckan_dat
 sudo -u postgres createdb -e -O ckan_datastorer -D pg_default -E utf8 ckan_data_tests
 
 sudo -u postgres createdb -e -O rasdaman -D tablespace_1 -E utf8 rasdaman
+sudo -u postgres createdb -e -O petascope -D tablespace_1 -E utf8 petascope
 
 # Grant permissions to geometry tables
 
