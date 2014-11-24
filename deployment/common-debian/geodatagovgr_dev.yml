@@ -185,6 +185,14 @@
     # CKAN setup #
     ##############
 
+    - name: Install needed system packages
+      action: apt pkg={{item}} state=installed
+      with_items:
+        - unzip
+        - unrar
+        - p7zip-full
+        - python-gdal
+
     - name: Add CKAN path
       action: file path=/var/local/ckan/default state=directory
 
@@ -279,6 +287,11 @@
 
     - name: Install ckanext-publicamundi requirements
       action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/pip-requirements.txt virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Install ckanext-publicamundi vector requirements
+      action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/vector-requirements.txt virtualenv=/var/local/ckan/default/pyenv/
       sudo: yes
       sudo_user: ckaner
 
