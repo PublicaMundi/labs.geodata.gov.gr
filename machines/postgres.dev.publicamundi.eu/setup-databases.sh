@@ -22,3 +22,10 @@ for db in "ckan" "ckan_data" "ckan_tests"; do
    sudo -u postgres psql ${db} -c 'ALTER TABLE spatial_ref_sys OWNER TO ckaner'
    sudo -u postgres psql ${db} -c 'ALTER TABLE geometry_columns OWNER TO ckaner'
 done
+
+# Grant view permissions to geoserver on CKAN datastore
+# Note: Maybe this should run after setup-datastore.sh ??
+
+sudo -u postgres psql ckan_data -c 'GRANT ALL ON SCHEMA public TO geoserver'
+sudo -u postgres psql ckan_data -c 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO geoserver'
+
