@@ -10,7 +10,7 @@ sudo -u postgres psql template_postgis \
 
 sudo -u postgres createdb -e -O ckaner -D tablespace_1 -E utf8 -T template_postgis ckan
 sudo -u postgres createdb -e -O ckaner -D pg_default -E utf8 -T template_postgis ckan_tests
-sudo -u postgres createdb -e -O ckan_datastorer -D tablespace_1 -E utf8 ckan_data
+sudo -u postgres createdb -e -O ckan_datastorer -D tablespace_1 -T template_postgis -E utf8 ckan_data
 sudo -u postgres createdb -e -O ckan_datastorer -D pg_default -E utf8 ckan_data_tests
 
 sudo -u postgres createdb -e -O rasdaman -D tablespace_1 -E utf8 rasdaman
@@ -18,8 +18,7 @@ sudo -u postgres createdb -e -O petascope -D tablespace_1 -E utf8 petascope
 
 # Grant permissions to geometry tables
 
-sudo -u postgres psql ckan -c 'ALTER TABLE spatial_ref_sys OWNER TO ckaner'
-sudo -u postgres psql ckan -c 'ALTER TABLE geometry_columns OWNER TO ckaner'
-sudo -u postgres psql ckan_tests -c 'ALTER TABLE spatial_ref_sys OWNER TO ckaner'
-sudo -u postgres psql ckan_tests -c 'ALTER TABLE geometry_columns OWNER TO ckaner'
-
+for db in "ckan" "ckan_data" "ckan_tests"; do
+   sudo -u postgres psql ${db} -c 'ALTER TABLE spatial_ref_sys OWNER TO ckaner'
+   sudo -u postgres psql ${db} -c 'ALTER TABLE geometry_columns OWNER TO ckaner'
+done
