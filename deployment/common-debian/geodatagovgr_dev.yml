@@ -69,6 +69,9 @@
     - name: Restarting tomcat service
       command: service tomcat6 restart
 
+    - name: Wait for 15 secs so that war is deployed
+      action: pause seconds=15
+
     - name: Copy SOLR config file
       action: copy src=var/lib/tomcat6/webapps/solr/WEB-INF/web.xml dest=/var/lib/tomcat6/webapps/solr/WEB-INF/web.xml
 
@@ -182,6 +185,14 @@
     # CKAN setup #
     ##############
 
+    - name: Install needed system packages
+      action: apt pkg={{item}} state=installed
+      with_items:
+        - unzip
+        - unrar
+        - p7zip-full
+        - python-gdal
+
     - name: Add CKAN path
       action: file path=/var/local/ckan/default state=directory
 
@@ -276,6 +287,11 @@
 
     - name: Install ckanext-publicamundi requirements
       action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/pip-requirements.txt virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Install ckanext-publicamundi vector requirements
+      action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/vector-requirements.txt virtualenv=/var/local/ckan/default/pyenv/
       sudo: yes
       sudo_user: ckaner
 
