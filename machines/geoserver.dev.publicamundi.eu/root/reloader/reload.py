@@ -4,12 +4,14 @@ import json
 
 def application(environ, start_response):
     result = {}
+    data = ''
     for i in range(1,5):
         c = pycurl.Curl()
         host = "localhost:%d" % (8080 + i)
         c.setopt(pycurl.URL, "http://%s/geoserver/rest/reload" % (host))
         c.setopt(pycurl.POST, 1)
         c.setopt(pycurl.USERPWD, 'admin:password')
+        c.setopt(pycurl.POSTFIELDS, data)
         try:
             c.perform()
             response_code = int(c.getinfo(c.RESPONSE_CODE))
