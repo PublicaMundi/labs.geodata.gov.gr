@@ -1,15 +1,26 @@
-from wsgiref.simple_server import make_server, demo_app
+from wsgiref.simple_server import make_server
 import pycurl
+import json
 
 def application(environ, start_response):
+    result = {}
     for i in range(1,5):
         c = pycurl.Curl()
-        c.setopt(pycurl.URL, "http://localhost:808" + str(i) + "/geoserver/rest/reload")
+        host = "localhost:%d" % (8080 + i)
+        c.setopt(pycurl.URL, "http://%s/geoserver/rest/reload" % (host))
         c.setopt(pycurl.POST, 1)
         c.setopt(pycurl.USERPWD, 'admin:password')
-        c.perform()
-    start_response('200 OK', [('Content-type', 'text/plain')])
-    return ["GeoServer reloaded"]
+        try:
+            c.perform()
+            response_code = int(c.getinfo(c.RESPONSE_CODE))
+            if response_code != 200:
+                result[host] = 'Failed (HTTP %d)' % (response_code)
+            else:
+                result[host] = 'Ok'
+        except Exception as ex:
+            result[host] = 'Failed (%s)' % (ex)
+    start_response('200 OK', [('Content-type', 'application/json')])
+    return [json.dumps(result)]
 
 httpd = make_server('', 8000, application)
 print "Serving HTTP on port 8000..."
