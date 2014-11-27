@@ -2,10 +2,14 @@ from wsgiref.simple_server import make_server
 import pycurl
 import json
 
+NUM_BACKEND_SERVERS = 5
+
 def application(environ, start_response):
+    global NUM_BACKEND_SERVERS
+
     result = {}
     data = ''
-    for i in range(1,5):
+    for i in range(1, NUM_BACKEND_SERVERS):
         c = pycurl.Curl()
         host = "localhost:%d" % (8080 + i)
         c.setopt(pycurl.URL, "http://%s/geoserver/rest/reload" % (host))
@@ -16,11 +20,12 @@ def application(environ, start_response):
             c.perform()
             response_code = int(c.getinfo(c.RESPONSE_CODE))
             if response_code != 200:
-                result[host] = 'Failed (HTTP %d)' % (response_code)
+                result[i] = dict(success=False, message='Failed (HTTP %d)' % (response_code))
             else:
-                result[host] = 'Ok'
-        except Exception as ex:
-            result[host] = 'Failed (%s)' % (ex)
+                result[i] = dict(success=True)
+        except pycurl.error as ex:
+            result[i] = dict(
+                success=False, message='Failed (pycurl %d: %s)' % (ex.args))
     start_response('200 OK', [('Content-type', 'application/json')])
     return [json.dumps(result)]
 
