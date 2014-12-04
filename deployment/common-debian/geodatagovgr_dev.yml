@@ -26,6 +26,7 @@
         - rsync
         - curl
         - wget
+        - unzip
 
     # Adding new ckaner user
     - user: name=ckaner state=present shell=/bin/bash group=users createhome=no
@@ -85,6 +86,22 @@
 
     - name: Restarting tomcat service
       command: service tomcat6 restart
+
+    ###################
+    # GeoServer setup #
+    ###################
+
+    - name: Download GeoServer 2.6.1
+      get_url: url="http://sourceforge.net/projects/geoserver/files/GeoServer/2.6.1/geoserver-2.6.1-war.zip" dest="~/"
+
+    - name: Unpack GeoServer war
+      shell: "cd ~/ && unzip -e geoserver-2.6.1-war.zip && cp geoserver.war /var/lib/tomcat6/webapps/geoserver.war"
+
+    - name: Restarting tomcat service
+      command: service tomcat6 restart
+
+    - name: Wait for 60 secs so that war is deployed
+      action: pause seconds=60
 
     ####################
     # POSTGRESQL setup #
