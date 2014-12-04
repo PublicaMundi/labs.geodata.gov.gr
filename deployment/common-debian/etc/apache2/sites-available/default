@@ -26,6 +26,8 @@
     WSGIScriptAlias /csw /var/local/ckan/default/pyenv/src/pycsw/csw.wsgi
     SetEnvIf Request_URI "/csw" PYCSW_CONFIG=/var/local/ckan/default/pyenv/src/pycsw/default.cfg
     
+    WSGIScriptAlias /maps /var/local/ckan/default/pyenv/src/mapclient/wsgi.py
+
     WSGIScriptAlias / "/var/local/ckan/default/pyenv/src/ckan/wsgi.py"
     WSGIPassAuthorization On
     WSGIDaemonProcess ckan_default display-name=ckan_default processes=2 threads=15
