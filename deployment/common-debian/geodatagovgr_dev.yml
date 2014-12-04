@@ -1,5 +1,5 @@
 - hosts: dev
-  gather_facts: yes
+  gather_facts: no
   #gather_facts: no #Enable on first run, cause Debian does not have python installed by default
   user: root
   tasks:
@@ -206,7 +206,6 @@
       action: apt pkg={{item}} state=installed
       with_items:
         - unzip
-        - unrar
         - p7zip-full
         - python-gdal
 
@@ -303,7 +302,7 @@
       sudo_user: ckaner
 
     - name: Install ckanext-publicamundi requirements
-      action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/pip-requirements.txt virtualenv=/var/local/ckan/default/pyenv/
+      action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/requirements.txt virtualenv=/var/local/ckan/default/pyenv/
       sudo: yes
       sudo_user: ckaner
 
