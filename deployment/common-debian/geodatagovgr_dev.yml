@@ -213,13 +213,16 @@
       action: file path=/var/local/ckan/default state=directory
 
     - name: Add deployment folders
-      shell: "cd /var/local/ckan/default && mkdir log && mkdir run && mkdir -p files/resources && mkdir -p files/storage"
+      shell: "cd /var/local/ckan/default && mkdir log && mkdir run && mkdir tmp && mkdir -p files/resources && mkdir -p files/storage"
 
     - name: Create virtualenv for CKAN
       shell: virtualenv --setuptools /var/local/ckan/default/pyenv
 
     - name: Change owner of virtualenv to ckaner
       shell: chown -R ckaner:users /var/local/ckan/default
+
+    - name: Change owner of tmp to www-data
+      shell: chown -R www-data:www-data /var/local/ckan/default/tmp
 
     - name: Install latest pip
       action: pip name=pip virtualenv=/var/local/ckan/default/pyenv/
