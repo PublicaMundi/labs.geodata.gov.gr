@@ -381,15 +381,15 @@
     - name: Change owner of source folder
       shell: chown -R ckaner:users /var/local/ckan/default/pyenv/src/pycsw
 
-    - name: FIXME Drop csw_record table
-      action: command psql -d ckan -c 'DROP TABLE csw_record;'
-      sudo: yes
-      sudo_user: postgres
+    # - name: FIXME Drop csw_record table
+    #   action: command psql -d ckan -c 'DROP TABLE csw_record;'
+    #   sudo: yes
+    #   sudo_user: postgres
 
-    - name: Create pycsw tables
-      action: command chdir=/var/local/ckan/default/pyenv/src/ckanext-spatial ../../bin/paster ckan-pycsw setup -p /var/local/ckan/default/pyenv/src/pycsw/default.cfg
-      sudo: yes
-      sudo_user: ckaner
+    # - name: Create pycsw tables
+    #   action: command chdir=/var/local/ckan/default/pyenv/src/ckanext-spatial ../../bin/paster ckan-pycsw setup -p /var/local/ckan/default/pyenv/src/pycsw/default.cfg
+    #   sudo: yes
+    #   sudo_user: ckaner
 
     ##############
     # Maps setup #
