@@ -365,7 +365,7 @@
       sudo_user: ckaner
 
     - name: Install ckanext-publicamundi vector requirements
-      action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/vector-requirements.txt virtualenv=/var/local/ckan/default/pyenv/
+      action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/vectorstorer-requirements.txt virtualenv=/var/local/ckan/default/pyenv/
       sudo: yes
       sudo_user: ckaner
 
