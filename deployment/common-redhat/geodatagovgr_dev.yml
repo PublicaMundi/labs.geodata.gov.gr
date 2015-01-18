@@ -1,0 +1,53 @@
+- hosts: dev
+  user: root
+  tasks:
+    - name: Install epel
+      action: command creates=/etc/yum.repos.d/epel.repo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+
+    # - name: Install PostgreSQL repository
+    #   action: command rpm -Uvh http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-redhat93-9.3-1.noarch.rpm
+
+    - name: Install needed packages
+      action: yum pkg={{item}} state=installed
+      with_items:
+        - htop
+        - atool
+        - python-virtualenv
+        - python-setuptools
+        - git
+        - python-devel
+        - rpmdevtools
+        - gcc
+        - gcc-c++
+        - make
+        - bison
+        - libselinux-python
+        - wget
+        - vim
+        - screen
+        - unzip
+        - curl
+
+    # Adding new ckaner user
+    - user: name=ckaner state=present shell=/bin/bash group=users createhome=no
+    #- user: name=ckaner state=absent
+
+    - name: Stop firewall
+      command: service iptables stop
+
+    - name: Disable firewall service
+      command: chkconfig iptables off
+
+    - name: Disable selinux
+      command: /usr/sbin/setenforce 0
+
+    ##############
+    # SOLR setup #
+    ##############
+
+    # - name: Install tomcat
+    #   action: apt pkg={{item}} state=installed
+    #   with_items:
+    #     - openjdk-7-jdk
+    #     - tomcat6
+    #     - tomcat6-admin
