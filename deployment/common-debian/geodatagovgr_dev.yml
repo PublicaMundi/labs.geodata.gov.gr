@@ -91,11 +91,16 @@
     # GeoServer setup #
     ###################
 
-    - name: Download GeoServer 2.6.1
-      get_url: url="http://sourceforge.net/projects/geoserver/files/GeoServer/2.6.1/geoserver-2.6.1-war.zip" dest="~/"
+    - name: Download GeoServer 2.5.4
+      get_url: url="http://sourceforge.net/projects/geoserver/files/GeoServer/2.5.4/geoserver-2.5.4-war.zip" dest="~/"
 
     - name: Unpack GeoServer war
-      shell: "cd ~/ && unzip -e geoserver-2.6.1-war.zip && cp geoserver.war /var/lib/tomcat6/webapps/geoserver.war"
+      shell: "cd ~/ && unzip -e geoserver-2.5.4-war.zip && cp geoserver.war /var/lib/tomcat6/webapps/geoserver.war"
+
+    - name: Copy tuned tomcat files
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - etc/default/tomcat6
 
     - name: Restarting tomcat service
       command: service tomcat6 restart
