@@ -45,9 +45,78 @@
     # SOLR setup #
     ##############
 
-    # - name: Install tomcat
-    #   action: apt pkg={{item}} state=installed
-    #   with_items:
-    #     - openjdk-7-jdk
-    #     - tomcat6
-    #     - tomcat6-admin
+    - name: Install Tomcat and Java
+      action: yum pkg={{item}} state=installed
+      with_items:
+        - java-openjdk
+        - tomcat6
+        - tomcat6-webapps
+        - tomcat6-admin-webapps
+
+    - name: Enabling tomcat service
+      command: chkconfig tomcat6 on
+
+    - name: Stopping tomcat service
+      command: service tomcat6 stop
+
+    - name: Download Common Logging 1.1.3
+      get_url: url="http://apache.org/dist/commons/logging/binaries/commons-logging-1.1.3-bin.tar.gz" dest="~/"
+
+    - name: Unpack common-logging
+      shell: "cd ~/ && tar -zxvf commons-logging-1.1.3-bin.tar.gz && cd commons-logging-1.1.3 && cp commons-logging-*.jar /usr/share/tomcat6/lib/"
+
+    - name: Download slf4j 1.7.5
+      get_url: url="http://www.slf4j.org/dist/slf4j-1.7.5.tar.gz" dest="~/"
+
+    - name: Unpack slf4j
+      shell: "cd ~/ && tar -zxvf slf4j-1.7.5.tar.gz && cd slf4j-1.7.5 && cp slf4j-*.jar /usr/share/tomcat6/lib/"
+
+    - name: Download SOLR 4.2.1
+      get_url: url="http://archive.apache.org/dist/lucene/solr/4.2.1/solr-4.2.1.tgz" dest="~/"
+
+    - name: Unpack SOLR
+      shell: "cd ~/ && tar -zxvf solr-4.2.1.tgz && cd solr-4.2.1/dist && cp solr-4.2.1.war /var/lib/tomcat6/webapps/solr.war"
+
+    - name: Setup SOLR home folder
+      shell: "mkdir /home/solr && cp -R ~/solr-4.2.1/example/solr/* /home/solr && chown -R tomcat /home/solr"
+
+    - name: Restarting tomcat service
+      command: service tomcat6 start
+
+    - name: Wait for 15 secs so that war is deployed
+      action: pause seconds=15
+
+    - name: Copy SOLR config file
+      action: copy src=var/lib/tomcat6/webapps/solr/WEB-INF/web.xml dest=/var/lib/tomcat6/webapps/solr/WEB-INF/web.xml
+
+    - name: Backup default schema.xml
+      shell: "cd /home/solr/collection1/conf && mv schema.xml schema.xml.bak"
+
+    - name: Download latest CKAN schema file for SOLR
+      get_url: url="https://github.com/PublicaMundi/ckan/raw/dev.publicamundi.eu/ckan/config/solr/schema.xml" dest="/home/solr/collection1/conf/schema.xml" validate_certs=no
+      sudo: yes
+      sudo_user: tomcat
+
+    - name: Restarting tomcat service
+      command: service tomcat6 restart
+
+    ###################
+    # GeoServer setup #
+    ###################
+
+    - name: Download GeoServer 2.5.4
+      get_url: url="http://sourceforge.net/projects/geoserver/files/GeoServer/2.5.4/geoserver-2.5.4-war.zip" dest="~/"
+
+    - name: Unpack GeoServer war
+      shell: "cd ~/ && unzip -e geoserver-2.5.4-war.zip && cp geoserver.war /var/lib/tomcat6/webapps/geoserver.war"
+
+    - name: Copy tuned tomcat files
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - etc/tomcat6/tomcat6.conf
+
+    - name: Restarting tomcat service
+      command: service tomcat6 restart
+
+    - name: Wait for 60 secs so that war is deployed
+      action: pause seconds=60
