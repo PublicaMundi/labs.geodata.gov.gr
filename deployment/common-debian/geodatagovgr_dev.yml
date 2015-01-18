@@ -119,7 +119,7 @@
       action: apt pkg={{item}} state=installed
       with_items:
         - postgresql-9.3
-        - postgis
+        - postgresql-9.3-postgis-2.1
         - postgresql-common
         - python-psycopg2
         - libpq-dev
