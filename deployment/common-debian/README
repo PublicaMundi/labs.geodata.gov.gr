@@ -5,7 +5,7 @@ Install ansible on your local machine (probably ok to do this globally)
 
 pip install ansible
 
-Have a bare debian box that you have ssh login too. We shall assume this machines ipaddress is 1.1.1.1
+Have a bare Debian 7 box that you have ssh login too.
 
 Make a hosts file /etc/ansible/hosts containing the IP of the server you want to deploy to
 
