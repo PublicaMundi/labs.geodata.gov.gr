@@ -4,9 +4,6 @@
     - name: Install epel
       action: command creates=/etc/yum.repos.d/epel.repo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
 
-    # - name: Install PostgreSQL repository
-    #   action: command rpm -Uvh http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-redhat93-9.3-1.noarch.rpm
-
     - name: Install needed packages
       action: yum pkg={{item}} state=installed
       with_items:
@@ -120,3 +117,103 @@
 
     - name: Wait for 60 secs so that war is deployed
       action: pause seconds=60
+
+    ####################
+    # POSTGRESQL setup #
+    ####################
+
+    - name: Add PostgreSQL repository
+      action: command rpm -Uvh http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-redhat93-9.3-1.noarch.rpm
+
+    - name: Install PostgreSQL 9.3
+      action: yum pkg={{item}} state=installed
+      with_items:
+        - postgresql93-libs
+        - postgresql93-server
+        - postgresql93
+        - postgis2_93
+        - hdf5
+        - proj
+        - python-psycopg2
+        - libxml2-devel
+        - libxslt-devel
+        - postgresql93-devel
+        - tidy
+        - tidy-devel
+        - supervisor
+
+    - name: Create PostgreSQL cluster
+      command: service postgresql-9.3 initdb
+
+    - name: Backup default postgresql.conf
+      shell: "cd /var/lib/pgsql/9.3/data && mv postgresql.conf postgresql.conf.orig"
+
+    - name: Copy PostgreSQL configuration files
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - var/lib/pgsql/9.3/data/postgresql.conf
+        - var/lib/pgsql/9.3/data/pg_hba.conf
+
+    - name: Start PostgreSQL service
+      command: service postgresql-9.3 start
+
+    - name: Enable PostgreSQL service
+      command: chkconfig postgresql-9.3 on
+
+    - name: Create ckaner role
+      action: postgresql_user user=ckaner password=ckaner role_attr_flags=NOCREATEDB,LOGIN state=present
+
+    - name: Create ckan_datastorer role
+      action: postgresql_user user=ckan_datastorer password=ckan_datastorer role_attr_flags=NOCREATEDB,LOGIN state=present
+
+    - name: Create geoserver role
+      action: postgresql_user user=geoserver password=geoserver role_attr_flags=NOCREATEDB,LOGIN state=present
+
+    - name: Create rasdaman role
+      action: postgresql_user user=rasdaman password=rasdaman role_attr_flags=NOCREATEDB,LOGIN state=present
+
+    - name: Create petauser role
+      action: postgresql_user user=petauser password=petauser role_attr_flags=NOCREATEDB,LOGIN state=present
+
+    - name: Create ckan database
+      action: postgresql_db name=ckan owner=ckaner encoding='UTF-8'
+
+    - name: Create ckan_tests database
+      action: postgresql_db name=ckan_tests owner=ckaner encoding='UTF-8'
+
+    - name: Create ckan_data database
+      action: postgresql_db name=ckan_data owner=ckan_datastorer encoding='UTF-8'
+
+    - name: Create ckan_data_tests database
+      action: postgresql_db name=ckan_data_tests owner=ckan_datastorer encoding='UTF-8'
+
+    - name: Create ckan_vector database
+      action: postgresql_db name=ckan_vector owner=ckan_datastorer encoding='UTF-8'
+
+    - name: Create ckan_raster database
+      action: postgresql_db name=ckan_raster owner=rasdaman encoding='UTF-8'
+      # action: postgresql_db name=RASBASE owner=rasdaman encoding='UTF-8'
+
+    - name: Create petascopedb database
+      action: postgresql_db name=petascopedb owner=petauser encoding='UTF-8'
+
+    - name: Install postgis to ckan database
+      action: command psql -d ckan -c 'CREATE EXTENSION "postgis";'
+      sudo: yes
+      sudo_user: postgres
+
+    - name: Install postgis to ckan_tests database
+      action: command psql -d ckan_tests -c 'CREATE EXTENSION "postgis";'
+      sudo: yes
+      sudo_user: postgres
+
+    - name: Change postgis owner to ckan database
+      action: command psql -d ckan -c 'ALTER TABLE spatial_ref_sys OWNER TO ckaner'
+      sudo: yes
+      sudo_user: postgres
+
+    - name: Change postgis owner to ckan_tests database
+      action: command psql -d ckan_tests -c 'ALTER TABLE spatial_ref_sys OWNER TO ckaner'
+      sudo: yes
+      sudo_user: postgres
+
