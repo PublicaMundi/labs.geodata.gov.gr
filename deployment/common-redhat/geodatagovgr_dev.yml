@@ -315,5 +315,48 @@
       sudo: yes
       sudo_user: ckaner
 
+    ###############
+    # pycsw setup #
+    ###############
+
+    - name: Get pycsw
+      action: git repo=https://github.com/PublicaMundi/pycsw.git dest=/var/local/ckan/default/pyenv/src/pycsw version=dev.publicamundi.eu
+
+    - name: Change owner of source folder
+      shell: chown -R ckaner:users /var/local/ckan/default/pyenv/src
+
+    - name: Run setup build for pycsw
+      action: command chdir=/var/local/ckan/default/pyenv/src/pycsw/ ../../bin/python setup.py build
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Run setup install for pycsw
+      action: command chdir=/var/local/ckan/default/pyenv/src/pycsw/ ../../bin/python setup.py install
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Install pyproj
+      action: pip name=pyproj virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Install geolinks
+      action: pip name=geolinks virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Remove upstream wsgi script
+      action: file path=/var/local/ckan/default/pyenv/src/pycsw/csw.wsgi state=absent
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Copy pycsw configuration files
+      action: copy src={{item}} dest=/{{item}} mode=644
+      with_items:
+        - var/local/ckan/default/pyenv/src/pycsw/csw.wsgi
+        - var/local/ckan/default/pyenv/src/pycsw/default.cfg
+
+    - name: Change owner of source folder
+      shell: chown -R ckaner:users /var/local/ckan/default/pyenv/src/pycsw
 
 
