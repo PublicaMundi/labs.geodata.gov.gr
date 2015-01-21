@@ -440,3 +440,35 @@
       with_items:
         - var/local/ckan/default/pyenv/src/mapclient/development.ini
 
+    ################
+    # apache setup #
+    ################
+
+    - name: Install needed packages
+      action: yum pkg={{item}} state=installed
+      with_items:
+        - httpd
+        - mod_wsgi
+
+    - name: Change owner of storage folder
+      shell: chown -R ckaner:apache /var/local/ckan/default/files/storage
+
+    - name: Change permissions of storage folder
+      action: file path=/var/local/ckan/default/files/storage mode=0775
+
+    - name: Change owner of resources folder
+      shell: chown -R apache:apache /var/local/ckan/default/files/resources
+
+    - name: Change permissions of resources folder
+      action: file path=/var/local/ckan/default/files/resources mode=0755
+
+    - name: Remove default apache configuration
+      action: file path=/etc/httpd/conf.d/welcome.conf state=absent
+
+    - name: Copy apache configuration files
+      action: copy src={{item}} dest=/{{item}} mode=644
+      with_items:
+        - etc/httpd/conf.d/ckan.conf
+
+    - name: Restart apache
+      action: service name=httpd state=restarted
