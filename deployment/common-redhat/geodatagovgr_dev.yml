@@ -238,7 +238,7 @@
       shell: "cd /var/local/ckan/default && mkdir log && mkdir run && mkdir tmp && mkdir -p files/resources && mkdir -p files/storage"
 
     - name: Create virtualenv for CKAN
-      shell: virtualenv --setuptools /var/local/ckan/default/pyenv
+      shell: virtualenv --setuptools --system-site-packages /var/local/ckan/default/pyenv
 
     - name: Change owner of virtualenv to ckaner
       shell: chown -R ckaner:users /var/local/ckan/default
