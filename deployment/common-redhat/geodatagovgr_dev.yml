@@ -415,4 +415,28 @@
       sudo: yes
       sudo_user: ckaner
 
+    ##############
+    # Maps setup #
+    ##############
+
+    - name: Get PublicaMundi MapClient
+      action: git repo=https://github.com/PublicaMundi/MapClient.git dest=/var/local/ckan/default/pyenv/src/mapclient version=dev.publicamundi.eu
+
+    - name: Change owner of source folder
+      shell: chown -R ckaner:users /var/local/ckan/default/pyenv/src
+
+    - name: Run setup build for MapClient
+      action: command chdir=/var/local/ckan/default/pyenv/src/mapclient/ ../../bin/python setup.py build
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Run setup install for MapClient
+      action: command chdir=/var/local/ckan/default/pyenv/src/mapclient/ ../../bin/python setup.py install
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Copy MapClient configuration files
+      action: copy src={{item}} dest=/{{item}} mode=644
+      with_items:
+        - var/local/ckan/default/pyenv/src/mapclient/development.ini
 
