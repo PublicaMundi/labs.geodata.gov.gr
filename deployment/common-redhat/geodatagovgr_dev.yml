@@ -472,3 +472,6 @@
 
     - name: Restart apache
       action: service name=httpd state=restarted
+
+    - name: Enabling apache service
+      command: chkconfig httpd on
