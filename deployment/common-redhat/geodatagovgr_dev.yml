@@ -359,4 +359,60 @@
     - name: Change owner of source folder
       shell: chown -R ckaner:users /var/local/ckan/default/pyenv/src/pycsw
 
+    ######################
+    # PublicaMundi setup #
+    ######################
+
+    - name: Get ckanext-publicamundi from git
+      action: git repo=https://github.com/kalxas/ckanext-publicamundi.git dest=/var/local/ckan/default/pyenv/src/ckanext-publicamundi version=95-python2.6
+
+    - name: Change owner of source folder
+      shell: chown -R ckaner:users /var/local/ckan/default/pyenv/src
+
+    - name: Run setup.py develop for ckanext-publicamundi
+      action: command chdir=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/ ../../bin/python setup.py develop
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Install ckanext-publicamundi requirements
+      action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/requirements.txt virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Install gsconfig
+      action: pip name=gsconfig virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Install pyunpack
+      action: pip name=pyunpack virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Copy CKAN configuration files
+      action: copy src={{item}} dest=/{{item}} mode=644
+      with_items:
+        - var/local/ckan/default/pyenv/src/ckan/development.ini
+
+    - name: Change owner of source folder
+      shell: chown -R ckaner:users /var/local/ckan/default/pyenv/src
+
+    - name: Touch needed file
+      action: file path=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/ckanext/publicamundi/public/js/scratch.js state=touch
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Initialize CKAN database
+      action: command chdir=/var/local/ckan/default/pyenv/src/ckan/ ../../bin/paster db init -c development.ini
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Setup permissions for datastore’s database
+      action: command chdir=/var/local/ckan/default/pyenv/src/ckan/ ../../bin/paster datastore set-permissions postgres -c development.ini
+
+    - name: Initialize ckanext-publicamundi extension
+      action: command chdir=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/ ../../bin/paster publicamundi-setup -c /var/local/ckan/default/pyenv/src/ckan/development.ini
+      sudo: yes
+      sudo_user: ckaner
+
 
