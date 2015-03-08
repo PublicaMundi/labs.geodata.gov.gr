@@ -1,0 +1,39 @@
+---
+
+  #
+  # Install APT Packages
+  #
+
+  - name: Update APT index
+    apt: update_cache=yes
+
+  - name: Install Solr on Tomcat
+    apt: pkg={{item}} state=latest
+    with_items:
+    - openjdk-7-jdk 
+    - solr-tomcat
+  
+  - name: Backup default Tomcat configuration
+    command: cp /etc/tomcat6/server.xml /etc/tomcat6/server.xml.orig creates=/etc/tomcat6/server.xml.orig 
+  
+  - name: Provide Tomcat server configuration
+    template: src=etc/tomcat6/server.xml dest=/etc/tomcat6/server.xml
+    notify:
+      - restart-tomcat
+
+  - set_fact: 
+      config_url: 'https://api.github.com/repos/PublicaMundi/{{github_repos["ckan"].name}}/contents/{{config.file_path}}?ref={{github_repos["ckan"].branch}}'
+  - debug: var=config_url
+ 
+  - name: Download CKAN-specific schema configuration
+    shell: wget -q -O '-' '{{config_url}}'| jq -r '.download_url'| xargs wget -q -O /tmp/ckan-schema.xml
+    
+  - name: Backup default Solr configuration
+    command: cp /etc/solr/conf/schema.xml /etc/solr/conf/schema.xml.orig creates=/etc/solr/conf/schema.xml.orig
+   
+  - name: Provide CKAN-specific schema
+    copy: src=/tmp/ckan-schema.xml dest=/etc/solr/conf/schema.xml
+    notify:
+      - restart-tomcat
+
+

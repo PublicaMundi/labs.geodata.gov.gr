@@ -1,0 +1,25 @@
+---
+# Provide defaults for the node role.
+# The variables below can be overriden at a group or host level.
+
+apt_packages:
+  - vim
+  - vim-scripts
+  - p7zip
+  - bzip2
+  - unzip
+  - screen
+  - less
+  - wget
+  - curl
+  - rsync
+  - git
+  - jq
+  - python-dev
+  - python-virtualenv
+  - python-setuptools
+
+prefs:
+  bash:
+    history_size: 8000
+    history_file_size: 50000

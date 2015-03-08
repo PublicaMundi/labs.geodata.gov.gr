@@ -1,0 +1,17 @@
+---
+
+# List involved Publicamundi projects
+github_repos:
+  ckan:
+    name: ckan
+    branch: dev.publicamundi.eu
+  ckanext_archiver:
+    name: ckanext-archiver
+    branch: dev.publicamundi.eu
+  ckanext_datastorer:
+    name: ckanext-datastorer
+    branch: dev.publicamundi.eu
+  ckanext_publicamundi:
+    name: ckanext-publicamundi
+    branch: dev.publicamundi.eu
+ 

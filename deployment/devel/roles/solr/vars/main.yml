@@ -1,0 +1,12 @@
+---
+
+config: 
+  # Configure Tomcat6 container
+  tomcat6:
+    connectors:
+    - port: 8983
+      address: 127.0.0.1
+    - port: 8983
+      address: default
+  # Specify schema path relative to our CKAN repo 
+  file_path: ckan/config/solr/schema.xml
