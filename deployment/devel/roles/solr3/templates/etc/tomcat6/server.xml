@@ -42,9 +42,7 @@
          APR (HTTP/AJP) Connector: /docs/apr.html
          Define a non-SSL HTTP/1.1 Connector on port 8080
     -->
-    {% for connector in config.tomcat6.connectors %}
-    <Connector port="{{connector.port}}" protocol="HTTP/1.1" address="{{connector.address if connector.address != 'default' else ansible_default_ipv4['address'] }}" connectionTimeout="20000" URIEncoding="UTF-8" redirectPort="8443"/>
-    {% endfor %}
+    <Connector port="{{tomcat6.connector.port}}" protocol="HTTP/1.1" address="{{tomcat6.connector.address if tomcat6.connector.address != 'default' else ansible_default_ipv4['address'] }}" connectionTimeout="20000" URIEncoding="UTF-8" redirectPort="8443"/>
 
     <!-- A "Connector" using the shared thread pool-->
     <!--

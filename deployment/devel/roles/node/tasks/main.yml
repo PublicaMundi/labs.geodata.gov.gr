@@ -22,6 +22,7 @@
 
   - name: Create a normal user account
     user: name={{user.name}} createhome=yes shell=/bin/bash groups=testers append=yes
+    when: '{{user}}'
   
   - name: Create a Bash profile for root
     template: src=etc/root-profile dest=~/.profile mode=0600
@@ -30,11 +31,13 @@
     sudo: yes
     sudo_user: '{{user.name}}'
     template: src=etc/user-profile dest=~/.profile mode=0600
+    when: '{{user}}'
 
   - name: Create a user-local workspace directory
     sudo: yes
     sudo_user: '{{user.name}}'
     file: path=~/workspace state=directory mode=0755
+    when: '{{user}}'
 
   #
   # Configure SSH
@@ -42,23 +45,27 @@
 
   - name: Copy current key as an authorized key for user
     authorized_key: user={{user.name}} key="{{lookup('file', 'public-keys/id_rsa.pub')}}"
+    when: '{{user}}'
   
   - name: Configure client SSH for user
     copy: src=etc/ssh/ssh_config dest=~/.ssh/config mode=0640
     sudo: yes
     sudo_user: '{{user.name}}'
+    when: '{{user}}'
   
   - name: Copy RSA public keys for user
     copy: src=~/.ssh/{{item.key_file}}.pub dest=~/.ssh/id_rsa-{{item.name}}.pub mode=0644
     sudo: yes
     sudo_user: '{{user.name}}'
     with_items: private_keys
+    when: '{{user}}'
  
   - name: Copy RSA private keys for user
     copy: src=~/.ssh/{{item.key_file}} dest=~/.ssh/id_rsa-{{item.name}} mode=0600
     sudo: yes
     sudo_user: '{{user.name}}'
     with_items: private_keys
+    when: '{{user}}'
 
   #
   # Configure Git client
@@ -68,6 +75,7 @@
     copy: src=etc/gitconfig dest=~/.gitconfig 
     sudo: yes
     sudo_user: '{{user.name}}'
+    when: '{{user}}'
 
   - name: Provide bash completion for git
     get_url: url={{git_completion_script}} dest=/etc/bash_completion.d/git force=no mode=0644
@@ -83,10 +91,12 @@
     copy: src=etc/vim/vimrc dest=~/.vimrc mode=0644
     sudo: yes
     sudo_user: '{{user.name}}'
+    when: '{{user}}'
   
   - name: Rsync vim files for root
     synchronize: src=etc/vim/vim/ dest=/root/.vim/ owner=no group=no delete=yes
   
   - name: Rsync vim files for user
     synchronize: src=etc/vim/vim/ dest=/home/{{user.name}}/.vim/ owner=no group=no delete=yes
+    when: '{{user}}'
 

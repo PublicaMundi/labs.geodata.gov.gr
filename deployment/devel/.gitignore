@@ -1,2 +1,4 @@
 
 hosts.conf
+
+roles/solr3/files/etc/solr/conf/schema.xml

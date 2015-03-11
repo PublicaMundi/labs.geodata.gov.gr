@@ -1,3 +1,7 @@
 [catalog]
 
 catalog.publicamundi.localdomain
+
+[search-engine]
+
+solr.publicamundi.localdomain

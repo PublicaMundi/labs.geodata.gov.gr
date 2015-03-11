@@ -3,15 +3,19 @@
 # List involved Publicamundi projects
 github_repos:
   ckan:
-    name: ckan
+    name: Publicamundi/ckan
     branch: dev.publicamundi.eu
   ckanext_archiver:
-    name: ckanext-archiver
+    name: Publicamundi/ckanext-archiver
     branch: dev.publicamundi.eu
   ckanext_datastorer:
-    name: ckanext-datastorer
+    name: Publicamundi/ckanext-datastorer
     branch: dev.publicamundi.eu
   ckanext_publicamundi:
-    name: ckanext-publicamundi
+    name: Publicamundi/ckanext-publicamundi
     branch: dev.publicamundi.eu
+
+solr:
+  # Specify path for schema.xml relative to CKAN repo 
+  schema_path: ckan/config/solr/schema.xml
  

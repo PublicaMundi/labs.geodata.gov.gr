@@ -1,0 +1,11 @@
+---
+
+# Configure Tomcat6 container
+tomcat6:
+  max_heap_size: 192m
+  min_heap_size: 64m
+  connector:
+    port: 8983
+    address: 0.0.0.0
+## Configure Solr application
+#solr: 
