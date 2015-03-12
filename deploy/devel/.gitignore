@@ -1,4 +1,8 @@
 
 hosts.conf
 
+temp
+
+roles/node/files/etc/ssh/authorized_keys
+
 roles/solr3/files/etc/solr/conf/schema.xml

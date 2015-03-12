@@ -5,16 +5,38 @@
   vars_files:
   - vars.yml
   
-  tasks:
+  #
+  # Tasks
+  #
   
+  tasks:
+
+  - name: Create directory for temporary stuff
+    command: mktemp -d
+    register: mktemp
+    notify:
+    - cleanup
+  - debug: var=mktemp
+
+  # Solr 
+
   - name: Determine CKAN-specific schema file for Solr
     set_fact: 
       schema_url: https://api.github.com/repos/{{github_repos['ckan'].name}}/contents/{{solr.schema_path}}?ref={{github_repos['ckan'].branch}}
-   
   - debug: var=schema_url
  
   - name: Download Solr schema file
-    shell: wget -q -O '-' '{{schema_url}}'| jq -r '.download_url'| xargs wget -q -O roles/solr3/files/etc/solr/conf/schema.xml
+    shell: wget -q -O '-' '{{schema_url}}'| jq -r '.download_url'| xargs wget -q -O '{{mktemp.stdout}}/schema.xml' 
     
+  - copy: src={{mktemp.stdout}}/schema.xml dest=roles/solr3/files/etc/solr/conf/schema.xml
+  
+  #
+  # Handlers
+  #
+
+  handlers:
+
+  - name: cleanup
+    file: path={{mktemp.stdout}} state=absent
 
     

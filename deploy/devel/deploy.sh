@@ -1,15 +1,16 @@
 #!/bin/bash
 
 #
-# Prepare
+# Prepare needed stuff at control machine (i.e. localhost)
 #
 
-#ansible-playbook -i hosts.conf -v prepare.yml
+ansible-playbook -i hosts.conf --force-handlers -v prepare.yml
 
 #
-# Setup ansible groups
+# Run playbooks for various groups (of managed hosts)
 #
 
-#ansible-playbook -i hosts.conf -v -l catalog play.yml
-#ansible-playbook -i hosts.conf -v -l search-engine play.yml
+ansible-playbook -i hosts.conf -v -l catalog play.yml
+
+ansible-playbook -i hosts.conf -v -l search-engine play.yml
 

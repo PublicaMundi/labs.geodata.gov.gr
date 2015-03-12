@@ -43,8 +43,8 @@
   # Configure SSH
   #
 
-  - name: Copy current key as an authorized key for user
-    authorized_key: user={{user.name}} key="{{lookup('file', 'public-keys/id_rsa.pub')}}"
+  - name: Assign authorized keys for user
+    authorized_key: user={{user.name}} key="{{lookup('file', 'etc/ssh/authorized_keys')}}"
     when: '{{user}}'
   
   - name: Configure client SSH for user
