@@ -22,13 +22,18 @@
 
   - name: Determine CKAN-specific schema file for Solr
     set_fact: 
-      schema_url: https://api.github.com/repos/{{github_repos['ckan'].name}}/contents/{{solr.schema_path}}?ref={{github_repos['ckan'].branch}}
+      schema_url: https://api.github.com/repos/{{g.github_repos['ckan'].name}}/contents/{{g.solr.schema_path}}?ref={{g.github_repos['ckan'].branch}}
   - debug: var=schema_url
  
   - name: Download Solr schema file
     shell: wget -q -O '-' '{{schema_url}}'| jq -r '.download_url'| xargs wget -q -O '{{mktemp.stdout}}/schema.xml' 
     
-  - copy: src={{mktemp.stdout}}/schema.xml dest=roles/solr3/files/etc/solr/conf/schema.xml
+  - name: Copy schema for a single-core setup for Solr v3
+    copy: src={{mktemp.stdout}}/schema.xml dest=roles/solr3/files/etc/solr/schema.xml
+  
+  - file: path=roles/solr4/files/etc/solr/ckan/conf state=directory mode=0775
+  - name: Copy schema for a multi-core setup for Solr v4 
+    copy: src={{mktemp.stdout}}/schema.xml dest=roles/solr4/files/etc/solr/ckan/conf/schema.xml
   
   #
   # Handlers

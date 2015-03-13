@@ -1,8 +1,11 @@
 
 hosts.conf
 
-temp
+**/secrets/
+
+roles/*/files/secrets/
 
 roles/node/files/etc/ssh/authorized_keys
 
-roles/solr3/files/etc/solr/conf/schema.xml
+roles/solr3/files/etc/solr/schema.xml
+roles/solr4/files/etc/solr/*/conf/schema.xml
