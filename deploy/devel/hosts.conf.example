@@ -5,3 +5,7 @@ catalog.publicamundi.localdomain
 [search-engine]
 
 solr.publicamundi.localdomain
+
+[database]
+
+postgres.publicamundi.localdomain

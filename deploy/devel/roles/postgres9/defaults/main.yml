@@ -1,0 +1,39 @@
+---
+
+postgres:
+  
+  service:
+    listen_addresses: ['localhost']
+    port: 5432
+
+  # Provide users with their role flags
+  # Note: If allowed addresses is omited, default is 'samehost' 
+#  users:
+#  - name: tester
+#    options: [LOGIN, CREATEDB]
+#    allowed_addresses: 
+#    - 'samenet'
+#    - '192.168.5.0/24'
+#  
+#  - name: nowhere-man
+#    options: [LOGIN]
+#    allowed_addresses: all
+#
+#  # Additional tablespaces to be created
+#  tablespaces:
+#  - name: tablespace_1
+#    path: /var/local/lib/postgresql/tablespace-1
+#  
+#  # A set of databases to be created
+#  databases:
+#
+#  - name: foo_tests
+#    tablespace: tablespace_1
+#    owner: tester
+#    extensions: [hstore]
+#
+#  - name: foo_pois
+#    tablespace: tablespace_1
+#    owner: nowhere-man
+#    extensions: [postgis, hstore]
+#

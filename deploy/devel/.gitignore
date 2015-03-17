@@ -2,8 +2,10 @@
 hosts.conf
 
 **/secrets/
+**/secrets$
 
 roles/*/files/secrets/
+roles/*/files/secrets
 
 roles/node/files/etc/ssh/authorized_keys
 
