@@ -6,6 +6,8 @@ postgres:
     listen_addresses: ['localhost']
     port: 5432
 
+  pgtune: false
+
   # Provide users with their role flags
   # Note: If allowed addresses is omited, default is 'samehost' 
 #  users:
@@ -31,9 +33,16 @@ postgres:
 #    tablespace: tablespace_1
 #    owner: tester
 #    extensions: [hstore]
+#    readers: [nowhere-man]
+#    writers: [tester]
+#    initialize:
+#    - files/setup-scripts/foo_tests/1.sql
+#    - files/setup-scripts/foo_tests/2.sql
 #
 #  - name: foo_pois
 #    tablespace: tablespace_1
 #    owner: nowhere-man
 #    extensions: [postgis, hstore]
+#    readers: [tester, nowhere-man]
+#    writers: []
 #

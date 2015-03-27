@@ -1,49 +1,19 @@
 ---
 
-#  - debug: var=postgres
+  #- debug: var=postgres
   
   #
   # Install APT packages
   #
 
-  - name: Trust key for PostgreSQL APT repos
-    apt_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc state=present
-
-  - name: Add PostgreSQL APT repos
-    copy: src=etc/apt/sources.list.d/pgdg.list dest=/etc/apt/sources.list.d/pgdg.list
-
-  - name: Update APT index
-    apt: update_cache=yes
-  
-  - name: Install basic utilities
-    apt: pkg={{item}} state=latest
-    with_items:
-    - python
-
-  - name: Install PostgreSQL APT packages
-    apt: pkg={{item}} state=latest
-    with_items:
-    - postgresql-{{postgres.version}}
-    - postgresql-contrib-{{postgres.version}}
-    - libpq-dev
-    - python-psycopg2
-    #- pgtune
- 
-  - name: Install PostGIS APT packages
-    apt: pkg={{item}} state=latest
-    with_items:
-    - postgresql-{{postgres.version}}-postgis-{{postgis.version}}
-    when: '{{postgis.version}}'
-
+  - include: install-packages.yml
   
   #
-  # Configure PostgreSQL
+  # Provide basic configuration
   #
-  
-  # Todo: Tune (e.g. by pgtune ??)
 
   - name: Create conf.d-like directory
-    file: path=/etc/postgresql/{{postgres.version}}/main/conf.d state=directory owner=root group=postgres mode=0775
+    file: path=/etc/postgresql/{{postgres.version}}/main/conf.d state=directory owner=postgres group=postgres mode=0775
   
   - name: Determine where the data directory for the main cluster
     shell: pg_lsclusters --no-header| grep -e '^{{postgres.version}}'| cut -f 6 -d ' '
@@ -53,8 +23,19 @@
       data_directory: '{{pg_lsclusters_result.stdout}}'
   - debug: var=data_directory
 
-  - name: Generate main configuration at postgresql.conf
-    template: src=etc/postgresql/postgresql.conf dest=/etc/postgresql/{{postgres.version}}/main/postgresql.conf backup=yes
+  - name: Generate a simple configuration at postgresql.conf
+    template: src=etc/postgresql/postgresql.conf dest=/etc/postgresql/{{postgres.version}}/main/postgresql.conf owner=postgres group=postgres backup=yes
+    notify: [restart-postgresql]
+    
+  - name: Generate a customized configuration at postgresql-tuned.conf
+    shell: cd /etc/postgresql/{{postgres.version}}/main/ && pgtune -o postgresql-tuned.conf -i postgresql.conf
+    sudo: yes
+    sudo_user: postgres
+    when: postgres.pgtune
+
+  - name: Override with the tuned version of postgresql.conf
+    file: path=/etc/postgresql/{{postgres.version}}/main/postgresql.conf src=postgresql-tuned.conf state=link force=yes
+    when: postgres.pgtune
     notify: [restart-postgresql]
     
   #
@@ -68,24 +49,25 @@
   
   - set_fact:
       existing_users: '{{psql_du_result.stdout_lines}}'
+      requested_users: '{{postgres.users| map(attribute="name")| list}}'
   #- debug: var=existing_users
 
   - name: Create database users
-    command: psql -c 'CREATE USER "{{item.name}}" WITH {{item["options"]| default(["LOGIN"])| join(" ")}}'
+    command: psql -c 'CREATE USER "{{item.name}}" WITH {{item.options| default(["LOGIN"])| join(" ")}}'
     sudo: yes
     sudo_user: postgres
     with_items: postgres.users
-    when: '{{not item.name in existing_users}}'
+    when: not item.name in existing_users
 
   - set_fact:
       secrets_file: secrets # relative to files
 
   - name: Set user passwords
-    shell: echo '{{item}}'| awk -F ':' '{printf("ALTER ROLE \x22%s\x22 PASSWORD \x27%s\x27\n", $1, $2)}'| psql
+    shell: psql -c '{{item}}'
     sudo: yes
     sudo_user: postgres
     with_lines:
-    - cat {{secrets_file}}
+    - awk -v users={{requested_users| join(",")}} -f scripts/gen-alter-role.awk -- {{secrets_file}}
 
   - name: Generate pg_hba.conf rules
     template: src=etc/postgresql/pg_hba.conf dest=/etc/postgresql/{{postgres.version}}/main/pg_hba.conf backup=yes
@@ -113,7 +95,7 @@
     sudo: yes
     sudo_user: postgres
     with_items: postgres.tablespaces
-    when: '{{not item.name in existing_tablespaces}}'
+    when: not item.name in existing_tablespaces
    
   #
   # Create databases
@@ -129,23 +111,23 @@
   - debug: var=existing_databases
  
   - name: Create databases
-    command: psql -c 'CREATE DATABASE {{item.name}} OWNER "{{item.owner}}" TABLESPACE {{item["tablespace"]| default("DEFAULT")}}' 
+    command: psql -c 'CREATE DATABASE {{item.name}} OWNER "{{item.owner}}" TABLESPACE {{item.tablespace| default("DEFAULT")}}' 
     sudo: yes
     sudo_user: postgres
     with_items: postgres.databases
-    when: '{{item.name not in existing_databases}}'
+    when: item.name not in existing_databases
 
   - name: Load extensions into databases
     command: psql -c 'CREATE EXTENSION IF NOT EXISTS {{item.1}}' '{{item.0.name}}'
     sudo: yes
     sudo_user: postgres
-    with_subelements: 
+    with_subelements_if_exist: 
     - postgres.databases
     - extensions 
-    when: '{{item.0.name not in existing_databases}}'
+    when: item.0.name not in existing_databases
 
   # Todo: Is there a better way to do this? 
-  # The previous CREATE-EXTENSION statement leaves postgis-related tables unusable 
+  # The previous CREATE-EXTENSION statements leaves postgis-related tables unusable 
   # for the database owner.
   - name: Fix postgis permissions for owner
     command: psql -c 'ALTER TABLE {{item.1}} OWNER TO "{{item.0.owner}}"' '{{item.0.name}}'
@@ -156,3 +138,41 @@
     - ['spatial_ref_sys', 'geometry_columns']
     when: '{{"postgis" in item.0.extensions}}'
 
+ #
+ # Define default privileges
+ # Note: This must be done before creating any objects inside the databases!
+ #
+
+  - name: Grant default read priviledges to entire schemata
+    command: psql -c 'ALTER DEFAULT PRIVILEGES FOR ROLE "{{item.0.owner}}" IN SCHEMA public GRANT SELECT ON TABLES TO "{{item.1}}"' '{{item.0.name}}'
+    sudo: yes
+    sudo_user: postgres
+    with_subelements_if_exist:
+    - postgres.databases
+    - readers
+
+  - name: Grant default read/write priviledges to entire schemata
+    command: psql -c 'ALTER DEFAULT PRIVILEGES FOR ROLE "{{item.0.owner}}" IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE ON TABLES TO "{{item.1}}"' '{{item.0.name}}'
+    sudo: yes
+    sudo_user: postgres
+    with_subelements_if_exist:
+    - postgres.databases
+    - writers
+
+  #
+  # Initialize databases running custom (DDL?) SQL scripts 
+  #
+
+  - name: Copy init scripts to target machine
+    copy: src={{item.1}} dest=/tmp/{{(item.0.name ~ '$' ~ item.1)| md5}}.sql owner=postgres
+    with_subelements_if_exist: 
+    - postgres.databases
+    - initialize 
+
+  - name: Source init scripts into target database
+    command: psql -a -1 -f /tmp/{{(item.0.name ~ '$' ~ item.1)| md5}}.sql {{item.0.name}}
+    sudo: yes
+    sudo_user: postgres
+    with_subelements_if_exist: 
+    - postgres.databases
+    - initialize

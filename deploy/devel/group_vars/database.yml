@@ -4,41 +4,68 @@ user: false
 
 # Override some postgres-related settings from role `postgres9`
 postgres:
+
   service:
-    listen_addresses: ['{{ansible_default_ipv4.address}}']
+    listen_addresses: 
+    - 'localhost'
+    - '{{ansible_default_ipv4.address}}'
     port: 5432
 
-  # Provide users with their role flags
+  #
+  # Define users
+  #
+
   # Note: If allowed addresses is omited, default is 'samehost' 
   users:
+  - name: postgres
+    allowed_addresses: 
+    - samenet
+  
   - name: ckaner
-    allowed_addresses: samenet
+    allowed_addresses: 
+    - samehost 
+    - ckan.publicamundi.localdomain
   
   - name: ckan_datastorer
-    allowed_addresses: samenet
-
+    allowed_addresses: 
+    - samehost 
+    - ckan.publicamundi.localdomain
+  
   - name: rasdaman
-    allowed_addresses: samenet
+    allowed_addresses:
+    - samehost
   
   - name: petascope
-    allowed_addresses: samenet
+    allowed_addresses:
+    - samehost
   
   - name: geoserver
-    allowed_addresses: samenet
+    allowed_addresses:
+    - samehost 
+    - geoserver.publicamundi.localdomain
 
+  #
   # Additional tablespaces to be created
+  #
+
   tablespaces:
   - name: tablespace_1
     path: /var/local/lib/postgresql/tablespace-1
   
-  # A set of databases to be created
+  
+  #
+  # Set of databases to be created
+  #
+
   databases:
 
   - name: ckan
     tablespace: tablespace_1
     owner: ckaner
     extensions: [postgis]
-  
+    readers: []
+    writers: []
+
   - name: ckan_tests
     tablespace: tablespace_1
     owner: ckaner

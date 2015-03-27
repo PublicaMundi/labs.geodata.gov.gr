@@ -1,6 +1,8 @@
 
 hosts.conf
 
+scratch.yml
+
 **/secrets/
 **/secrets$
 
