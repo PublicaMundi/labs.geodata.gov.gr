@@ -29,6 +29,6 @@
   - vars.yml
   
   roles:
-  #- node
+  - node
   - postgres9
 

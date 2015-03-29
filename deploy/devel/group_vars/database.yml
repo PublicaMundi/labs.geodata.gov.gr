@@ -63,8 +63,6 @@ postgres:
     tablespace: tablespace_1
     owner: ckaner
     extensions: [postgis]
-    readers: []
-    writers: []
 
   - name: ckan_tests
     tablespace: tablespace_1
@@ -75,11 +73,13 @@ postgres:
     tablespace: tablespace_1
     owner: ckan_datastorer
     extensions: [postgis]
+    readers: [ckaner, geoserver]
   
   - name: ckan_data_tests
     tablespace: tablespace_1
     owner: ckan_datastorer
     extensions: [postgis]
+    readers: [ckaner]
 
   - name: rasdaman
     tablespace: tablespace_1
