@@ -2,8 +2,12 @@
 
 user: false
 
-# Override some postgres-related settings from role `postgres9`
+export_gpg_keys: true
+
+private_keys: []
+
 postgres:
+  pgtune: true
 
   service:
     listen_addresses: 
@@ -44,6 +48,9 @@ postgres:
     - samehost 
     - geoserver.publicamundi.localdomain
 
+  - name: collectd
+    trusted: true
+
   #
   # Additional tablespaces to be created
   #
@@ -54,7 +61,7 @@ postgres:
   
   
   #
-  # Set of databases to be created
+  # Databases to be created
   #
 
   databases:
@@ -90,4 +97,26 @@ postgres:
     tablespace: tablespace_1
     owner: petascope
     extensions: []
+
+
+collectd:
+  server: collectd.localdomain
+
+  plugins:
+    
+    processes: ~
+    
+    df:
+      devices:
+      - mountpoint: /
+      - mountpoint: /var/local/lib/postgresql
+    
+    postgresql:
+      
+      databases:
+      - name: ckan
+        user: collectd
+
+      - name: ckan_data
+        user: collectd
 

@@ -1,0 +1,16 @@
+---
+
+user: false
+
+private_keys: []
+
+collectd:
+  server: ~
+
+  plugins:
+    
+    processes: ~
+    
+    df:
+      devices:
+      - mountpoint: /

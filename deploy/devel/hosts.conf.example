@@ -9,3 +9,7 @@ solr.publicamundi.localdomain
 [database]
 
 postgres.publicamundi.localdomain
+
+[monitor]
+
+collectd.publicamundi.localdomain
