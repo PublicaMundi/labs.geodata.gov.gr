@@ -22,7 +22,7 @@
 
   - name: Determine CKAN-specific schema file for Solr
     set_fact: 
-      schema_url: https://api.github.com/repos/{{g.github_repos['ckan'].name}}/contents/{{g.solr.schema_path}}?ref={{g.github_repos['ckan'].branch}}
+      schema_url: https://api.github.com/repos/{{publicamundi.github_repos['ckan'].name}}/contents/{{publicamundi.solr.schema_path}}?ref={{publicamundi.github_repos['ckan'].branch}}
   - debug: var=schema_url
  
   - name: Download Solr schema file

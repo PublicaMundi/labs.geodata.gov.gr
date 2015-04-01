@@ -2,9 +2,6 @@
 
 - hosts: catalog
   remote_user: root
-
-  vars_files:
-  - vars.yml
   
   roles:
   - node
@@ -15,9 +12,6 @@
 - hosts: search-engine
   remote_user: root
   
-  vars_files:
-  - vars.yml
-  
   roles:
   - node
   - solr4
@@ -27,19 +21,14 @@
 - hosts: database
   remote_user: root
   
-  vars_files:
-  - vars.yml
-  
   roles:
   - node
   - postgres9
+  - ckan-datastore
   - collectd-node
 
 - hosts: monitor
   remote_user: root
-  
-  vars_files:
-  - vars.yml
   
   roles:
   - node
