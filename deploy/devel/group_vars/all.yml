@@ -1,0 +1,4 @@
+---
+
+collectd:
+  server: monitor.publicamundi.localdomain

@@ -1,6 +1,6 @@
 ---
 
-  #- debug: var=postgres
+  - debug: var=postgres
   
   #
   # Install APT packages

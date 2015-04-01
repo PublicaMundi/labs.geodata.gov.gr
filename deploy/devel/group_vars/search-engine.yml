@@ -2,7 +2,16 @@
 
 user: false
 
-# Override specific Tomcat-related settings
 tomcat:
   min_heap_size: 48m
   max_heap_size: 128m
+
+collectd:
+  plugins:
+    
+    processes: ~
+    
+    df:
+      devices:
+      - mountpoint: /
+

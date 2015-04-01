@@ -100,8 +100,6 @@ postgres:
 
 
 collectd:
-  server: collectd.localdomain
-
   plugins:
     
     processes: ~

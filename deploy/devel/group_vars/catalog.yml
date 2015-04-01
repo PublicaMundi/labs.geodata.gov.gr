@@ -7,4 +7,12 @@ user:
 
 private_keys: []
 
+collectd:
+  plugins:
+    
+    processes: ~
+    
+    df:
+      devices:
+      - mountpoint: /
 
