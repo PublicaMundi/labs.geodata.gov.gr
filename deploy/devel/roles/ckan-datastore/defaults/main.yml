@@ -1,0 +1,9 @@
+---
+
+ckan_datastore:
+  main_db: ckan
+  datastore_db: ckan_data
+  ckan_user: ckaner
+  write_user: ckan_datastorer
+  readonly_user: ckaner
+
