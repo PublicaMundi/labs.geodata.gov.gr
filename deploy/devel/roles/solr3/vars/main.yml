@@ -1,6 +1,0 @@
----
-
-tomcat:
-  # Choose Java's JVM between: java-6-openjdk-6 or java-7-openjdk
-  jvm: java-7-openjdk
-
