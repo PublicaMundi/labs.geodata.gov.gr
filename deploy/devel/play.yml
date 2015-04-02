@@ -2,7 +2,6 @@
 
 - hosts: catalog
   remote_user: root
-  
   roles:
   - node
   - ckan
@@ -11,7 +10,6 @@
 
 - hosts: search-engine
   remote_user: root
-  
   roles:
   - node
   - solr4
@@ -20,7 +18,6 @@
 
 - hosts: database
   remote_user: root
-  
   roles:
   - node
   - postgres9
@@ -29,7 +26,6 @@
 
 - hosts: monitor
   remote_user: root
-  
   roles:
   - node
   - collectd-server

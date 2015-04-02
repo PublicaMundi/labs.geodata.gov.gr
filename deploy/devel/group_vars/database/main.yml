@@ -2,8 +2,6 @@
 
 user: false
 
-export_gpg_keys: true
-
 private_keys: []
 
 postgres:
@@ -50,6 +48,8 @@ postgres:
 
   - name: collectd
     trusted: true
+  
+  credentials: []
 
   #
   # Additional tablespaces to be created
