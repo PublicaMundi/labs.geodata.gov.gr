@@ -3,6 +3,8 @@ hosts.conf
 
 scratch.yml
 
+group_vars/*/secrets.yml
+
 **/secrets/
 **/secrets$
 roles/*/files/secrets/

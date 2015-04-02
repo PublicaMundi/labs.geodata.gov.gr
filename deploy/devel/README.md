@@ -12,16 +12,19 @@ We assume the following command-line utilities are available at Ansible's contro
 
 ### Required files
 
-A certain numner of files should be provided at Ansible's control machine:
+A certain number of files should be provided at Ansible's control machine:
 
 * an authorized-keys file to be used for normal users (if those are created). This is used
   by `node` role, and should be placed at `roles/node/files/etc/ssh/authorized_keys`.
-* a password for Tomcat's `tomcat` user which can access the manager (graphical) interface. 
-  This used by `solrX` roles, and is placed at `roles/solrX/files/secrets/manager-password`. 
+* (_deprecated_) a file containing credentials (lines of user:password) for CGP web interface, which is used
+  by `collectd-server` role abd should should be placed at `roles/collectd-server/files/etc/apache2/secrets`
 
 ### Required variables
 
-__Todo__
+A certain number of variables must also be provided at group/host level. Some of them are considered 
+sensitive data and must be placed under `group_vars/<group-name>/secrets.yml` (not under source control):
+
+ * `tomcat.manager.password` (under `group_vars/search-engine/secrets.yml`) 
 
 ## Quickstart
 
