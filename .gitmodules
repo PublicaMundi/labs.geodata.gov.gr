@@ -1,3 +1,6 @@
-[submodule "ansible_plugins"]
-	path = ansible_plugins
-	url = https://github.com/drmalex07/ansible-plugins.git
+[submodule "ansible-roles"]
+	path = ansible-roles
+	url = https://github.com/PublicaMundi/ansible-roles
+[submodule "ansible-plugins"]
+	path = ansible-plugins
+	url = https://github.com/PublicaMundi/ansible-plugins
