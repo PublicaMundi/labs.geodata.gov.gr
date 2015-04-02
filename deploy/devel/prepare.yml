@@ -2,9 +2,6 @@
 - hosts: 127.0.0.1
   connection: local
   
-  vars_files:
-  - vars.yml
-  
   #
   # Tasks
   #
@@ -29,7 +26,7 @@
     shell: wget -q -O '-' '{{schema_url}}'| jq -r '.download_url'| xargs wget -q -O '{{mktemp.stdout}}/schema.xml' 
     
   - name: Copy schema for a single-core setup for Solr v3
-    copy: src={{mktemp.stdout}}/schema.xml dest=roles/solr3/files/etc/solr/schema.xml
+    copy: src={{mktemp.stdout}}/schema.xml dest=roles/solr3/files/etc/solr/conf/schema.xml
   
   - file: path=roles/solr4/files/etc/solr/ckan/conf state=directory mode=0775
   - name: Copy schema for a multi-core setup for Solr v4 

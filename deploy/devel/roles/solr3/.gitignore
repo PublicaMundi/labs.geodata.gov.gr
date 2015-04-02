@@ -1,2 +1,2 @@
-files/etc/solr/schema.xml
+files/etc/solr/conf/schema.xml
 files/secrets/

@@ -1,16 +1,6 @@
 ---
 
-# Configure Tomcat6 container
 tomcat:
   # Choose Java's JVM between: java-6-openjdk-6 or java-7-openjdk
   jvm: java-7-openjdk
-  # Define min/max for JVM's heap size
-  max_heap_size: 192m
-  min_heap_size: 64m
-  # Configure service endpoint
-  connector:
-    port: 8983
-    address: 0.0.0.0
 
-## Configure Solr application
-#solr: 
