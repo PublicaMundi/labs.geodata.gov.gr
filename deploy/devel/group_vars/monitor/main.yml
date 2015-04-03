@@ -14,3 +14,7 @@ collectd:
     df:
       devices:
       - mountpoint: /
+  
+  cgp:
+    authn:
+      realm: 'Graph Panel'
