@@ -20,9 +20,9 @@
   remote_user: root
   roles:
   - node
-  - postgres9
-  - ckan-datastore
+  - database
   - collectd-node
+
 
 - hosts: monitor
   remote_user: root

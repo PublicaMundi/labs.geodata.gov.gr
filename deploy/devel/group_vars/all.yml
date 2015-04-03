@@ -1,7 +1,6 @@
 ---
 
 publicamundi:
-
   # List involved Publicamundi projects
   github_repos:
     ckan:
@@ -17,10 +16,21 @@ publicamundi:
       name: Publicamundi/ckanext-publicamundi
       branch: dev.publicamundi.eu
   
-  # Solr-related
+
+ckan:
+  databases:
+    ckan: 
+      dbname: ckan
+      owner: ckaner
+    datastore:
+      dbname: ckan_data
+      owner: ckan_datastorer
+      readonly_user: ckaner
+  
   solr:
     # Specify path for schema.xml relative to CKAN repo 
     schema_path: ckan/config/solr/schema.xml
+
 
 collectd:
   server: monitor.publicamundi.localdomain
