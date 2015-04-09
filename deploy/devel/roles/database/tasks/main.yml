@@ -1,9 +1,13 @@
 ---
 
- - name: Generate SQL for setting-up permissions
+ #
+ # Setup CKAN datastore
+ #
+ 
+ - name: Generate SQL for setting-up datastore permissions
    template: src=scripts/set-permissions.sql dest=/tmp/ckan-datastore.set-permissions.sql
 
- - name: Set permissions
+ - name: Set datastore permissions
    command: psql -f /tmp/ckan-datastore.set-permissions.sql postgres
    sudo: yes
    sudo_user: postgres

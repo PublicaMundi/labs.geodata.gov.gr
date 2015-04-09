@@ -23,12 +23,12 @@ postgres:
     allowed_addresses: 
     - samenet
   
-  - name: ckaner
+  - name: '{{ckan.databases.ckan.owner}}'
     allowed_addresses: 
     - samehost 
     - ckan.publicamundi.localdomain
   
-  - name: ckan_datastorer
+  - name: '{{ckan.databases.datastore.owner}}'
     allowed_addresses: 
     - samehost 
     - ckan.publicamundi.localdomain
@@ -66,27 +66,30 @@ postgres:
 
   databases:
 
-  - name: ckan
+  - name: '{{ckan.databases.ckan.dbname}}'
     tablespace: tablespace_1
-    owner: ckaner
+    owner: '{{ckan.databases.ckan.owner}}'
     extensions: [postgis]
 
   - name: ckan_tests
     tablespace: tablespace_1
-    owner: ckaner
+    owner: '{{ckan.databases.ckan.owner}}'
     extensions: []
   
-  - name: ckan_data
+  - name: '{{ckan.databases.datastore.dbname}}'
     tablespace: tablespace_1
-    owner: ckan_datastorer
+    owner: '{{ckan.databases.datastore.owner}}'
     extensions: [postgis]
-    readers: [ckaner, geoserver]
+    readers: 
+    - '{{ckan.databases.datastore.readonly_user}}' 
+    - 'geoserver'
   
   - name: ckan_data_tests
     tablespace: tablespace_1
-    owner: ckan_datastorer
+    owner: '{{ckan.databases.datastore.owner}}'
     extensions: [postgis]
-    readers: [ckaner]
+    readers:
+    - '{{ckan.databases.datastore.readonly_user}}' 
 
   - name: rasdaman
     tablespace: tablespace_1
@@ -112,9 +115,9 @@ collectd:
     postgresql:
       
       databases:
-      - name: ckan
+      - name: '{{ckan.databases.datastore.dbname}}'
         user: collectd
 
-      - name: ckan_data
+      - name: '{{ckan.databases.ckan.dbname}}'
         user: collectd
 

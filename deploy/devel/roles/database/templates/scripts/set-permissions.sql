@@ -14,15 +14,15 @@ To run the script, execute:
 */
 
 -- name of the main CKAN database
-\set maindb "{{ckan_datastore.main_db}}"
+\set maindb "{{ckan.databases.ckan.dbname}}"
 -- the name of the datastore database
-\set datastoredb "{{ckan_datastore.datastore_db}}"
+\set datastoredb "{{ckan.databases.datastore.dbname}}"
 -- username of the ckan postgres user
-\set ckanuser "{{ckan_datastore.ckan_user}}"
+\set ckanuser "{{ckan.databases.ckan.owner}}"
 -- username of the datastore user that can write
-\set wuser "{{ckan_datastore.write_user}}"
+\set wuser "{{ckan.databases.datastore.owner}}"
 -- username of the datastore user who has only read permissions
-\set rouser "{{ckan_datastore.readonly_user}}"
+\set rouser "{{ckan.databases.datastore.readonly_user}}"
 
 -- revoke permissions for the read-only user
 ---- this step can be ommitted if the datastore not
