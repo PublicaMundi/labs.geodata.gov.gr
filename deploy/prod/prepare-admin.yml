@@ -1,0 +1,99 @@
+---
+
+- hosts: external-admin 
+  remote_user: root
+    
+  vars: 
+    project:
+      repo:
+        key_file: id_rsa-repo
+        path: PublicaMundi/labs.geodata.gov.gr.git
+        host: repo-wps1.dbnet.ece.ntua.gr 
+        ssh_host: wps1.dbnet.ece.ntua.gr
+        ssh_port: 12722
+        remote_name: dblab
+        branch_name: prod
+      name: geodata.gov.gr
+
+  tasks:
+  
+  # Install APT packages
+  
+  - name: Update APT index
+    apt: update_cache=yes
+
+  - name: Install required APT packages
+    apt: pkg={{item}} state=latest
+    with_items:
+    - 'vim'
+    - 'git'
+    - 'python'
+    - 'python-dev'
+    - 'python-doc'
+    - 'python-setuptools'
+    - 'python-virtualenv'
+    - 'ipython'
+
+  # Create Python virtual environment
+  
+  - name: Create virtualenv
+    shell: /usr/bin/virtualenv /usr/local/pyenv creates=/usr/local/pyenv
+
+  - name: Install newest version of pip
+    pip:  name=pip extra_args='--upgrade' virtualenv=/usr/local/pyenv
+  
+  - name: Install required Python packages
+    pip: name={{item}} virtualenv=/usr/local/pyenv
+    with_items:
+    - 'pudb'
+    - 'pep8'
+    - 'ipython'
+    - 'pytz'
+    - 'argparse'
+    - 'jinja2'
+    - 'netaddr'
+    - 'ansible==1.8.4'
+
+  - name: Create a shortcut to activate the environment
+    copy:
+      mode: 0744
+      dest: ~/pyenv.sh
+      content: '. /usr/local/pyenv/bin/activate'
+
+  # Copy private keys under ~/.ssh
+
+  - copy: src={{item}} dest=~/.ssh/{{item| basename}} mode=0600
+    with_fileglob: files/keys/id_rsa-*
+  
+  # Create a workspace and clone this repository
+
+  - set_fact:
+      repo: '{{project.repo}}'
+      repo_url: 'git@{{project.repo.host}}:{{project.repo.path}}'
+      re_repo_host: '{{project.repo.host| regex_replace("[.]", "[.]")}}'
+
+  - name: Create a workspace
+    file: path=~/workspace state=directory mode=0755
+
+  - name: Create an ssh/config placeholder for repository host
+    lineinfile:
+      dest: ~/.ssh/config
+      create: yes
+      line: 'Host {{project.repo.host}}'
+      insertafter: EOF
+    register: add_repo_host
+ 
+  - name: Create an ssh/config stanza for repository host
+    command: >
+      sed -i 
+      '1,$s/^\(Host {{re_repo_host}}\)$/\1\n IdentityFile ~\/.ssh\/{{repo.key_file}}\n HostName {{repo.ssh_host}}\n Port {{repo.ssh_port}}\n StrictHostKeyChecking no/' 
+      ~/.ssh/config
+    when: add_repo_host.changed
+
+  - name: Checkout project from repo
+    command: >
+      git clone --recursive -b '{{repo.branch_name}}' -o '{{repo.remote_name}}' '{{repo_url}}' '{{project.name}}'
+    args:
+      chdir: ~/workspace
+      creates: '~/workspace/{{project.name}}'
+     
