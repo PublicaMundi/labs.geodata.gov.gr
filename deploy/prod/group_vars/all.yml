@@ -1,7 +1,20 @@
 ---
 
+# Packages for base system (base-node)
+apt:
+  use_backports: yes
+  # Todo: Override package_groups
+
+# Preferences for programs and shells (base-node)
+prefs:
+  bash:
+    history_size: 9000
+    history_file_size: 80000
+
+
+# Configuration for PublicaMundi projects
 publicamundi:
-  # List involved Publicamundi projects
+  # List involved projects
   github_repos:
     ckan:
       name: Publicamundi/ckan
@@ -15,8 +28,9 @@ publicamundi:
     ckanext_publicamundi:
       name: Publicamundi/ckanext-publicamundi
       branch: dev.publicamundi.eu
-  
 
+
+# Configuration (global) for CKAN application
 ckan:
   databases:
     ckan: 
@@ -32,5 +46,7 @@ ckan:
     schema_path: ckan/config/solr/schema.xml
 
 
+# Configuration (global) for monitored nodes (collect-node)
 collectd:
   server: monitor.local
+  
