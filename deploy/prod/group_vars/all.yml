@@ -1,11 +1,11 @@
 ---
 
-# Packages for base system (base-node)
+# Packages for base system (console-workstation)
 apt:
   use_backports: yes
   # Todo: Override package_groups
 
-# Preferences for programs and shells (base-node)
+# Preferences for programs and shells (console-workstation)
 prefs:
   bash:
     history_size: 9000
