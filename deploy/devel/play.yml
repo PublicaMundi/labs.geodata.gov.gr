@@ -3,7 +3,8 @@
 - hosts: catalog
   remote_user: root
   roles:
-  - console-workstation
+  - base-system
+  - cli
   - ckan
   - collectd-node
 
@@ -11,7 +12,8 @@
 - hosts: search-engine
   remote_user: root
   roles:
-  - console-workstation
+  - base-system
+  - cli
   - solr4
   - collectd-node
 
@@ -19,7 +21,8 @@
 - hosts: database
   remote_user: root
   roles:
-  - console-workstation
+  - base-system
+  - cli
   - database
   - collectd-node
 
@@ -27,6 +30,7 @@
 - hosts: monitor
   remote_user: root
   roles:
-  - console-workstation
+  - base-system
+  - cli
   - collectd-server
 

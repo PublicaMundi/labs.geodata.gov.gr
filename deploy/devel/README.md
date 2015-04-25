@@ -3,19 +3,27 @@
 
 ## Requirements
 
-### Required command-line utilities
+### Requirements for hosts
+
+The minimal requirements for Ansible to execute tasks on a host machine (for now just Python)
+can be fullfilled with an Ansible adhoc command. For example, we can install them to all known
+hosts as below:
+
+    ansible -m script -a install-ansible-prereqs.sh all
+
+### Requirements for control machine
 
 We assume the following command-line utilities are available at Ansible's control machine: 
 
-* wget
-* jq
+ * wget
+ * jq
 
 ### Required files
 
 A certain number of files should be provided at Ansible's control machine:
 
-* an authorized-keys file to be used for normal users (if those are created). This is used
-  by `node` role, and should be placed at `roles/node/files/etc/ssh/authorized_keys`.
+ * If `authorized_keys` or `private_keys` are supplied, the corresponding key files must exist 
+   under `files/keys`. See details in the dedicated README for the `cli` role.
 
 ### Required variables
 
