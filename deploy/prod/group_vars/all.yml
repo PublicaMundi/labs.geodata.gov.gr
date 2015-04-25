@@ -1,11 +1,11 @@
 ---
 
-# Packages for base system (console-workstation)
+# Packages for base system (base-system)
 apt:
   use_backports: yes
   # Todo: Override package_groups
 
-# Preferences for programs and shells (console-workstation)
+# Preferences for programs and shells (cli)
 prefs:
   bash:
     history_size: 9000
@@ -49,4 +49,3 @@ ckan:
 # Configuration (global) for monitored nodes (collect-node)
 collectd:
   server: monitor.local
-  

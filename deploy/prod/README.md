@@ -1,4 +1,4 @@
-# Deploy for development #
+# Deploy for production #
 
 
 ## Requirements
@@ -7,16 +7,16 @@
 
 The minimal requirements for Ansible to execute tasks on a host machine (for now just Python)
 can be fullfilled with an Ansible adhoc command. For example, we can install them to all known
-hosts as below:
+hosts that can be accessed externally (the group `external`) as below:
 
-    ansible -m script -a install-ansible-prereqs.sh all
+    ansible -m script -a install-ansible-prereqs.sh external
 
 ### Requirements for control machine
 
 We assume the following command-line utilities are available at Ansible's control machine: 
 
- * wget
- * jq
+* wget
+* jq
 
 ### Required files
 
