@@ -1,0 +1,58 @@
+---
+
+# Packages for base system (base-system)
+apt:
+  use_backports: yes
+  package_groups:
+    basic:
+      name: Basic
+      packages:
+      - sudo
+      - vim
+      - vim-scripts
+      - screen
+      - less
+      - wget
+      - curl
+      - rsync
+      - git
+      - htop
+      - bzip2
+    development:
+      name: Development
+      select: yes
+      packages:
+      - build-essential
+      - python-dev
+      - python-virtualenv
+      - python-setuptools
+
+# Override hostname (cli)
+hostname: '{{inventory_hostname_short}}-publicamundi'
+
+# Preferences for programs and shells (cli)
+prefs:
+  bash:
+    history_size: 9000
+    history_file_size: 80000
+
+# Authorized keys (cli)
+authorized_keys:
+- name: publicamundi
+  key_file: id_rsa-publicamundi
+
+# Known private keys (cli)
+private_keys:
+- name: publicamundi
+  key_file: id_rsa-publicamundi
+- name: repo
+  key_file: id_rsa-repo
+
+# Configuration for SSH clients (cli)
+ssh_config:
+- name: '*.publicamundi.local'
+  user: 'root'
+  strict_host_key_checking: 'ask'
+  identity_file: '~/.ssh/id_rsa-publicamundi'
+
+

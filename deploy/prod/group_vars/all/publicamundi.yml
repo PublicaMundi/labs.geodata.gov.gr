@@ -1,17 +1,5 @@
 ---
 
-# Packages for base system (base-system)
-apt:
-  use_backports: yes
-  # Todo: Override package_groups
-
-# Preferences for programs and shells (cli)
-prefs:
-  bash:
-    history_size: 9000
-    history_file_size: 80000
-
-
 # Configuration for PublicaMundi projects
 publicamundi:
   # List involved projects
@@ -45,7 +33,3 @@ ckan:
     # Specify path for schema.xml relative to CKAN repo 
     schema_path: ckan/config/solr/schema.xml
 
-
-# Configuration (global) for monitored nodes (collect-node)
-collectd:
-  server: monitor.local

@@ -1,0 +1,5 @@
+---
+
+# Configuration (global) for monitored nodes (collect-node)
+collectd:
+  server: monitor.local

@@ -1,0 +1,17 @@
+---
+
+# Note: 
+# All addresses for internal nodes specified in inventory (ansible_ssh_host) 
+# have to belong to the networking.internal_ip4.network specified below!
+
+networking:
+  public_ip4: ~
+  internal_ip4:
+    network: '10.0.3.0'
+    netmask: '255.255.255.0'
+    iface: eth1
+  public_ip6:
+    iface: eth0
+    prefix: 64
+    scope: global
+
