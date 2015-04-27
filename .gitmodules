@@ -4,3 +4,6 @@
 [submodule "ansible-plugins"]
 	path = ansible-plugins
 	url = https://github.com/PublicaMundi/ansible-plugins
+[submodule "ansible-modules"]
+	path = ansible-modules
+	url = https://github.com/drmalex07/ansible-modules.git
