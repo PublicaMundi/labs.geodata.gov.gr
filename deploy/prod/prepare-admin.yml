@@ -3,29 +3,14 @@
 - hosts: external-admin 
   remote_user: root
 
+  roles:
+  - boilerplate
+  
   tasks:
   
   - set_fact:
       repo: '{{project.repo}}'
       repo_url: 'git@{{project.repo.host}}:{{project.repo.path}}'
- 
-  # Install APT packages
-  
-  - name: Update APT index
-    apt: update_cache=yes
-
-  - name: Install required APT packages
-    apt: pkg={{item}} state=latest
-    with_items:
-    - 'vim'
-    - 'git'
-    - 'dnsutils'
-    - 'python'
-    - 'python-dev'
-    - 'python-doc'
-    - 'python-setuptools'
-    - 'python-virtualenv'
-    - 'ipython'
 
   # Create Python virtual environment
   

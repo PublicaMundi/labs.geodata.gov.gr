@@ -1,0 +1,16 @@
+---
+
+# Packages for base system (base-system)
+apt:
+  package_groups:
+    aux:
+      name: Aux
+      packages:
+      - tree
+      - tig
+      - sshpass
+    network:
+      name: Network
+      packages:
+      - dnsutils
+      - ntop

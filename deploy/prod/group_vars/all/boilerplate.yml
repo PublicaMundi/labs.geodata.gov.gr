@@ -24,6 +24,7 @@ apt:
       packages:
       - build-essential
       - python-dev
+      - python-doc
       - python-virtualenv
       - python-setuptools
 
@@ -51,6 +52,10 @@ private_keys:
 # Configuration for SSH clients (cli)
 ssh_config:
 - name: '*.publicamundi.local'
+  user: 'root'
+  strict_host_key_checking: 'ask'
+  identity_file: '~/.ssh/id_rsa-publicamundi'
+- name: '*.publicamundi.eu'
   user: 'root'
   strict_host_key_checking: 'ask'
   identity_file: '~/.ssh/id_rsa-publicamundi'
