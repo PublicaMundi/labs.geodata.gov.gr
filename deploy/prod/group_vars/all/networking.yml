@@ -1,8 +1,9 @@
 ---
 
-# Note: 
-# All addresses for internal nodes specified in inventory (ansible_ssh_host) 
-# have to belong to the networking.internal_ipv4.network specified below!
+nameservers:
+- '83.212.2.77'
+- '194.177.210.10'
+- '194.177.210.211'
 
 networking:
   public_ipv4:

@@ -1,0 +1,26 @@
+---
+
+ - debug: var=networking
+ 
+ - assert:
+     that:
+     - not networking.public_ipv4.iface or (networking.public_ipv4.iface == ansible_default_ipv4.interface)
+     - networking.internal_ipv4.address
+ 
+ - set_fact:
+     internal_ipv4_cidr_network: '{{networking.internal_ipv4.network| ipv4_to_cidr(netmask=networking.internal_ipv4.netmask)}}'
+ 
+ - name: Validate vars-supplied internal IPv4 address
+   assert:
+     that:
+     - networking.internal_ipv4.address| ipv4_in_cidr(internal_ipv4_cidr_network)
+ 
+ - name: Configure network interfaces
+   template: src=etc/network/interfaces dest=/etc/network/interfaces
+
+ - name: Generate /etc/hosts with internal names
+   template: src=etc/hosts dest=/etc/hosts
+
+ - name: Disable network-manager service
+   service: name=network-manager enabled=no
+

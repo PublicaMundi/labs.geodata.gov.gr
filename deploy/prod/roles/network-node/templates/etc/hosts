@@ -1,0 +1,19 @@
+127.0.0.1   localhost
+127.0.1.1   {{hostname}}
+
+{% for h in groups.internal -%}
+{% set addr = hostvars[h].networking.internal_ipv4.address| default('') -%}
+{%- if not addr -%}
+{%- set h1 = hostvars[h].external_name -%}
+{%- set addr = hostvars[h1].networking.internal_ipv4.address| mandatory -%}
+{%- endif -%}
+{{'%-35.35s %s'| format(h, addr)}}
+{% endfor %} {# for h #}
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+

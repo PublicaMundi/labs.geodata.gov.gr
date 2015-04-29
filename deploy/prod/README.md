@@ -32,6 +32,7 @@ It has the following objectives:
  * Configure internal network (10.0.3.x)
  * Configure public interfaces (IPv6, IPv4 if exists) 
  * Setup SSH port forwardings from admin to internal hosts
+ * Setup firewalls
  * Provide site-local aliases for hosts
 
 If all the above are satisfied (e.g. networks are already setup manually be the administrator), this play can be omitted.

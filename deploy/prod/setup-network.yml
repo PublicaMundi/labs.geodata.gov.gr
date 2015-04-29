@@ -4,41 +4,34 @@
   remote_user: root
 
   tasks:
-  
+ 
   - assert:
-      that: networking.public_ipv4.iface == ansible_default_ipv4.interface
-  
-  - debug: var=networking
-  
-  - set_fact:
-      internal_ipv4_address: '{{networking.internal_ipv4.gateway}}'
-  - debug: var=internal_ipv4_address
-  
-  - name: Configure network interfaces
-    template: src=templates/etc/network/interfaces dest=/etc/network/interfaces backup=yes
-
-  - name: Disable network-manager service
-    service: name=network-manager enabled=no
-
-  # Todo: Reboot!
-
-
-- hosts: external:!external-admin
+      that:
+      - networking.public_ipv4.iface
+      - networking.internal_ipv4.address
+      - networking.internal_ipv4.address == networking.internal_ipv4.gateway
+ 
+- hosts: external-admin
   remote_user: root
+ 
+  roles:
+  - network-node
 
   tasks:
-  
-  - debug: var=networking
-  
-  - set_fact:
-      internal_hostname: '{{inventory_hostname| regex_replace("[.]publicamundi[.]eu$", ".publicamundi.local")}}'  
-  - debug: var=internal_hostname
-  - set_fact:
-      internal_ipv4_address: '{{hostvars[internal_hostname]["ansible_ssh_host"]}}'
-  - debug: var=internal_ipv4_address
-  - set_fact:
-      internal_ipv4_cidr_network: '{{networking.internal_ipv4.network| ipv4_to_cidr(netmask=networking.internal_ipv4.netmask)}}'
-  - debug: var=internal_ipv4_cidr_network
 
-  - assert:
-      that: internal_ipv4_address| ipv4_in_cidr(internal_ipv4_cidr_network) 
+  - name: Reboot
+    command: shutdown -r now "Rebooting due to network reconfiguration"
+    async: 0
+    poll: 0
+    ignore_errors: yes
+
+  - name: Wait for host to reboot
+    local_action: wait_for host={{ansible_ssh_host| default(inventory_hostname)}} state=started port=22 delay=10 timeout=300
+
+
+#- hosts: external:!external-admin
+#  remote_user: root
+#
+#  tasks:
+#  - debug: var=networking
+#  
