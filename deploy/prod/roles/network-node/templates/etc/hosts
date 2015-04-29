@@ -7,7 +7,7 @@
 {%- set h1 = hostvars[h].external_name -%}
 {%- set addr = hostvars[h1].networking.internal_ipv4.address| mandatory -%}
 {%- endif -%}
-{{'%-35.35s %s'| format(h, addr)}}
+{{'%-18.18s %s'| format(addr, h)}}
 {% endfor %} {# for h #}
 
 # The following lines are desirable for IPv6 capable hosts

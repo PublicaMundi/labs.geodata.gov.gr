@@ -19,27 +19,45 @@ We assume the following command-line utilities are available at Ansible's contro
 
 ## Playbooks
 
-### Play: prepare-admin.yml
+### Play: prepare-admin-workspace.yml
 
-This play is responsible to prepare an administration node that will subsequently control the PublicaMundi deployment (for initial setup, updates etc.). After installing some minimal requirements, it will checkout this same repository.
+This play is controlled from *outside* of the target deployment, and is responsible to prepare an admin node (i.e. an Ansible control) that will subsequently control all the aspects of PublicaMundi deployment (for initial setup, updates etc.). 
 
-### Play: setup-network.yml
+After installing some minimal requirements, it will:
+  * Setup a system-wide Python virtual environment
+  * Setup a workspace
+  * Checkout this repository into workspace
 
-This play is intended to be applied before main deployment of applications (play.yml). 
-It has the following objectives:
+If all the above are satisfied, this play can be omitted.
+
+### Play: prepare-admin-network.yml
+
+This play is also controlled from *outside* of the target deployment, and is responsible to configure/setup the network infrastructure (on the admin node) needed for building an internal (site-local) network. Basically, it will:  
 
  * Disable Debian's network-manager
- * Configure internal network (10.0.3.x)
- * Configure public interfaces (IPv6, IPv4 if exists) 
+ * Configure internal network (10.0.3.0/24)
+ * Configure public interfaces (IPv6, IPv4)
+ * Generate /etc/hosts (site-local aliases for hosts)
  * Setup SSH port forwardings from admin to internal hosts
- * Setup firewalls
- * Provide site-local aliases for hosts
+ * Setup firewall
 
 If all the above are satisfied (e.g. networks are already setup manually be the administrator), this play can be omitted.
 
-### Play: play.yml
+### Play: setup-network.yml
 
-This is the basic play responsible to setup the `geodata.gov.gr` PublicaMundi deployment.
+This play is controlled from the admin node (so, from *inside* of the target deployment), and is responsible for setting-up the internal network. For each host, it will:
+
+ * Disable Debian's network-manager
+ * Configure internal network (10.0.3.0/24)
+ * Configure public interfaces (IPv6, IPv4 if exists) 
+ * Generate /etc/hosts (site-local aliases for hosts)
+ * Setup firewall
+
+If all the above are satisfied (e.g. networks are already setup manually be the administrator), this play can be omitted.
+
+### Play: deploy.yml
+
+This play is controlled from the admin node, and is responsible to setup the `geodata.gov.gr` PublicaMundi deployment.
 
 #### Required files
 

@@ -1,37 +1,9 @@
 ---
 
-- hosts: external-admin
+- hosts: external:!external-admin
   remote_user: root
 
   tasks:
- 
-  - assert:
-      that:
-      - networking.public_ipv4.iface
-      - networking.internal_ipv4.address
-      - networking.internal_ipv4.address == networking.internal_ipv4.gateway
- 
-- hosts: external-admin
-  remote_user: root
- 
-  roles:
-  - network-node
-
-  tasks:
-
-  - name: Reboot
-    command: shutdown -r now "Rebooting due to network reconfiguration"
-    async: 0
-    poll: 0
-    ignore_errors: yes
-
-  - name: Wait for host to reboot
-    local_action: wait_for host={{ansible_ssh_host| default(inventory_hostname)}} state=started port=22 delay=10 timeout=300
-
-
-#- hosts: external:!external-admin
-#  remote_user: root
-#
-#  tasks:
-#  - debug: var=networking
-#  
+  
+  - debug: var=networking
+  
