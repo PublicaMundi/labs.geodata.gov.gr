@@ -8,6 +8,7 @@ apt:
       packages:
       - tree
       - tig
+      - pandoc
       - sshpass
     network:
       name: Network
