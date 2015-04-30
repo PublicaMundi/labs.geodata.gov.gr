@@ -1,0 +1,120 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          firewall
+# Required-Start:    rsyslog
+# Required-Stop:     rsyslog
+# X-Start-Before:    fail2ban
+# X-Stop-After:      fail2ban
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Setup itables-based firewall
+### END INIT INFO
+
+# Process name (for display only)
+NAME=firewall
+
+# Main configuration file
+
+INI_FILE=/etc/firewall/firewall.ini
+
+# Helpers
+
+function get_ini_value()
+{
+   python -c \
+   "import ConfigParser;p=ConfigParser.ConfigParser();p.read('$1');print p.get('$2', '$3') if p.has_option('$2', '$3') else ''"
+}
+
+# Source LSB helpers
+. /lib/lsb/init-functions
+
+# Export network-related variables (IPs, networks) from INI file
+
+public_ip4_iface=$(get_ini_value ${INI_FILE} 'DEFAULT' 'public_ip4_iface')
+public_ip6_iface=$(get_ini_value ${INI_FILE} 'DEFAULT' 'public_ip6_iface')
+internal_ip4_iface=$(get_ini_value ${INI_FILE} 'DEFAULT' 'internal_ip4_iface')
+
+public_ip4_network=$(get_ini_value ${INI_FILE} 'DEFAULT' 'public_ip4_network')
+public_ip6_network=$(get_ini_value ${INI_FILE} 'DEFAULT' 'public_ip6_network')
+internal_ip4_network=$(get_ini_value ${INI_FILE} 'DEFAULT' 'internal_ip4_network')
+
+public_ip4=$(get_ini_value ${INI_FILE} 'DEFAULT' 'public_ip4')
+public_ip6=$(get_ini_value ${INI_FILE} 'DEFAULT' 'public_ip6')
+internal_ip4=$(get_ini_value ${INI_FILE} 'DEFAULT' 'internal_ip4')
+
+re_ip4_part='25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]'
+re_public_ip4="^(${re_ip4_part})(\.(${re_ip4_part})){3}$"
+re_internal_ip4="^10(\.(${re_ip4_part})){3}$"
+re_ip6_part='[0-9a-f]{1,4}'
+re_public_ip6="2001(:(${re_ip6_part})){7}"
+
+if [[ -n ${public_ip4} && ! ${public_ip4} =~ ${re_public_ip4} ]]; then
+   echo "Bad IP (v4): $public_ip4"; exit 1
+fi
+
+if [[ -n ${internal_ip4} && ! ${internal_ip4} =~ ${re_internal_ip4} ]]; then
+   echo "Bad IP (v4): $internal_ip4"; exit 1
+fi
+
+if [[ -n ${public_ip6} && ! ${public_ip6} =~ ${re_public_ip6} ]]; then
+   echo "Bad IP (v6): $public_ip6"; exit 1
+fi
+
+export public_ip4_iface public_ip6_iface internal_ip4_iface
+export public_ip4_network public_ip6_network internal_ip4_network
+export public_ip4 public_ip6 internal_ip4
+
+# Handle command
+
+case $1 in
+    start)
+        # Create user-defined chains
+        log_daemon_msg "Setting up ${NAME}" "Create chains for iptables" 
+        for c in $(get_ini_value ${INI_FILE} 'ip4:filter' 'chains'); do
+           iptables -t filter -N ${c}
+        done
+        for c in $(get_ini_value ${INI_FILE} 'ip6:filter' 'chains'); do
+           ip6tables -t filter -N ${c}
+        done
+        log_end_msg 0
+        # Create rules inside chains
+        log_daemon_msg "Setting up ${NAME}" "Define rules for iptables" 
+        for script in /etc/firewall/setup.d/*; do
+            if [ -x ${script} ]; then
+                source ${script}
+                logger -t firewall -p local0.info "Setting-up firewall: Sourced ${script}"
+            fi
+        done
+        log_end_msg 0
+        if [ -x /etc/init.d/fail2ban ]; then 
+           invoke-rc.d fail2ban start 
+        fi
+        ;;
+    stop)
+        if [ -x /etc/init.d/fail2ban ]; then 
+           invoke-rc.d fail2ban stop 
+        fi
+        log_daemon_msg "Tearing down ${NAME}" "Flushing iptables" 
+        iptables -F -t filter
+        iptables -F -t nat
+        ip6tables -F -t filter
+        log_end_msg 0
+        log_daemon_msg "Tearing down ${NAME}" "Removing chains" 
+        for c in $(get_ini_value ${INI_FILE} 'ip4:filter' 'chains'); do
+           iptables -t filter -X ${c}
+        done
+        for c in $(get_ini_value ${INI_FILE} 'ip6:filter' 'chains'); do
+           ip6tables -t filter -X ${c}
+        done
+        log_end_msg 0
+        ;;
+    restart)
+        $0 stop && $0 start
+        ;;
+    *)
+        # Invalid argument, print the usage message.
+        echo "Usage: $0 {start|stop|restart}"
+        exit 2
+        ;;
+esac

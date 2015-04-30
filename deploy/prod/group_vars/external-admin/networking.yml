@@ -1,8 +1,22 @@
 ---
 
+firewall:
+  setup:
+    filter_ssh:
+    - 'templates/hosts/{{inventory_hostname}}/etc/firewall/setup.d/filter-ssh.sh'
+    filter_fwd_ssh: 
+    - 'templates/hosts/{{inventory_hostname}}/etc/firewall/setup.d/filter-fwd-ssh.sh'
+    nat_fwd_ssh: 
+    - 'templates/hosts/{{inventory_hostname}}/etc/firewall/setup.d/nat-fwd-ssh.sh'
+    nat_masq:
+    - 'templates/hosts/{{inventory_hostname}}/etc/firewall/setup.d/nat-masq.sh'
+
+
 networking:
-  public_ipv4:
-    iface: eth2
-    network: '{{ansible_default_ipv4.network}}'
-    netmask: '{{ansible_default_ipv4.netmask}}'
-    gateway: '{{ansible_default_ipv4.gateway}}'
+  if:
+    public_ipv4:
+      iface: eth2
+      network: '{{ansible_default_ipv4.network}}'
+      netmask: '{{ansible_default_ipv4.netmask}}'
+      gateway: '{{ansible_default_ipv4.gateway}}'
+      address: '{{ansible_default_ipv4.address}}'

@@ -2,12 +2,8 @@
 127.0.1.1   {{hostname}}
 
 {% for h in groups.internal -%}
-{% set addr = hostvars[h].networking.internal_ipv4.address| default('') -%}
-{%- if not addr -%}
-{%- set h1 = hostvars[h].external_name -%}
-{%- set addr = hostvars[h1].networking.internal_ipv4.address| mandatory -%}
-{%- endif -%}
-{{'%-18.18s %s'| format(addr, h)}}
+{% set addr = hostvars[h].networking.if.internal_ipv4.address| mandatory -%}
+{{'%-15.15s %s'| format(addr, h)}}
 {% endfor %} {# for h #}
 
 # The following lines are desirable for IPv6 capable hosts

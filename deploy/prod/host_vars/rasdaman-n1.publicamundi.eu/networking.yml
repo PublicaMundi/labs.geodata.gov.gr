@@ -1,0 +1,7 @@
+---
+
+networking:
+  if:
+    internal_ipv4: { address: '10.0.3.25' }
+  nat:
+    ssh: { external_port: 12522 }

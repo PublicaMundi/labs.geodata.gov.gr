@@ -1,5 +1,0 @@
----
-
-networking:
-  internal_ipv4: { address: '10.0.3.31' }
-

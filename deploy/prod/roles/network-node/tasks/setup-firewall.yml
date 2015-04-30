@@ -1,0 +1,20 @@
+---
+
+ - name: Create configuration dirs for firewall service
+   file: path=/etc/firewall/setup.d state=directory recurse=yes mode=0700
+ 
+ - name: Copy firewall's init.d script
+   copy: src=etc/init.d/firewall dest=/etc/init.d/firewall mode=0750 owner=root group=root
+
+ - name: Generate firewall's basic configuration file
+   template: src=etc/firewall/firewall.ini dest=/etc/firewall/firewall.ini
+
+ - name: Copy firewall setup scripts
+   template: src={{item}} dest=/etc/firewall/setup.d/{{item| basename}} mode=0700
+   with_flattened: firewall.setup| dictsort| map(attribute="1")| list
+   notify: [restart-firewall]
+
+ - name: Enable firewall service
+   service: name=firewall enabled=yes
+   notify: [restart-firewall]
+ 

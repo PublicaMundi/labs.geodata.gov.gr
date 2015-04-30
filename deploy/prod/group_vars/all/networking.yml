@@ -6,15 +6,22 @@ nameservers:
 - '194.177.210.211'
 
 networking:
-  public_ipv4:
-    iface: ~
-  internal_ipv4:
-    iface: eth1
-    network: '10.0.3.0'
-    netmask: '255.255.255.0'
-    gateway: '10.0.3.2'
-  public_ipv6:
-    iface: eth0
-    prefix: 64
-    scope: global
+  if:
+    public_ipv4:
+      iface: ~
+    internal_ipv4:
+      iface: eth1
+      address: ~
+      network: '10.0.3.0'
+      netmask: '255.255.255.0'
+      gateway: '10.0.3.2'
+    public_ipv6:
+      iface: eth0
+      address: '{{ansible_default_ipv6.address}}'
+      prefix: '{{ansible_default_ipv6.prefix}}'
+      scope: global
+  nat:
+    ssh:
+      external_host: admin.publicamundi.eu
+      external_port: ~
 

@@ -1,0 +1,11 @@
+---
+
+  - name: reboot
+    command: shutdown -r now "Rebooting due to network reconfiguration"
+    async: 0
+    poll: 0
+    ignore_errors: yes
+
+  - name: restart-firewall
+    service: name=firewall state=restarted 
+ 

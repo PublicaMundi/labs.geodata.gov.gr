@@ -38,7 +38,7 @@ This play is also controlled from *outside* of the target deployment, and is res
  * Configure internal network (10.0.3.0/24)
  * Configure public interfaces (IPv6, IPv4)
  * Generate /etc/hosts (site-local aliases for hosts)
- * Setup SSH port forwardings from admin to internal hosts
+ * Setup SSH forwardings from admin to internal hosts (and accompanying ssh-config stanzas for clients)
  * Setup firewall
 
 If all the above are satisfied (e.g. networks are already setup manually be the administrator), this play can be omitted.
@@ -81,5 +81,5 @@ A certain number of variables must also be provided at group/host level. Some of
 
 ## Quickstart
 
-Take a look at `deploy.sh`.
+See `deploy.sh`.
 
