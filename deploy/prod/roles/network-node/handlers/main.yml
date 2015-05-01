@@ -10,4 +10,8 @@
   - name: restart-firewall
     service: name=firewall state=restarted
     when: shutdown_triggered is not defined
+  
+  - name: reload-ssh
+    service: name=ssh state=reloaded
+    when: shutdown_triggered is not defined
  

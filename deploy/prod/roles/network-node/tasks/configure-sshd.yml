@@ -1,0 +1,9 @@
+---
+
+ - name: Deny password authentication for SSH
+   replace: 
+     dest: /etc/ssh/sshd_config
+     regexp: '^[#]?PasswordAuthentication[\s]+([Yy]es|[Nn]o)$'
+     replace: 'PasswordAuthentication no'
+     backup: yes
+   notify: ['reload-ssh']

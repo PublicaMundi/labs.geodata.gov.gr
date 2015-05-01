@@ -15,9 +15,9 @@
  - name: Generate firewall setup scripts under /etc/firewall/setup.d
    template: src={{item}} dest=/etc/firewall/setup.d/{{item| basename}} mode=0700
    with_flattened: networking.firewall.setup| dictsort| map(attribute="1")| list
-   notify: [restart-firewall]
+   notify: ['restart-firewall']
 
  - name: Enable firewall service
    service: name=firewall enabled=yes
-   notify: [restart-firewall]
+   notify: ['restart-firewall']
  

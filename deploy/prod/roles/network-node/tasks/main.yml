@@ -2,7 +2,7 @@
 
  - debug: var=networking
  
- - name: Assert our assumptions about present network interfaces
+ - name: Check facts about present network interfaces
    assert:
      that:
      - not networking.if.public_ipv4.iface or (networking.if.public_ipv4.iface == ansible_default_ipv4.interface)
@@ -12,7 +12,7 @@
  - set_fact:
      internal_ipv4_cidr_network: '{{networking.if.internal_ipv4.network| ipv4_to_cidr(netmask=networking.if.internal_ipv4.netmask)}}'
  
- - name: Validate given IPv4 address for internal network
+ - name: Check given IPv4 address for internal network
    assert:
      that:
      - networking.if.internal_ipv4.address| ipv4_in_cidr(internal_ipv4_cidr_network)
@@ -27,6 +27,9 @@
  - name: Setup firewall
    include: setup-firewall.yml
  
+ - name: Configure SSH server
+   include: configure-sshd.yml
+
  - name: Enable IPv4 packet forwarding
    sysctl: name=net.ipv4.ip_forward value=1 reload=yes
    when: networking.forward_ipv4
