@@ -1,5 +1,8 @@
 ---
 
+ - name: Clear any existing firewall setup scripts (rulesets)
+   file: path=/etc/firewall/setup.d state=absent
+ 
  - name: Create configuration dirs for firewall service
    file: path=/etc/firewall/setup.d state=directory recurse=yes mode=0700
  
@@ -8,10 +11,10 @@
 
  - name: Generate firewall's basic configuration file
    template: src=etc/firewall/firewall.ini dest=/etc/firewall/firewall.ini
-
- - name: Copy firewall setup scripts
+ 
+ - name: Generate firewall setup scripts under /etc/firewall/setup.d
    template: src={{item}} dest=/etc/firewall/setup.d/{{item| basename}} mode=0700
-   with_flattened: firewall.setup| dictsort| map(attribute="1")| list
+   with_flattened: networking.firewall.setup| dictsort| map(attribute="1")| list
    notify: [restart-firewall]
 
  - name: Enable firewall service

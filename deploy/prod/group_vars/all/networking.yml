@@ -1,11 +1,11 @@
 ---
 
-nameservers:
-- '83.212.2.77'
-- '194.177.210.10'
-- '194.177.210.211'
-
 networking:
+  # Configure kernel-level behavior
+  forward_ipv4: no
+  forward_ipv6: no
+  
+  # Configure present interfaces
   if:
     public_ipv4:
       iface: ~
@@ -19,9 +19,25 @@ networking:
       iface: eth0
       address: '{{ansible_default_ipv6.address}}'
       prefix: '{{ansible_default_ipv6.prefix}}'
-      scope: global
+      scope: 'global'
+  
+  # Configure NAT
+  # The following describe DNAT rules for internal hosts. They are intended
+  # to be overriden at host/group level.
   nat:
     ssh:
       external_host: admin.publicamundi.eu
       external_port: ~
+  
+  # Configure iptables-based firewall
+  firewall:
+    setup: []
 
+  # Provide DNS nameservers 
+  # Note that the following nameservers will only be used for internal-only nodes
+  # which are statically configured on if.internal_ipv4 (and do not acquire DNS 
+  # configuration via DHCP).
+  nameservers:
+  - '83.212.2.77'
+  - '194.177.210.10'
+  - '194.177.210.211'

@@ -2,7 +2,7 @@
 
  - debug: var=networking
  
- - name: Assert our assumptions about present interfaces
+ - name: Assert our assumptions about present network interfaces
    assert:
      that:
      - not networking.if.public_ipv4.iface or (networking.if.public_ipv4.iface == ansible_default_ipv4.interface)
@@ -23,9 +23,17 @@
 
  - name: Generate /etc/hosts with internal names
    template: src=etc/hosts dest=/etc/hosts
- 
+
  - name: Setup firewall
    include: setup-firewall.yml
+ 
+ - name: Enable IPv4 packet forwarding
+   sysctl: name=net.ipv4.ip_forward value=1 reload=yes
+   when: networking.forward_ipv4
+ 
+ - name: Enable IPv6 packet forwarding
+   sysctl: name=net.ipv6.conf.all.forwarding value=1 reload=yes
+   when: networking.forward_ipv6
 
  - name: Disable network-manager service
    service: name=network-manager enabled=no

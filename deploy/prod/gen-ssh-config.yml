@@ -1,0 +1,18 @@
+---
+
+# 
+# Generate SSH client configuration file for connecting to internal hosts
+#
+
+- hosts: external-admin
+  remote_user: root
+
+  vars:
+    keyfile: '~/.ssh/id_rsa-publicamundi'
+    outfile: '~/.ssh/config-publicamundi.eu'
+
+  tasks:
+
+  - name: Generate SSH client configuration file
+    local_action: template src=templates/ssh-config dest={{outfile}}
+

@@ -14,10 +14,10 @@
   roles:
   - network-node
   
-  tasks: ~
+  tasks: ~ 
 
   post_tasks:
 
   - name: If rebooted, wait for host to be up again
     local_action: wait_for host={{ansible_ssh_host| default(inventory_hostname)}} state=started port=22 delay=8 timeout=300
-
+    when: shutdown_triggered is defined

@@ -1,6 +1,7 @@
 ---
 
-firewall:
-  setup:
-    filter_ssh: 
-    - etc/firewall/setup.d/filter-ssh.sh
+networking:
+  firewall:
+    setup:
+      filter_ssh: 
+      - etc/firewall/setup.d/filter-ssh.sh

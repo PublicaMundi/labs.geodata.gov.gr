@@ -5,7 +5,9 @@
     async: 0
     poll: 0
     ignore_errors: yes
+    register: shutdown_triggered
 
   - name: restart-firewall
-    service: name=firewall state=restarted 
+    service: name=firewall state=restarted
+    when: shutdown_triggered is not defined
  

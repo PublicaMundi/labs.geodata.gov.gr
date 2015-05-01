@@ -1,0 +1,15 @@
+Host *.publicamundi.eu
+   IdentityFile {{keyfile}}
+
+{% for host in groups["internal"] -%}
+{%- set from_host = hostvars[host].networking.nat.ssh.external_host| default('') -%}
+{%- set from_port = hostvars[host].networking.nat.ssh.external_port| int(default=0) -%}
+{%- if (from_host == inventory_hostname) and (from_port > 0) %}
+{%- set to_addr = hostvars[host].networking.if.internal_ipv4.address -%}
+# Connect to {{host}}
+Host sh.{{hostvars[host].external_name}}
+   HostName {{inventory_hostname}}
+   Port {{from_port}} 
+{% endif %}
+
+{% endfor %}
