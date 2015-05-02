@@ -12,7 +12,7 @@
  - set_fact:
      internal_ipv4_cidr_network: '{{networking.if.internal_ipv4.network| ipv4_to_cidr(netmask=networking.if.internal_ipv4.netmask)}}'
  
- - name: Check given IPv4 address for internal network
+ - name: Check that given IPv4 address belongs to the internal network
    assert:
      that:
      - networking.if.internal_ipv4.address| ipv4_in_cidr(internal_ipv4_cidr_network)
