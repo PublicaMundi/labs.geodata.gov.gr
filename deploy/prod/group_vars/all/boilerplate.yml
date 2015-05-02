@@ -60,4 +60,9 @@ ssh_config:
   strict_host_key_checking: 'ask'
   identity_file: '~/.ssh/id_rsa-publicamundi'
 
-
+git_config: 
+  user: 
+    name: drmalex07
+    email: alexakis@imis.athena-innovation.gr
+  merge_tool: ~
+  diff_tool: ~
