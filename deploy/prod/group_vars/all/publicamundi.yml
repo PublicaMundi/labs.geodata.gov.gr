@@ -5,9 +5,9 @@ project:
   repo:
     key_file: id_rsa-repo
     path: PublicaMundi/geodata.gov.gr.git
-    host: repo-wps1.dbnet.ece.ntua.gr 
-    ssh_host: wps1.dbnet.ece.ntua.gr
-    ssh_port: 12722
+    host: gitlab.wps1.dbnet.ece.ntua.gr 
+    ssh_host: gitlab.wps1.dbnet.ece.ntua.gr
+    ssh_port: 12922
     remote_name: dblab
     branch_name: prod
   name: geodata.gov.gr
