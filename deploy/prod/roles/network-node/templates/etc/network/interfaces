@@ -28,6 +28,6 @@ iface {{networking.if.internal_ipv4.iface}} inet static
    # Provide a gateway for IPv4 routing
    gateway {{networking.if.internal_ipv4.gateway}}
    # Provide IPv4 DNS nameservers
-   dns-nameservers {{networking.dns.ipv4.nameservers| slice(2)| join(" ")}}
+   dns-nameservers {{networking.dns.ipv4.nameservers[:2]| join(" ")}}
    {% endif -%}
 
