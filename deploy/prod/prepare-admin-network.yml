@@ -14,7 +14,13 @@
   roles:
   - network-node
   
-  tasks: ~ 
+  tasks:
+
+  - name: Add SSH configuration stanzas for external hosts
+    ssh_config:
+      name: '{{item}}'
+      user: 'root'
+    with_items: '{{groups["external"]}}' 
 
   post_tasks:
 

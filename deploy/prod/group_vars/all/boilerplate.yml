@@ -55,10 +55,12 @@ ssh_config:
   user: 'root'
   strict_host_key_checking: 'ask'
   identity_file: '~/.ssh/id_rsa-publicamundi'
+  preferred_authentications: 'publickey'
 - name: '*.publicamundi.eu'
   user: 'root'
   strict_host_key_checking: 'ask'
   identity_file: '~/.ssh/id_rsa-publicamundi'
+  preferred_authentications: 'publickey'
 
 git_config: 
   user: 
