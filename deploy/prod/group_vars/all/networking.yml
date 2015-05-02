@@ -31,7 +31,7 @@ networking:
   
   # Configure iptables-based firewall
   firewall:
-    setup: []
+    setup: {}
 
   # Provide DNS nameservers 
   # Note that the following nameservers will only be used for internal-only nodes
