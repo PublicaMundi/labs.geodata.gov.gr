@@ -35,9 +35,14 @@ networking:
 
   # Provide DNS nameservers 
   # Note that the following nameservers will only be used for internal-only nodes
-  # which are statically configured on if.internal_ipv4 (and do not acquire DNS 
-  # configuration via DHCP).
-  nameservers:
-  - '83.212.2.77'
-  - '194.177.210.10'
-  - '194.177.210.211'
+  # which are statically configured on networking.if.internal_ipv4 (and so, cannot 
+  # acquire their DNS configuration via DHCP).
+  dns:
+    ipv4:
+      nameservers:
+      - '194.177.210.10'
+      - '194.177.210.211'
+    ipv6:
+      nameservers:
+      - '2001:4860:4860::8888'
+      - '2001:4860:4860::8844'
