@@ -62,9 +62,15 @@ ssh_config:
   identity_file: '~/.ssh/id_rsa-publicamundi'
   preferred_authentications: 'publickey'
 
+# Configuration for Git clients (cli)
 git_config: 
   user: 
     name: drmalex07
     email: alexakis@imis.athena-innovation.gr
   merge_tool: ~
   diff_tool: ~
+
+# Configuration for swap space (boilerplate)
+swap:
+  path: 'memory.swap'
+  size: '512M' 

@@ -1,0 +1,24 @@
+---
+
+ - set_fact: 
+     swap_size: '{{swap.size| from_filesize}}'
+     swap_path: '{{"/" ~ swap.path.lstrip("/")}}'
+
+ - name: Check swap path
+   stat: path={{swap_path}}
+   register: swap_path_check
+
+ - name: Allocate swap space on disk
+   command: dd if=/dev/zero of={{swap_path}} count={{(swap_size| int) // 1024}} bs=1K 
+   when: not swap_path_check.stat.exists
+
+ - name: Make swap file on allocated space
+   command: mkswap {{swap_path}}
+   when: not swap_path_check.stat.exists
+
+ - name: Enforce right permissions/ownership for swap file
+   file: path={{swap_path}} mode=0600 owner=root group=root
+ 
+ - name: Add an fstab entry for swap
+   mount: src={{swap_path}} name=none fstype=swap opts=sw state=present
+
