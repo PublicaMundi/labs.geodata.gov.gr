@@ -16,3 +16,11 @@ apt:
       - dnsutils
       - ntop
       - fail2ban
+
+# Known private keys (cli)
+private_keys:
+- name: publicamundi
+  key_file: id_rsa-publicamundi
+- name: repo
+  key_file: id_rsa-repo
+

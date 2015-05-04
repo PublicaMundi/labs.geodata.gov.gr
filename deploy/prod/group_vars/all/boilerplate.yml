@@ -46,8 +46,6 @@ authorized_keys:
 private_keys:
 - name: publicamundi
   key_file: id_rsa-publicamundi
-- name: repo
-  key_file: id_rsa-repo
 
 # Configuration for SSH clients (cli)
 ssh_config:
