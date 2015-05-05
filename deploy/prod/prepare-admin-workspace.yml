@@ -10,7 +10,8 @@
   
   - set_fact:
       repo: '{{project.repo}}'
-      repo_url: 'git@{{project.repo.host}}:{{project.repo.path}}'
+      repo_fetch_url: 'git@{{project.repo.fetch.host}}:{{project.repo.path}}'
+      repo_push_url: 'git@{{project.repo.push.host}}:{{project.repo.path}}'
 
   # Create Python virtual environment
   
@@ -40,23 +41,44 @@
 
   # Create a workspace and clone this repository
 
-  - name: Copy private key needed for repo
-    copy: src=files/keys/{{repo.key_file}} dest=~/.ssh/{{repo.key_file}} mode=0600
-  
+  - name: Copy private keys needed for repo
+    copy: src=files/keys/{{item}} dest=~/.ssh/{{item}} mode=0600
+    with_items:
+    - '{{repo.key_file}}'
+    - '{{repo.fetch.key_file}}'
+    - '{{repo.push.key_file}}'
+
   - name: Create a workspace
     file: path=~/workspace state=directory mode=0755
 
   - ssh_config:
-      name: '{{repo.host}}'
+      name: '{{repo.fetch.host}}'
       hostname: '{{repo.ssh_host}}'
       port: '{{repo.ssh_port}}'
-      user: 'git'
-      identity_file: '~/.ssh/{{repo.key_file}}'
+      identity_file: '~/.ssh/{{repo.fetch.key_file| default(repo.key_file)}}'
       strict_host_key_checking: 'no'
   
+  - ssh_config:
+      name: '{{repo.push.host}}'
+      hostname: '{{repo.ssh_host}}'
+      port: '{{repo.ssh_port}}'
+      identity_file: '~/.ssh/{{repo.push.key_file| default(repo.key_file)}}'
+      strict_host_key_checking: 'no'
+ 
   - name: Checkout project from repo
     command: git clone
-      --recursive -b '{{repo.branch_name}}' -o '{{repo.remote_name}}' '{{repo_url}}' '{{project.name}}'
+      --recursive -b '{{repo.branch}}' -o '{{repo.remote}}' '{{repo_fetch_url}}' '{{project.name}}'
     args:
       chdir: ~/workspace
       creates: '~/workspace/{{project.name}}'
+
+  - name: Set push-url for repo
+    command: git remote set-url --push '{{repo.remote}}' '{{repo_push_url}}'
+    args:
+      chdir: '~/workspace/{{project.name}}'
+
+  - name: Fetch updates from repo
+    command: git fetch -a '{{repo.remote}}'
+    args:
+      chdir: '~/workspace/{{project.name}}'
+
