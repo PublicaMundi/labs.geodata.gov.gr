@@ -6,20 +6,17 @@ apt:
     aux:
       name: Aux
       packages:
-      - tree
       - tig
       - sshpass
-    network:
-      name: Network
+    network_security:
+      name: Network Security
       packages:
-      - dnsutils
-      - ntop
       - fail2ban
 
 # Known private keys (cli)
-# Note that key `id_rsa-publicamundi-deploy` will be used as a deploy-key,
-# so it must be unencrypted (not protected by passphrase), since the Ansible 
-# task will not interactively prompt for a passphrase.
+# Note that key `id_rsa-publicamundi-deploy` will be used as a readonly deploy-key,
+# so it must be unencrypted (not protected by passphrase), since the Ansible task
+# will not interactively prompt for a passphrase.
 private_keys:
 - name: publicamundi-deploy
   key_file: id_rsa-publicamundi-deploy

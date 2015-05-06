@@ -1,0 +1,12 @@
+---
+
+ - hosts: nfs
+   remote_user: root
+
+   roles:
+   - boilerplate
+   - nfs-server
+   - nfs-client
+   
+   tasks: ~
+

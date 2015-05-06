@@ -12,6 +12,7 @@ apt:
       - vim-scripts
       - screen
       - less
+      - tree
       - wget
       - curl
       - rsync
@@ -27,6 +28,12 @@ apt:
       - python-doc
       - python-virtualenv
       - python-setuptools
+    network:
+      name: Network
+      select: yes
+      packages:
+      - dnsutils
+      - ntop
 
 # Override hostname (cli)
 hostname: '{{inventory_hostname_short}}-publicamundi'
@@ -71,4 +78,4 @@ git_config:
 # Configuration for swap space (boilerplate)
 swap:
   path: 'memory.swap'
-  size: '512M' 
+  size: '1G' 

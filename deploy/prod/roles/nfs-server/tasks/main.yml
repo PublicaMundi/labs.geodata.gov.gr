@@ -1,0 +1,21 @@
+---
+
+ # Install APT requirements
+
+ - name: Install NFS server
+   apt: pkg={{item}} state=latest
+   with_items: ['nfs-common', 'nfs-kernel-server']
+
+ # Configure exported directories
+ 
+ - name: Create the root directory for main NFS share
+   file: 
+     path: '{{nfs.directories["share"].path}}'
+     state: directory
+ 
+ - name: Generate /etc/exports entries for main NFS share
+   nfs_export:
+     path: '{{nfs.directories["share"].path}}'
+     host: '{{item}}'
+   with_items: '{{groups["internal"]}}'
+   notify: ['reexport-nfs-directories']

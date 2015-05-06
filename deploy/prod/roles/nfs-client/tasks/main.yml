@@ -1,0 +1,22 @@
+---
+ 
+ # Install APT requirements
+
+ - name: Install NFS client 
+   apt: pkg={{item}} state=latest
+   with_items: ['nfs-common']
+
+ # TODO Configure imported directories
+
+ - name: Create mountpoint for main NFS share 
+   file: 
+     path: '{{nfs.directories["share"].mount.path}}'
+     state: directory
+ 
+ - name: Create /etc/fstab entry for mountpoint
+   mount:
+     fstype: nfs
+     src: '{{nfs.server}}:{{nfs.directories["share"].path}}'
+     name: '{{nfs.directories["share"].mount.path}}'
+     opts: '{{nfs.directories["share"].mount.opts| to_kv_pairs(sep=",")}}'
+     state: present

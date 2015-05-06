@@ -1,0 +1,11 @@
+---
+
+nfs:
+  defaults:
+    export_options: 
+      readonly: no
+      secure: yes
+      subtree_check: yes
+      sync: yes
+      squash: 'all'
+

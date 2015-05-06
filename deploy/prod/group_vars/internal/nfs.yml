@@ -1,0 +1,30 @@
+---
+
+nfs:
+  server: 'nfs.publicamundi.local'
+  directories:
+    share:
+      name: share
+      description: The main NFS share 
+      path: /var/local/nfs/share
+      mount:
+        path: /mnt/nfs-share
+        opts:
+          noexec: ~
+          hard: ~
+          rsize: 4096
+          wsize: 4096
+      export_opts: {}
+    backups:
+      name: backups
+      description: An NFS share for centralized backups
+      path: /var/local/nfs/backups
+      mount:
+        path: /mnt/nfs-backups
+        opts:
+          noexec: ~
+          hard: ~
+          rsize: 4096
+          wsize: 4096
+      export_opts: {}
+

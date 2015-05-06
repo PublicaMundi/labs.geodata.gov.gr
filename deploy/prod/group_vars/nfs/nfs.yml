@@ -1,0 +1,15 @@
+---
+
+# Complete nfs.directories.*.export_opts vars with server-side info
+nfs:
+  directories:
+    share:
+      export_opts:
+        sync: yes
+        squash: none
+    backups:
+      export_opts:
+        sync: yes
+        squash: all
+        anon_user: backup
+        anon_group: backup

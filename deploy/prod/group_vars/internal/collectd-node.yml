@@ -1,0 +1,6 @@
+---
+
+# Configuration for monitored nodes (collect-node)
+collectd:
+  server: 'monitor.publicamundi.local'
+
