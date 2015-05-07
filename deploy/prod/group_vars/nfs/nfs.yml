@@ -3,7 +3,7 @@
 # Complete nfs.directories.*.export vars with server-side info
 nfs:
   directories:
-    share:
+    'share':
       export:
         allowed_clients: '{{groups["internal"]}}'
         opts:
@@ -11,9 +11,12 @@ nfs:
           subtree_check: yes
           sync: yes
           squash: root
-    backups:
+      mount:
+        opts:
+          noauto: ~
+    'backups':
       export:
-        allowed_clients: '{{groups["admin"]| union(groups["monitor"])}}'
+        allowed_clients: '{{groups["internal"]| difference(groups["admin"])}}'
         opts:
           readonly: no
           subtree_check: yes
@@ -21,3 +24,6 @@ nfs:
           squash: all
           anon_user: backup
           anon_group: backup
+      mount:
+        opts:
+          noauto: ~

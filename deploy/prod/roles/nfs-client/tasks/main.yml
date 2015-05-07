@@ -18,7 +18,7 @@
  - name: Create /etc/fstab entries for mountpoints
    mount:
      fstype: nfs
-     src: '{{nfs.server}}:{{item.value.path}}'
+     src: '{{nfs.server}}:{{item.value.dir.path}}'
      name: '{{item.value.mount.path}}'
      opts: '{{item.value.mount.opts| to_kv_pairs(sep=",")}}'
      state: present

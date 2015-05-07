@@ -33,7 +33,6 @@ apt:
       select: yes
       packages:
       - dnsutils
-      - ntop
 
 # Override hostname (cli)
 hostname: '{{inventory_hostname_short}}-publicamundi'

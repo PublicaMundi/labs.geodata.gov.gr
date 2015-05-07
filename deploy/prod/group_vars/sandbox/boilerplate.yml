@@ -1,2 +1,14 @@
 ---
 
+user:
+   name: ckaner
+   full_name: ckaner
+   email: admin@publicamundi.eu
+   authorized_keys:
+   - key_file: id_rsa-publicamundi
+   pyenv:
+     packages:
+     - jinja2
+     - isodate
+   git_config: ~ 
+   export_gpg_keys: ~
