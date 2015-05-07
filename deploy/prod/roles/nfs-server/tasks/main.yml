@@ -8,14 +8,23 @@
 
  # Configure exported directories
  
- - name: Create the root directory for main NFS share
+ - name: Create the root directories for NFS exports
    file: 
-     path: '{{nfs.directories["share"].path}}'
+     path: '{{item.value.path}}'
      state: directory
+   with_dict: nfs.directories
  
- - name: Generate /etc/exports entries for main NFS share
+ - name: Generate /etc/exports entries for NFS directories
    nfs_export:
-     path: '{{nfs.directories["share"].path}}'
-     host: '{{item}}'
-   with_items: '{{groups["internal"]}}'
+     path: '{{item.value.path}}'
+     hosts: '{{item.value.export.allowed_clients}}'
+     readonly: '{{item.value.export.opts.readonly}}'
+     secure: '{{item.value.export.opts.secure| default(true)}}'
+     subtree_check: '{{item.value.export.opts.subtree_check}}'
+     sync: '{{item.value.export.opts.sync}}'
+     squash: '{{item.value.export.opts.squash}}'
+     anon_user: '{{item.value.export.opts.anon_user| default(omit)}}' 
+     anon_group: '{{item.value.export.opts.anon_group| default(omit)}}'
+   with_dict: nfs.directories
    notify: ['reexport-nfs-directories']
+

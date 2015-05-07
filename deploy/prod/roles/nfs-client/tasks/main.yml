@@ -6,17 +6,21 @@
    apt: pkg={{item}} state=latest
    with_items: ['nfs-common']
 
- # TODO Configure imported directories
+ # Configure mounted (imported) directories
 
- - name: Create mountpoint for main NFS share 
+ - name: Create needed mountpoints
    file: 
-     path: '{{nfs.directories["share"].mount.path}}'
+     path: '{{item.value.mount.path}}'
      state: directory
+   when: item.value.mount.path  
+   with_dict: nfs.directories
  
- - name: Create /etc/fstab entry for mountpoint
+ - name: Create /etc/fstab entries for mountpoints
    mount:
      fstype: nfs
-     src: '{{nfs.server}}:{{nfs.directories["share"].path}}'
-     name: '{{nfs.directories["share"].mount.path}}'
-     opts: '{{nfs.directories["share"].mount.opts| to_kv_pairs(sep=",")}}'
+     src: '{{nfs.server}}:{{item.value.path}}'
+     name: '{{item.value.mount.path}}'
+     opts: '{{item.value.mount.opts| to_kv_pairs(sep=",")}}'
      state: present
+   when: item.value.mount.path  
+   with_dict: nfs.directories

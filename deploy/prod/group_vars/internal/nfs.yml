@@ -1,5 +1,10 @@
 ---
 
+# NOTE
+# An internal host can override the following mount configuration
+# by tweaking mount.* options. Also, a host can disable a mountpoint
+# by setting mount.path to null.
+
 nfs:
   server: 'nfs.publicamundi.local'
   directories:
@@ -14,7 +19,7 @@ nfs:
           hard: ~
           rsize: 4096
           wsize: 4096
-      export_opts: {}
+      export: {}
     backups:
       name: backups
       description: An NFS share for centralized backups
@@ -26,5 +31,5 @@ nfs:
           hard: ~
           rsize: 4096
           wsize: 4096
-      export_opts: {}
+      export: {}
 
