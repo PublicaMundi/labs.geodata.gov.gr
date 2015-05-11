@@ -1,10 +1,20 @@
 127.0.0.1   localhost
 127.0.1.1   {{hostname}}
 
+{# First, print canonical names for internal hosts -#}
 {% for host in groups['internal'] -%}
-{% set addr = hostvars[host].networking.if.internal_ipv4.address| mandatory -%}
-{{'%-15.15s %s'| format(addr, host)}}
-{% endfor %} {# for host #}
+{% if hostvars[host].canonical_name is not defined %}
+{{'%-15.15s %s'| format(hostvars[host].networking.if.internal_ipv4.address, host)}}
+{% endif %}
+{% endfor %}{# for host #}
+
+{# Second, print aliases for internal hosts -#}
+{% for host in groups['internal'] -%}
+{% if hostvars[host].canonical_name is defined %}
+{% set host1 = hostvars[host].canonical_name -%}
+{{'%-15.15s %s'| format(hostvars[host1].networking.if.internal_ipv4.address, host)}}
+{% endif %}
+{% endfor %}{# for host #}
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback
