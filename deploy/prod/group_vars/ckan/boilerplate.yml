@@ -1,4 +1,5 @@
 ---
+
 apt:
   package_groups:
     development:
@@ -12,17 +13,18 @@ apt:
       - zlib1g-dev
       - libxslt1-dev
       - libxml2-dev
+      - libpq5
+      - libpq-dev
 
 user:
    name: ckaner
    full_name: ckaner
-   email: ckaner@publicamundi.eu
+   email: admin@publicamundi.eu
    authorized_keys:
    - key_file: id_rsa-publicamundi
-   pyenv:
-     packages:
-     - jinja2
-     - isodate
-     - lxml
+   private_keys:
+   - key_file: id_rsa-publicamundi
+   ssh_config: '{{ssh_config}}'
+   pyenv: ~
    git_config: ~ 
    export_gpg_keys: ~
