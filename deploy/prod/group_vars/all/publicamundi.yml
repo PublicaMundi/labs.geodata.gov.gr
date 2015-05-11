@@ -37,15 +37,7 @@ publicamundi:
 
 # Configuration (global) for CKAN application
 ckan:
-  databases:
-    ckan: 
-      dbname: ckan
-      owner: ckaner
-    datastore:
-      dbname: ckan_data
-      owner: ckan_datastorer
-      readonly_user: ckaner
-  
+  databases: ~
   solr:
     # Specify path for schema.xml relative to CKAN repo 
     schema_path: ckan/config/solr/schema.xml

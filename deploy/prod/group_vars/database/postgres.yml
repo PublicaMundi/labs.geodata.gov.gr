@@ -1,0 +1,74 @@
+---
+
+postgres:
+  pgtune: true
+
+  service:
+    listen_addresses: 
+    - 'localhost'
+    - '{{networking.if.internal_ipv4.address}}'
+    port: 5432
+
+  users:
+  - name: 'postgres'
+    allowed_addresses: 
+    - 'samehost' 
+  - name: 'ckaner'
+    allowed_addresses: 
+    - 'samehost' 
+    - '{{groups["ckan"]}}'
+  - name: 'ckan_datastorer'
+    allowed_addresses: 
+    - 'samehost' 
+    - '{{groups["ckan"]}}'
+  - name: 'rasdaman'
+    allowed_addresses:
+    - 'samehost' 
+    - '{{groups["rasdaman"]}}' 
+  - name: 'petascope'
+    allowed_addresses:
+    - 'samehost' 
+    - '{{groups["rasdaman"]}}' 
+  - name: 'geoserver'
+    allowed_addresses:
+    - 'samehost' 
+    - '{{groups["geoserver"]}}' 
+  - name: 'collectd'
+    trusted: true
+    allowed_addresses: 
+    - 'samehost' 
+  
+  credentials: []
+
+  tablespaces:
+  - name: tablespace_1
+    path: /var/local/lib/postgresql/tablespace_1
+  
+  databases:
+  - name: 'ckan'
+    tablespace: tablespace_1
+    owner: 'ckaner'
+    extensions: [postgis]
+  - name: 'ckan_tests'
+    tablespace: tablespace_1
+    owner: 'ckaner'
+    extensions: []
+  - name: 'ckan_data'
+    tablespace: tablespace_1
+    owner: 'ckan_datastorer'
+    extensions: [postgis]
+    readers: ['ckaner','geoserver']
+  - name: 'ckan_data_tests'
+    tablespace: tablespace_1
+    owner: 'ckan_datastorer'
+    extensions: [postgis]
+    readers: ['ckaner']
+  - name: 'rasdaman'
+    tablespace: tablespace_1
+    owner: 'rasdaman'
+    extensions: []
+  - name: 'petascope'
+    tablespace: tablespace_1
+    owner: petascope
+    extensions: []
+

@@ -1,0 +1,16 @@
+---
+
+collectd:
+  plugins:    
+    processes: ~
+    df:
+      devices:
+      - mountpoint: /
+      - mountpoint: /var/local/lib/postgresql
+    postgresql:
+      databases:
+      - name: 'ckan'
+        user: collectd
+      - name: 'ckan_data'
+        user: collectd
+

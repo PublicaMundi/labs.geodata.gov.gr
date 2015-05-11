@@ -2,5 +2,10 @@
 
 # Configuration for monitored nodes (collect-node)
 collectd:
-  server: 'monitor.publicamundi.local'
+  server: '{{groups["monitor"]| first}}'
+  plugins:    
+    processes: ~
+    df:
+      devices:
+      - mountpoint: /
 

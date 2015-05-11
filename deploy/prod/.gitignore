@@ -1,2 +1,4 @@
 
 scratch.yml
+
+group_vars/database/secrets.yml
