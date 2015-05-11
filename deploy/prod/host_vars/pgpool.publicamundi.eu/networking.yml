@@ -1,0 +1,10 @@
+---
+
+# NOTE: Currently, this is on the same host with postgres-n1.publicamundi.eu
+
+networking:
+  if:
+    internal_ipv4: { address: '10.0.3.30' }
+  nat:
+    ssh: { external_port: 13022 }
+
