@@ -50,10 +50,37 @@
    roles:
    - postgres
 
+
+#
+# Setup Solr
+#
+
+ - hosts: solr
+   remote_user: root
+  
+   roles:
+   - solr
+
+   tasks:
+
+   - set_fact:
+       solr_url: 'http://{{inventory_hostname}}:{{tomcat.connector.port}}/solr/'
+
 #
 # Setup CKAN
 #
 
 # TODO
+
+ - hosts: ckan
+   remote_user: root
+
+   tasks:
+
+   - set_fact:
+      solr_host: '{{groups["solr"]| first}}'
+  
+   - set_fact:
+      solr_url: '{{hostvars[solr_host].solr_url}}'
 
 

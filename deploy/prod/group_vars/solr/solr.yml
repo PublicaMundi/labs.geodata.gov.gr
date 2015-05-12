@@ -1,5 +1,15 @@
 ---
 
+tomcat:
+  # Define min/max for JVM's heap size
+  max_heap_size: 1024m
+  min_heap_size: 256m
+  
+  # Configure service endpoint
+  connector:
+    port: 8983
+    address: '{{networking.if.internal_ipv4.address}}'
+
 solr:
   share_dir: /usr/local/share/solr
   home_dir: /var/local/solr
