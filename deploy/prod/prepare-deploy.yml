@@ -1,0 +1,17 @@
+
+- hosts: solr
+  connection: local
+  
+  tasks:
+
+  - name: Determine CKAN-specific schema file for Solr
+    set_fact:
+      solr_config_dir: files/groups/solr/etc/solr/ckan/conf
+      solr_schema_url: >
+         https://api.github.com/repos/{{publicamundi.github_repos.ckan.name}}/contents/{{ckan.solr.schema_path}}?ref={{publicamundi.github_repos.ckan.branch}}
+  - debug: var=solr_schema_url
+  
+  - file: path={{solr_config_dir}} state=directory mode=0755
+  - name: Download Solr schema configuration file
+    shell: wget -q -O '-' '{{solr_schema_url}}'| jq -r '.download_url'| xargs wget -q -O '{{solr_config_dir}}/schema.xml' 
+  

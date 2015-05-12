@@ -1,0 +1,9 @@
+---
+
+solr:
+  share_dir: /usr/local/share/solr
+  home_dir: /var/local/solr
+  cores:
+  - name: ckan
+    schema_file: files/groups/solr/etc/solr/ckan/conf/schema.xml
+    elevate_file: files/groups/solr/etc/solr/ckan/conf/elevate.xml

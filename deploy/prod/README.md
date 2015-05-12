@@ -55,6 +55,10 @@ This play is controlled from the admin node (so, from *inside* of the target dep
 
 If all the above are satisfied (e.g. networks are already setup manually be the administrator), this play can be omitted.
 
+### Play: prepare-deploy.yml
+
+This play is controlled from the admin node, and is responsible to prepare the deployment locally (admin node). Basically, it downloads external files (e.g. Solr schema configuration) needed for roles, or computes site-global caches. Must be invoked just before `deploy.yml`. 
+
 ### Play: deploy.yml
 
 This play is controlled from the admin node, and is responsible to setup the `geodata.gov.gr` PublicaMundi deployment.
@@ -67,7 +71,7 @@ A certain number of files should be provided at Ansible's control machine:
 
 #### Required variables
 
-A certain number of variables must also be provided at group/host level. Some of them are considered sensitive data and must be placed under `group_vars/<group-name>/secrets.yml` (not under source control):
+A certain number of variables must also be provided at group/host level. Some of them are considered sensitive data and must be placed under `group_vars/group-name/secrets.yml` (not under source control):
 
  * `tomcat.manager.password` (under `group_vars/search-engine/secrets.yml`).
     This is a plain string value. The provided password will be assigned to a Tomcat user holding the 

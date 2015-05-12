@@ -15,6 +15,7 @@ apt:
       - tree
       - wget
       - curl
+      - jq
       - rsync
       - git
       - htop
