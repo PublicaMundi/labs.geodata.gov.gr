@@ -51,16 +51,6 @@
    - postgres
 
 #
-# Prepare databases
-#
-
- - hosts: database-master
-   remote_user: root
-   
-   tasks: ~
-   - include: plays/prepare-ckan-databases.yml
-
-#
 # Setup CKAN
 #
 

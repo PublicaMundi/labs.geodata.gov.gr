@@ -10,33 +10,45 @@ postgres:
     port: 5432
 
   users:
-  - name: 'postgres'
-    allowed_addresses: 
-    - 'samehost' 
+  
   - name: 'ckaner'
     allowed_addresses: 
     - 'samehost' 
+    - '{{groups["admin"]}}'
     - '{{groups["ckan"]}}'
+  
   - name: 'ckan_datastorer'
     allowed_addresses: 
     - 'samehost' 
+    - '{{groups["admin"]}}'
     - '{{groups["ckan"]}}'
+  
+  - name: 'ckan_datareader'
+    allowed_addresses: 
+    - 'samehost' 
+    - '{{groups["admin"]}}'
+    - '{{groups["ckan"]}}'
+  
   - name: 'rasdaman'
     allowed_addresses:
     - 'samehost' 
+    - '{{groups["admin"]}}'
     - '{{groups["rasdaman"]}}' 
+  
   - name: 'petascope'
     allowed_addresses:
     - 'samehost' 
+    - '{{groups["admin"]}}'
     - '{{groups["rasdaman"]}}' 
+  
   - name: 'geoserver'
     allowed_addresses:
     - 'samehost' 
+    - '{{groups["admin"]}}'
     - '{{groups["geoserver"]}}' 
+  
   - name: 'collectd'
     trusted: true
-    allowed_addresses: 
-    - 'samehost' 
   
   credentials: []
 
@@ -45,28 +57,40 @@ postgres:
     path: /var/local/lib/postgresql/tablespace_1
   
   databases:
+  
   - name: 'ckan'
     tablespace: tablespace_1
     owner: 'ckaner'
     extensions: [postgis]
+  
   - name: 'ckan_tests'
     tablespace: tablespace_1
     owner: 'ckaner'
     extensions: []
+  
   - name: 'ckan_data'
     tablespace: tablespace_1
     owner: 'ckan_datastorer'
     extensions: [postgis]
-    readers: ['ckaner','geoserver']
+    readers: ['ckan_datareader','geoserver', 'ckaner']
+    initialize:
+    - local_path: files/groups/database/ckan_data/set-permissions.sql
+      single_transaction: yes
+  
   - name: 'ckan_data_tests'
     tablespace: tablespace_1
     owner: 'ckan_datastorer'
     extensions: [postgis]
-    readers: ['ckaner']
+    readers: ['ckan_datareader', 'geoserver', 'ckaner']
+    initialize:
+    - local_path: files/groups/database/ckan_data/set-permissions.sql
+      single_transaction: yes
+  
   - name: 'rasdaman'
     tablespace: tablespace_1
     owner: 'rasdaman'
     extensions: []
+  
   - name: 'petascope'
     tablespace: tablespace_1
     owner: petascope
