@@ -1,0 +1,30 @@
+---
+
+# NOTE: 
+# This play is *not* an equivalent of our production's setup-network.yml. Because
+# here we do not really setup the network, instead we assume everything is allready 
+# configured and set-up.
+# 
+# So, the point of this play is to ensure that our Ansible control host is locally
+# resolved (by an /etc/hosts entry) by all controlled hosts.
+
+
+ - hosts: admin
+   
+   tasks:
+   - set_fact: 
+       control_address: '{{networking.if.internal_ipv4.address}}'
+  
+ - hosts: all:!admin
+  
+   tasks:
+   - set_fact:
+       admin_host: '{{groups["admin"]| one}}'
+
+   - lineinfile:
+       backup: yes
+       dest: /etc/hosts
+       state: present
+       line: '{{hostvars[admin_host].control_address}} admin-publicamundi'
+       regexp: '[\d]+(\.[\d]+){3}\s+admin-publicamundi\s*$'
+       insertafter: '127\.0\.1\.1\s+.*'

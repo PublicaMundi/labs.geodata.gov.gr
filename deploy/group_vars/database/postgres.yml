@@ -14,37 +14,37 @@ postgres:
   - name: 'ckaner'
     allowed_addresses: 
     - 'samehost' 
-    - '{{groups["admin"]}}'
+    - 'admin-publicamundi'
     - '{{groups["ckan"]}}'
   
   - name: 'ckan_datastorer'
     allowed_addresses: 
     - 'samehost' 
-    - '{{groups["admin"]}}'
+    - 'admin-publicamundi'
     - '{{groups["ckan"]}}'
   
   - name: 'ckan_datareader'
     allowed_addresses: 
     - 'samehost' 
-    - '{{groups["admin"]}}'
+    - 'admin-publicamundi'
     - '{{groups["ckan"]}}'
   
   - name: 'rasdaman'
     allowed_addresses:
     - 'samehost' 
-    - '{{groups["admin"]}}'
+    - 'admin-publicamundi'
     - '{{groups["rasdaman"]}}' 
   
   - name: 'petascope'
     allowed_addresses:
     - 'samehost' 
-    - '{{groups["admin"]}}'
+    - 'admin-publicamundi'
     - '{{groups["rasdaman"]}}' 
   
   - name: 'geoserver'
     allowed_addresses:
     - 'samehost' 
-    - '{{groups["admin"]}}'
+    - 'admin-publicamundi'
     - '{{groups["geoserver"]}}' 
   
   - name: 'collectd'
