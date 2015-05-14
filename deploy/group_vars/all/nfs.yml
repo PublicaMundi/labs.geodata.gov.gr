@@ -8,11 +8,11 @@
 nfs_storage_root_dir: /var/local/nfs
 
 # NOTE
-# An internal host may override the following mount configuration by tweaking 
-# mount.* options. Also, an internal host can (and should) disable a mountpoint 
-# by setting mount.path to null.
+# A host may override the following mount configuration by tweaking mount.*
+# options. Also, a host can (and should) disable a mountpoint by setting 
+# mount.path to null.
 nfs:
-  server: 'nfs.publicamundi.local'
+  server: 'nfs.publicamundi.localdomain'
   directories:
     'share':
       name: share

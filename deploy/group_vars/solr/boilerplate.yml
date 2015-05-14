@@ -2,5 +2,5 @@
 
 # Configuration for swap space (boilerplate)
 swap:
-  size: '2G' 
+  size: '1G' 
 

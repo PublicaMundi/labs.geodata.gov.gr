@@ -1,0 +1,10 @@
+---
+
+networking:
+  if:
+    internal_ipv4:
+      iface: eth0
+      address: '{{ansible_eth0.ipv4.address}}'
+      network: '{{ansible_eth0.ipv4.network}}'
+      netmask: '{{ansible_eth0.ipv4.netmask}}'
+  

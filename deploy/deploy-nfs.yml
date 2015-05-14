@@ -16,7 +16,7 @@
    
    tasks: ~
 
- - hosts: internal:!admin:!nfs 
+ - hosts: all:!nfs 
    remote_user: root
   
    pre_tasks:

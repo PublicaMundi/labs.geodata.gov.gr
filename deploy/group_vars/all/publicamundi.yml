@@ -1,22 +1,5 @@
 ---
 
-# Configuration for this project/deployment
-project:
-  repo:
-    ssh_host: gitlab.wps1.dbnet.ece.ntua.gr
-    ssh_port: 12922
-    key_file: id_rsa-repo
-    path: PublicaMundi/geodata.gov.gr.git
-    fetch:
-      host: r-gitlab.wps1.dbnet.ece.ntua.gr
-      key_file: id_rsa-publicamundi-deploy
-    push:
-      host: gitlab.wps1.dbnet.ece.ntua.gr 
-      key_file: id_rsa-repo
-    remote: dblab
-    branch: prod
-  name: geodata.gov.gr
-
 # Configuration for PublicaMundi projects 
 publicamundi:
   # List project repos

@@ -2,8 +2,8 @@
 
 tomcat:
   # Define min/max for JVM's heap size
-  max_heap_size: 1024m
-  min_heap_size: 256m
+  max_heap_size: 384m
+  min_heap_size: 128m
   
   # Configure service endpoint
   connector:

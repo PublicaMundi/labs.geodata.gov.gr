@@ -1,6 +1,8 @@
 
 scratch.yml
 
+files/groups/solr/etc/solr/ckan/conf/schema.xml
+
 group_vars/*/secrets.yml
 
 **/secrets/

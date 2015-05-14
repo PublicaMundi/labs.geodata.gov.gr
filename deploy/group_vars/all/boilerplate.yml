@@ -56,7 +56,7 @@ private_keys:
 
 # Configuration for SSH clients (cli)
 ssh_config:
-- name: '*.publicamundi.local'
+- name: '*.publicamundi.localdomain'
   user: 'root'
   strict_host_key_checking: 'ask'
   identity_file: '~/.ssh/id_rsa-publicamundi'
@@ -78,4 +78,4 @@ git_config:
 # Configuration for swap space (boilerplate)
 swap:
   path: 'memory.swap'
-  size: '1G' 
+  size: '512M' 

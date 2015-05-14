@@ -4,7 +4,7 @@
 # Install common boilerplate for all actual hosts
 #
  
- - hosts: internal:!admin
+ - hosts: all
    remote_user: root
   
    roles:
