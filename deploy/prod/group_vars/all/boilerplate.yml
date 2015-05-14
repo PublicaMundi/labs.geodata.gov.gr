@@ -5,7 +5,7 @@ apt:
   use_backports: yes
   package_groups:
     basic:
-      name: Basic
+      name: basic
       packages:
       - sudo
       - vim
@@ -21,7 +21,7 @@ apt:
       - htop
       - bzip2
     development:
-      name: Development
+      name: development tools
       select: yes
       packages:
       - build-essential
@@ -30,7 +30,7 @@ apt:
       - python-virtualenv
       - python-setuptools
     network:
-      name: Network
+      name: network tools
       select: yes
       packages:
       - dnsutils

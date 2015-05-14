@@ -1,0 +1,32 @@
+---
+
+ckan_site_id: 'default'
+
+ckan:
+  # Basic directories
+  pyenv_dir: '/usr/local/ckan/default/pyenv'
+  config_dir: '/usr/local/ckan/default/etc'
+  files_dir: '/var/local/ckan/default/files'
+  temp_dir: '/var/tmp/ckan/default'
+   
+  # Provide Solr endpoint URLs 
+  solr:
+    core_url: 'http://localhost:8983/solr/ckan'
+  
+  # Provide database connection URLs
+  database:
+    url: 'postgresql://ckaner:ckaner@localhost/ckan'
+    datastore_read_url: 'postgresql://ckan_datareader:ckan_datareader@localhost/ckan_data'
+    datastore_write_url: 'postgresql://ckan_datastorer:ckan_datastorer@localhost/ckan_data'
+  
+  # Configure virtual environment
+  pyenv:
+    # Provide packages to be installed befory any of the application requirements 
+    basic_packages:
+    - 'pudb'
+    - 'pep8'
+    - 'ipython'
+    - 'pytz'
+    - 'isodate'
+    - 'argparse'
+   

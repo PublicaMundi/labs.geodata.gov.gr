@@ -17,9 +17,9 @@ project:
     branch: prod
   name: geodata.gov.gr
 
-# Configuration for PublicaMundi projects
+# Configuration for PublicaMundi projects 
 publicamundi:
-  # List involved projects
+  # List project repos
   github_repos:
     ckan:
       name: Publicamundi/ckan
@@ -36,9 +36,11 @@ publicamundi:
 
 
 # Configuration (global) for CKAN application
+
+ckan_site_id: default
+
 ckan:
-  databases: ~
   solr:
-    # Specify path for schema.xml relative to CKAN repo 
+    # Specify path for schema.xml relative to the above CKAN repo 
     schema_path: ckan/config/solr/schema.xml
 

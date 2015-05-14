@@ -1,0 +1,20 @@
+---
+
+#
+# Install additional APT packages needed by ckanext-publicamundi
+#
+
+ - name: Install geospatial libraries and utilities
+   apt: pkg={{item}} state=latest
+   with_items:
+   - libgeos
+   - libgeos-dev
+   - libgdal-dev
+   - python-gdal
+ 
+ - name: Install other general-purpose utilities
+   apt: pkg={{item}} state=latest
+   with_items:
+   - tidy
+   - libtidy-dev
+

@@ -1,0 +1,8 @@
+---
+
+ckan:
+  pyenv_dir: '/usr/local/ckan/{{ckan_site_id}}/pyenv'
+  config_dir: '/usr/local/ckan/{{ckan_site_id}}/etc'
+  files_dir: '/var/local/ckan/{{ckan_site_id}}/files'
+  temp_dir: '/var/tmp/ckan/{{ckan_site_id}}'
+   

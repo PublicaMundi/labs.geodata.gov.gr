@@ -3,7 +3,7 @@
 apt:
   package_groups:
     development:
-      name: Development
+      name: development tools
       packages:
       - 'build-essential'
       - 'python-dev'

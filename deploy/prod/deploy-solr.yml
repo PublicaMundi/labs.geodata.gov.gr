@@ -1,0 +1,12 @@
+---
+
+#
+# Setup Solr server
+#
+
+ - hosts: solr
+   remote_user: root
+  
+   roles:
+   - solr
+

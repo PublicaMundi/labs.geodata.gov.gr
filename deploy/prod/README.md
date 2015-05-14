@@ -19,7 +19,7 @@ We assume the following command-line utilities are available at Ansible's contro
 
 ## Playbooks
 
-### Play: prepare-admin-workspace.yml
+### Play: `prepare-admin-workspace.yml`
 
 This play is controlled from *outside* of the target deployment, and is responsible to prepare an admin node (i.e. an Ansible control) that will subsequently control all the aspects of PublicaMundi deployment (for initial setup, updates etc.). 
 
@@ -30,7 +30,7 @@ After installing some minimal requirements, it will:
 
 If all the above are satisfied, this play can be omitted.
 
-### Play: prepare-admin-network.yml
+### Play: `prepare-admin-network.yml`
 
 This play is also controlled from *outside* of the target deployment, and is responsible to configure/setup the network infrastructure (on the admin node) needed for building an internal (site-local) network. Basically, it will:  
 
@@ -43,7 +43,7 @@ This play is also controlled from *outside* of the target deployment, and is res
 
 If all the above are satisfied (e.g. networks are already setup manually be the administrator), this play can be omitted.
 
-### Play: setup-network.yml
+### Play: `setup-network.yml`
 
 This play is controlled from the admin node (so, from *inside* of the target deployment), and is responsible for setting-up the internal network. For each host, it will:
 
@@ -55,13 +55,13 @@ This play is controlled from the admin node (so, from *inside* of the target dep
 
 If all the above are satisfied (e.g. networks are already setup manually be the administrator), this play can be omitted.
 
-### Play: prepare-deploy.yml
+### Play: `prepare-deploy.yml`
 
 This play is controlled from the admin node, and is responsible to prepare the deployment locally (admin node). Basically, it downloads external files (e.g. Solr schema configuration) needed for roles, or computes site-global caches. Must be invoked just before `deploy.yml`. 
 
-### Play: deploy.yml
+### Plays: `deploy-*.yml`
 
-This play is controlled from the admin node, and is responsible to setup the `geodata.gov.gr` PublicaMundi deployment.
+This group of plays is controlled from the admin node, and is responsible to setup the _geodata.gov.gr_ PublicaMundi deployment.
 
 #### Required files
 

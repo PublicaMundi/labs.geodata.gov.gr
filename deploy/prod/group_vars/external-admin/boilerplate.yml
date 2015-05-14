@@ -4,12 +4,12 @@
 apt:
   package_groups:
     aux:
-      name: Aux
+      name: auxiliary
       packages:
       - tig
       - sshpass
     network_security:
-      name: Network Security
+      name: network security
       packages:
       - fail2ban
 
