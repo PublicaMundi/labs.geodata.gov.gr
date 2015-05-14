@@ -1,2 +1,0 @@
-# wheezy-pgdg, PostgreSQL apt repos
-deb http://apt.postgresql.org/pub/repos/apt/ wheezy-pgdg main
