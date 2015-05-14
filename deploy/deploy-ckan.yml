@@ -1,0 +1,47 @@
+---
+
+#
+# Setup CKAN application
+#
+ 
+ - hosts: solr 
+   tasks:
+   - set_fact:
+       solr_server: '{{inventory_hostname}}:{{tomcat.connector.port}}'
+   - set_fact:
+       solr_url: 'http://{{solr_server}}/solr/'
+
+ 
+ - hosts: database-master
+   tasks:
+   - set_fact:
+       db_server: '{{inventory_hostname}}:{{postgres.service.port}}'
+   - set_fact:
+       db_credentials: '{{postgres.credentials}}'
+
+ 
+ - hosts: ckan
+   remote_user: root
+
+   pre_tasks:
+   - set_fact:
+       db_host: '{{groups["database-master"]| one}}'
+       solr_host: '{{groups["solr"]| one}}'
+   - set_fact:
+       db_server: '{{hostvars[db_host].db_server}}'
+       db_credentials: '{{hostvars[db_host].db_credentials| to_map("username")}}'
+       solr_server: '{{hostvars[solr_host].solr_server}}'
+   - set_fact:
+       ckan:
+         database:
+           url: 'postgresql://ckaner:{{db_credentials["ckaner"].password}}@{{db_server}}/ckan'
+           datastore_write_url: 'postgresql://ckan_datastorer:{{db_credentials["ckan_datastorer"].password}}@{{db_server}}/ckan_data'
+           datastore_read_url: 'postgresql://ckan_datareader:{{db_credentials["ckan_datareader"].password}}@{{db_server}}/ckan_data'
+         solr:
+           core_url: 'http://{{solr_server}}/solr/ckan'
+
+   roles:
+   - ckan
+
+   tasks: ~
+

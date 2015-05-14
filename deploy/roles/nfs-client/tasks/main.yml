@@ -1,0 +1,26 @@
+---
+ 
+ # Install APT requirements
+
+ - name: Install NFS client 
+   apt: pkg={{item}} state=latest
+   with_items: ['nfs-common']
+
+ # Configure mounted (imported) directories
+
+ - name: Create needed mountpoints
+   file: 
+     path: '{{item.value.mount.path}}'
+     state: directory
+   when: item.value.mount.path  
+   with_dict: nfs.directories
+ 
+ - name: Create /etc/fstab entries for mountpoints
+   mount:
+     fstype: nfs
+     src: '{{nfs.server}}:{{item.value.dir.path}}'
+     name: '{{item.value.mount.path}}'
+     opts: '{{item.value.mount.opts| to_kv_pairs(sep=",")}}'
+     state: present
+   when: item.value.mount.path  
+   with_dict: nfs.directories

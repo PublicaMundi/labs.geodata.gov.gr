@@ -1,0 +1,46 @@
+---
+
+# Configuration for this project/deployment
+project:
+  repo:
+    ssh_host: gitlab.wps1.dbnet.ece.ntua.gr
+    ssh_port: 12922
+    key_file: id_rsa-repo
+    path: PublicaMundi/geodata.gov.gr.git
+    fetch:
+      host: r-gitlab.wps1.dbnet.ece.ntua.gr
+      key_file: id_rsa-publicamundi-deploy
+    push:
+      host: gitlab.wps1.dbnet.ece.ntua.gr 
+      key_file: id_rsa-repo
+    remote: dblab
+    branch: prod
+  name: geodata.gov.gr
+
+# Configuration for PublicaMundi projects 
+publicamundi:
+  # List project repos
+  github_repos:
+    ckan:
+      name: Publicamundi/ckan
+      branch: dev.publicamundi.eu
+    ckanext_archiver:
+      name: Publicamundi/ckanext-archiver
+      branch: dev.publicamundi.eu
+    ckanext_datastorer:
+      name: Publicamundi/ckanext-datastorer
+      branch: dev.publicamundi.eu
+    ckanext_publicamundi:
+      name: Publicamundi/ckanext-publicamundi
+      branch: dev.publicamundi.eu
+
+
+# Configuration (global) for CKAN application
+
+ckan_site_id: default
+
+ckan:
+  solr:
+    # Specify path for schema.xml relative to the above CKAN repo 
+    schema_path: ckan/config/solr/schema.xml
+

@@ -1,0 +1,13 @@
+---
+
+#
+# Install common boilerplate for all actual hosts
+#
+ 
+ - hosts: internal:!admin
+   remote_user: root
+  
+   roles:
+   - role: boilerplate
+     when: not canonical_name is defined
+

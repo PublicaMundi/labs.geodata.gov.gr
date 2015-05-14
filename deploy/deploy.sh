@@ -1,19 +1,23 @@
 #!/bin/bash
 
-#
-# Prepare needed stuff at control machine (i.e. localhost)
-#
+DEPLOY=$0
 
-ansible-playbook --force-handlers -v prepare.yml
+function play()
+{
+    local playbook=${1}
+    ansible-playbook -v ${playbook}
+    if [ "$?" -ne "0" ]; then 
+        echo "${DEPLOY}: Failed during playbook ${playbook}";
+        exit 1
+    fi
+}
 
-#
-# Run playbooks for various groups (of managed hosts)
-#
+play 'deploy-all-boilerplate.yml'
 
-ansible-playbook -v -l monitor play.yml
+play 'deploy-nfs.yml'
 
-ansible-playbook -v -l search-engine play.yml
+play 'deploy-database.yml'
 
-ansible-playbook -v -l database play.yml
+play 'deploy-solr.yml'
 
-ansible-playbook -v -l catalog play.yml
+play 'deploy-ckan.yml'

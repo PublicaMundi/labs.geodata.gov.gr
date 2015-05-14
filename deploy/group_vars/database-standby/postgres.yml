@@ -1,0 +1,8 @@
+---
+
+postgres:
+  replication:
+    role: standby
+    standby: 
+      master_host: '{{groups["database-master"]| first}}'
+

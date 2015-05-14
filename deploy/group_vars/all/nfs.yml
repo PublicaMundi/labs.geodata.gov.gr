@@ -1,0 +1,50 @@
+---
+
+# NOTE 
+# The following directory should exist in advance, before site-local playbooks
+# are invoked. In our production deployment, this is the mountpoint for a
+# properly-sized logical volume (/dev/vg1/vol1). This directory *should* be
+# the parent of any NFS export declared below (under nfs.directories).
+nfs_storage_root_dir: /var/local/nfs
+
+# NOTE
+# An internal host may override the following mount configuration by tweaking 
+# mount.* options. Also, an internal host can (and should) disable a mountpoint 
+# by setting mount.path to null.
+nfs:
+  server: 'nfs.publicamundi.local'
+  directories:
+    'share':
+      name: share
+      description: The main NFS share 
+      dir: 
+        path: '{{nfs_storage_root_dir}}/share'
+        owner: nobody
+        group: nogroup
+        mode: '0775'
+      mount:
+        path: /mnt/nfs-share
+        opts:
+          noexec: ~
+          hard: ~
+          intr: ~
+          rsize: 4096
+          wsize: 4096
+      export: {}
+    'backups':
+      name: backups
+      description: An NFS share for centralized backups
+      dir:
+        path: '{{nfs_storage_root_dir}}/backups'
+        owner: backup
+        group: backup
+      mount:
+        path: /mnt/nfs-backups
+        opts:
+          noexec: ~
+          hard: ~
+          intr: ~
+          rsize: 4096
+          wsize: 4096
+      export: {}
+

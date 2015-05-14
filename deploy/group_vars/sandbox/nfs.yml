@@ -1,0 +1,6 @@
+---
+
+nfs:
+  directories:
+    backups:
+      mount: { path: ~ }

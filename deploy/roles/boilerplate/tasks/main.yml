@@ -1,0 +1,9 @@
+---
+
+ # Create swap space
+ 
+ - include: create-swapfile.yml
+   when: swap.path
+
+ - name: Activate swap, if exists
+   command: swapon -a

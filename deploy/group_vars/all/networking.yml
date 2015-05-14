@@ -1,0 +1,20 @@
+---
+
+networking:
+  # Configure present interfaces
+  if:
+    public_ipv4:
+      iface: ~
+    public_ipv6:
+      iface: ~
+    internal_ipv4:
+      iface: eth1
+      address: '{{ansible_eth1.ipv4.address}}'
+      network: '{{ansible_eth1.ipv4.network}}'
+      netmask: '{{ansible_eth1.ipv4.netmask}}'
+  
+  # Configure iptables-based firewall
+  # Note: this is ignored for devel deployment
+  firewall:
+    setup: {}
+

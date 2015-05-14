@@ -1,0 +1,15 @@
+---
+
+#
+# Setup database servers
+#
+ 
+ - hosts: database-master:database-standby
+   remote_user: root
+
+   pre_tasks:
+   - debug: var=postgres
+
+   roles:
+   - postgres
+

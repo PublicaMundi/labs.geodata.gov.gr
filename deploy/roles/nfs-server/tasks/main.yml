@@ -1,0 +1,51 @@
+---
+
+ # Install APT requirements
+
+ - name: Install NFS server
+   apt: pkg={{item}} state=latest
+   with_items: ['nfs-common', 'nfs-kernel-server']
+
+ # Sanity checks
+
+ - stat: path={{nfs_storage_root_dir}}
+   register: root_dir_stat
+
+ - name: Check that root directory exists
+   assert: 
+     that: 
+     - root_dir_stat.stat.exists
+     - root_dir_stat.stat.isdir
+ 
+ - name: Check all NFS exports nest into root directory
+   assert:
+     that: item.value.dir.path.find(nfs_storage_root_dir) == 0
+   with_dict: nfs.directories
+   
+ # Configure exported directories
+ 
+ - name: Create root directories for NFS exports
+   file: 
+     path: '{{item.value.dir.path}}'
+     owner: '{{item.value.dir.owner| default(omit)}}'
+     group: '{{item.value.dir.group| default(omit)}}'
+     mode: '{{item.value.dir.mode| default(omit)}}'
+     state: directory
+   with_dict: nfs.directories
+ 
+ - name: Generate /etc/exports entries for NFS exports
+   nfs_export:
+     path: '{{item.value.dir.path}}'
+     hosts: '{{item.value.export.allowed_clients}}'
+     readonly: '{{item.value.export.opts.readonly}}'
+     secure: '{{item.value.export.opts.secure| default(true)}}'
+     subtree_check: '{{item.value.export.opts.subtree_check}}'
+     sync: '{{item.value.export.opts.sync}}'
+     squash: '{{item.value.export.opts.squash}}'
+     anon_user: '{{item.value.export.opts.anon_user| default(omit)}}' 
+     anon_group: '{{item.value.export.opts.anon_group| default(omit)}}'
+   with_dict: nfs.directories
+   notify:
+   - start-nfs-server
+   - reexport-nfs-directories
+

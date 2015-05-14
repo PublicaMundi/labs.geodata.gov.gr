@@ -1,0 +1,5 @@
+---
+
+dependencies:
+- role: base-system
+- role: cli

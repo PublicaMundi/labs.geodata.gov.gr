@@ -1,0 +1,49 @@
+---
+
+apt:
+  package_groups:
+    development:
+      name: development tools
+      packages:
+      - 'build-essential'
+      - 'python-dev'
+      - 'python-doc'
+      - 'python-virtualenv'
+      - 'python-setuptools'
+      - 'zlib1g-dev'
+      - 'make' 
+      - 'automake' 
+      - 'autotools-dev' 
+      - 'bison' 
+      - 'flex' 
+      - 'g++' 
+      - 'comerr-dev' 
+      - 'libecpg-dev' 
+      - 'libtiff4-dev' 
+      - 'libgdal1-dev' 
+      - 'gawk'
+      - 'libncurses5-dev'
+      - 'libnetpbm10-dev'
+      - 'libffi-dev'
+      - 'libreadline-dev'
+      - 'libtool'
+      - 'm4'
+      - 'openjdk-6-jdk'
+      - 'tomcat6'
+      - 'libsigsegv-dev'
+      - 'libedit-dev'
+      - 'gdal-bin'
+      - 'ant'
+
+user:
+   name: rasdaman
+   full_name: rasdaman
+   email: admin@publicamundi.eu
+   authorized_keys:
+   - key_file: id_rsa-publicamundi
+   private_keys:
+   - key_file: id_rsa-publicamundi
+   ssh_config: '{{ssh_config}}'
+   pyenv: ~
+   git_config: ~ 
+   export_gpg_keys: ~

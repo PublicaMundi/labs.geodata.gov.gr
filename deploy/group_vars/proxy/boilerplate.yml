@@ -1,0 +1,13 @@
+---
+
+apt:
+  package_groups:
+    haproxy:
+      name: HAProxy
+      packages:
+      - haproxy 
+    network_security:
+      name: Network Security
+      packages:
+      - fail2ban
+

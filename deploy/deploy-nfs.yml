@@ -1,0 +1,28 @@
+---
+
+#
+# Setup NFS server and clients
+#
+
+ - hosts: nfs
+   remote_user: root
+
+   pre_tasks:
+   - debug: var=nfs
+   
+   roles:
+   - nfs-server
+   - nfs-client
+   
+   tasks: ~
+
+ - hosts: internal:!admin:!nfs 
+   remote_user: root
+  
+   pre_tasks:
+   - debug: var=nfs
+  
+   roles:
+   - role: nfs-client
+     when: not canonical_name is defined
+

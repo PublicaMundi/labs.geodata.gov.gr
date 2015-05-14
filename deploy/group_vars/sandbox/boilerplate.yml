@@ -1,0 +1,14 @@
+---
+
+user:
+   name: ckaner
+   full_name: ckaner
+   email: ckaner@publicamundi.eu
+   authorized_keys:
+   - key_file: id_rsa-publicamundi
+   private_keys:
+   - key_file: id_rsa-publicamundi
+   ssh_config: '{{ssh_config}}'
+   pyenv: ~
+   git_config: ~ 
+   export_gpg_keys: ~

@@ -1,0 +1,21 @@
+---
+
+apt:
+  package_groups:
+    webserver:
+      name: Web server
+      packages:
+      - 'apache2'
+      - 'apache2-utils'
+user:
+   name: zoo
+   full_name: zoo
+   email: admin@publicamundi.eu
+   authorized_keys:
+   - key_file: id_rsa-publicamundi
+   private_keys:
+   - key_file: id_rsa-publicamundi
+   ssh_config: '{{ssh_config}}'
+   pyenv: ~
+   git_config: ~ 
+   export_gpg_keys: ~

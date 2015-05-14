@@ -1,0 +1,11 @@
+---
+
+# Configuration for monitored nodes (collect-node)
+collectd:
+  server: '{{groups["monitor"]| first}}'
+  plugins:    
+    processes: ~
+    df:
+      devices:
+      - mountpoint: /
+

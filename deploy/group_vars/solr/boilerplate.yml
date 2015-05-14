@@ -1,0 +1,6 @@
+---
+
+# Configuration for swap space (boilerplate)
+swap:
+  size: '2G' 
+

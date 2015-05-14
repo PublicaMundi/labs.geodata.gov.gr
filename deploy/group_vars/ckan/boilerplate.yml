@@ -1,0 +1,30 @@
+---
+
+apt:
+  package_groups:
+    development:
+      name: Development
+      packages:
+      - build-essential
+      - python-dev
+      - python-doc
+      - python-virtualenv
+      - python-setuptools
+      - zlib1g-dev
+      - libxslt1-dev
+      - libxml2-dev
+      - libpq5
+      - libpq-dev
+
+user:
+   name: ckaner
+   full_name: ckaner
+   email: admin@publicamundi.eu
+   authorized_keys:
+   - key_file: id_rsa-publicamundi
+   private_keys:
+   - key_file: id_rsa-publicamundi
+   ssh_config: '{{ssh_config}}'
+   pyenv: ~
+   git_config: ~ 
+   export_gpg_keys: ~
