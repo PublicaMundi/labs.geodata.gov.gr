@@ -27,18 +27,70 @@
    - set_fact:
        db_host: '{{groups["database-master"]| one}}'
        solr_host: '{{groups["solr"]| one}}'
+   
    - set_fact:
        db_server: '{{hostvars[db_host].db_server}}'
        db_credentials: '{{hostvars[db_host].db_credentials| to_map("username")}}'
        solr_server: '{{hostvars[solr_host].solr_server}}'
+   
    - set_fact:
        ckan:
+         instance_uuid: '{{"catalog.publicamundi.localdomain"| to_uuid}}'
+         
+         source:
+           update: yes
+           repo:
+             url: 'https://github.com/{{publicamundi.github_repos.ckan.name}}.git'
+             push_url: 'git@github.com:{{publicamundi.github_repos.ckan.name}}.git'
+             branch: '{{publicamundi.github_repos.ckan.branch}}'
+         
          database:
            url: 'postgresql://ckaner:{{db_credentials["ckaner"].password}}@{{db_server}}/ckan'
            datastore_write_url: 'postgresql://ckan_datastorer:{{db_credentials["ckan_datastorer"].password}}@{{db_server}}/ckan_data'
            datastore_read_url: 'postgresql://ckan_datareader:{{db_credentials["ckan_datareader"].password}}@{{db_server}}/ckan_data'
+         
          solr:
            core_url: 'http://{{solr_server}}/solr/ckan'
+         
+         site:
+           url: 'http://catalog.publicamundi.localdomain' 
+         
+         serve:
+           http_server: 'apache2/paster'
+         
+         session:
+           #cookie_lifetime: 10800
+           #cookie_domain: 'catalog.publicamundi.localdomain'
+           secret: '{{lookup("password", "files/secrets/groups/ckan/session chars=ascii_letters,digits length=16")}}'
+         
+         email:
+           errors_to: 'webmaster@publicamundi.localdomain'
+           errors_from: 'ckaner@publicamundi.localdomain'
+         
+         users:
+         - name: admin
+           email: 'admin@publicamundi.localdomain'
+           password: '{{lookup("password", "files/secrets/groups/ckan/users/admin chars=ascii_letters,digits length=8")}}'
+           is_admin: yes
+         - name: tester
+           email: 'tester@publicamundi.localdomain'
+           password: '{{lookup("password", "files/secrets/groups/ckan/users/tester chars=ascii_letters,digits length=8")}}'
+   
+   - set_fact:   
+       ckanext:
+         'datastorer':
+           source:
+             repo:
+               url: 'https://github.com/{{publicamundi.github_repos.ckanext_datastorer.name}}.git'
+               push_url: 'git@github.com:{{publicamundi.github_repos.ckanext_datastorer.name}}.git'
+               branch: '{{publicamundi.github_repos.ckanext_datastorer.branch}}'
+         
+         'archiver':
+           source:
+             repo:
+               url: 'https://github.com/{{publicamundi.github_repos.ckanext_archiver.name}}.git'
+               push_url: 'git@github.com:{{publicamundi.github_repos.ckanext_archiver.name}}.git'
+               branch: '{{publicamundi.github_repos.ckanext_archiver.branch}}'
 
    roles:
    - ckan

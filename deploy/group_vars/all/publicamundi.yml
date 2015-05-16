@@ -5,16 +5,16 @@ publicamundi:
   # List project repos
   github_repos:
     ckan:
-      name: Publicamundi/ckan
+      name: PublicaMundi/ckan
       branch: dev.publicamundi.eu
     ckanext_archiver:
-      name: Publicamundi/ckanext-archiver
+      name: PublicaMundi/ckanext-archiver
       branch: dev.publicamundi.eu
     ckanext_datastorer:
-      name: Publicamundi/ckanext-datastorer
+      name: PublicaMundi/ckanext-datastorer
       branch: dev.publicamundi.eu
     ckanext_publicamundi:
-      name: Publicamundi/ckanext-publicamundi
+      name: PublicaMundi/ckanext-publicamundi
       branch: dev.publicamundi.eu
 
 

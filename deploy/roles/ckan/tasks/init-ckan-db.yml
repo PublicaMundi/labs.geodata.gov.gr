@@ -1,0 +1,10 @@
+---
+
+ - name: Create application model in database
+   sudo: yes
+   sudo_user: ckaner
+   shell: >
+     . '{{ckan.pyenv_dir}}/bin/activate' && paster db -c '{{ckan.config_file}}' init
+   args:
+     chdir: '{{ckan.pyenv_dir}}/src/ckan'
+

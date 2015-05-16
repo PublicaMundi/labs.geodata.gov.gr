@@ -1,0 +1,49 @@
+---
+
+ #
+ # Create basic directories
+ #
+ 
+ - name: Create directory for configuration files
+   file: path={{ckan.config_dir}} state=directory
+ - file: path={{ckan.config_dir}} state=directory mode=0775 owner=ckaner group=ckaner
+
+ - name: Create root directory for file storage
+   file: path={{ckan.files_dir}} state=directory
+ - file: path={{ckan.files_dir}} state=directory mode=0775 owner=ckaner group=www-data
+  
+ - name: Create directory for temporary session/cache data
+   file: path={{ckan.temp_dir}} state=directory
+ - file: path={{ckan.temp_dir}} state=directory mode=0775 owner=ckaner group=www-data
+  
+ #
+ # Create virtual environment
+ # 
+
+ - name: Create virtual environment
+   command: /usr/bin/virtualenv {{ckan.pyenv_dir}} creates={{ckan.pyenv_dir}}
+ 
+ - name: Set ownership for virtual environment tree
+   file: path={{ckan.pyenv_dir}} state=directory recurse=yes owner=ckaner group=ckaner 
+
+ - name: Install newest version of pip in virtual environment
+   sudo: yes
+   sudo_user: ckaner
+   pip:  name=pip extra_args='--upgrade' virtualenv={{ckan.pyenv_dir}}
+  
+ - name: Install basic Python packages
+   sudo: yes
+   sudo_user: ckaner
+   pip: name={{item}} virtualenv={{ckan.pyenv_dir}}
+   with_items: ckan.pyenv.basic_packages
+
+ - name: Create a shortcut to activate the environment
+   copy:
+     content: |
+       . {{ckan.pyenv_dir}}/bin/activate
+       cd {{ckan.pyenv_dir| dirname}}
+     mode: 0744
+     dest: ~/pyenv.sh
+     owner: ckaner
+     group: ckaner
+

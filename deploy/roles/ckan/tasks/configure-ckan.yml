@@ -1,0 +1,28 @@
+--- 
+ 
+ - assert:
+     that: '{{ckan.config_file| search("[.]ini$")}}'
+
+ - file: path=/tmp/ckan/conf.d state=directory owner=ckaner group=ckaner 
+
+ - name: Generate INI configuration fragments
+   template: src=etc/ckan/conf.d/{{item.1}} dest=/tmp/ckan/conf.d/s{{item.0}}.{{item.1}} owner=ckaner
+   with_indexed_items:
+   - 'global.ini'
+   - 'server.ini'
+   - 'app.ini'
+   - 'logging.ini'
+   register: ckan_config_fragments
+
+ - name: Generate INI configuration file
+   assemble: 
+     dest: '{{ckan.pyenv_dir}}/src/ckan/{{ckan.config_file}}' 
+     src: '/tmp/ckan/conf.d' 
+     mode: 0664 
+     owner: ckaner
+     group: ckaner 
+     backup: yes
+   when: ckan_config_fragments.changed
+   #notify: ['restart-apache2']
+   
+
