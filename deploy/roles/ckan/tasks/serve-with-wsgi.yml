@@ -1,4 +1,23 @@
 ---
 
-# TODO
+ - name: Enable wsgi module for Apache2
+   apache2_module: state=present name=wsgi
+   notify: ['restart-apache2']
 
+ - name: Generate vhost configuration
+   template: 
+     src: 'etc/apache2/sites-available/wsgi' 
+     dest: '/etc/apache2/sites-available/ckan-{{ckan_site_id}}.wsgi'
+   notify: ['restart-apache2']
+
+ - name: Enable vhost
+   file:
+     state: link
+     force: yes
+     path: '/etc/apache2/sites-enabled/ckan-{{ckan_site_id}}'
+     src: '../sites-available/ckan-{{ckan_site_id}}.wsgi'
+   notify: ['restart-apache2']
+
+ - name: Print URL
+   debug:
+     msg: 'Browse http://{{ckan.serve.hostname}}{{ckan.serve.url_prefix}}'

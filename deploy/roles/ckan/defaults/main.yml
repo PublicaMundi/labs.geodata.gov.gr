@@ -48,15 +48,23 @@ ckan:
     - 'argparse'
     - 'nose>=1.3'
   
+  plugins: ~  
+
   # Serve as a WSGI application
   serve:
-    # Choose the way to deploy it: 'apache2-mod-wsgi' or 'apache2/paster'
-    use: 'apache2/paster'
+    # Choose the way to deploy it: 'apache2-mod-wsgi', 'apache2/paster' or 'paster'
+    # Note that in case 'apache2/paster' or 'paster' is chosen, the paster-serve process
+    # must be started/stopped manually.
+    use: 'paster'
     # Specify the hostname for this service (i.e. the virtual host)
     hostname: ~
     # hostname: 'ckan.example.localdomain'
     url_prefix: '/'
-    # The following are paster-only options (meaningfull for 'apache2/paster')
+    # Spawn WSGI processes/threads (applicable for 'apache2-mod-wsgi')
+    wsgi_opts:
+      num_processes: 2
+      num_threads: 15
+    # The following are paster-only options (applicable for 'paster', 'apache2/paster')
     paster_opts:
       listen_address: '127.0.0.1'
       port: 5000  
@@ -73,7 +81,7 @@ ckan:
     favicon_url: '/images/icons/ckan.ico'
     logo_url: '/base/images/ckan-logo.png'
 
-  # List users to be created on initialization
+  # Provide users to be created on initialization
   users:
   - name: admin
     email: admin@example.com

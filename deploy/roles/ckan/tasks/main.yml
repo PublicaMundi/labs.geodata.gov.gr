@@ -32,6 +32,12 @@
 
  # Serve WSGI application
 
+ - name: Check if deploy method is compatible with debug mode
+   assert: 
+     that: 
+     # The debugging middleware is not usable under apache2 (either as proxy or wsgi container)
+     - (not ckan.debug) or ckan.serve.use == 'paster'
+ 
  - include: serve-with-proxy.yml
    when: ckan.serve.use == 'apache2/paster'
  

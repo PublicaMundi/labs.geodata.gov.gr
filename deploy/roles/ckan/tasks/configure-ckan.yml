@@ -26,10 +26,9 @@
      dest: '{{ckan.pyenv_dir}}/src/ckan/{{ckan.config_file}}' 
      src: '{{ckan.temp_dir}}/conf.d' 
      regexp: '^{{config_name}}[.]'
-     mode: 0660
+     mode: 0640
      owner: ckaner
-     group: ckaner 
-     backup: yes
+     group: www-data 
    when: ckan_config_fragments.changed
    notify: ['restart-apache2']
    
