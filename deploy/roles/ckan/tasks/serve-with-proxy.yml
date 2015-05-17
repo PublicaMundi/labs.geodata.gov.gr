@@ -24,7 +24,11 @@
      src: '../sites-available/ckan-{{ckan_site_id}}'
    notify: ['restart-apache2']
 
- - name: Print application root URL
+ - name: Print URL
    debug:
      msg: 'Browse http://{{ckan.serve.hostname}}{{ckan.serve.url_prefix}}'
 
+ - name: Print paster URL for debugging purposes
+   debug:
+     msg: 'Browse http://{{ckan.serve.hostname}}:{{ckan.serve.paster_opts.port}}'
+   when: ckan.serve.paster_opts.listen_address == '0.0.0.0'
