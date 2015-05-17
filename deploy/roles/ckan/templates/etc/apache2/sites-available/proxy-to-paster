@@ -1,0 +1,25 @@
+<VirtualHost *:80>
+    ServerAdmin "{{ckan.email.errors_to}}"
+    ServerName "{{ckan.serve.hostname}}"
+
+    DocumentRoot /var/www
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+    </Directory>
+    <Directory /var/www/>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride None
+        Order allow,deny
+        allow from all
+    </Directory>
+    
+    {% set backend_server = '127.0.0.1' ~ ':' ~ (ckan.serve.paster_opts.port| int| default(5000)) -%}
+    {% set url_prefix = ckan.serve.url_prefix| default("/") -%}
+    ProxyPass        "{{url_prefix}}" http://{{backend_server}}/
+    ProxyPassReverse "{{url_prefix}}" http://{{backend_server}}/
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    LogLevel info
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>

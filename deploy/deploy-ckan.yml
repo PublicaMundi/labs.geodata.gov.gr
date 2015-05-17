@@ -53,10 +53,16 @@
            core_url: 'http://{{solr_server}}/solr/ckan'
          
          site:
-           url: 'http://catalog.publicamundi.localdomain' 
+           title: 'GEODATA.gov.gr'
+           #url: 'http://catalog.publicamundi.localdomain' 
          
          serve:
-           http_server: 'apache2/paster'
+           use: 'apache2/paster'
+           hostname: 'catalog.publicamundi.localdomain'
+           url_prefix: '/'
+           paster_opts:
+             listen_address: '0.0.0.0'
+             port: 5000
          
          session:
            #cookie_lifetime: 10800
