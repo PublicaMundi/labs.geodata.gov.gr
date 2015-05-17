@@ -5,15 +5,15 @@
 
  # Configure APT repos, install required packages
  
-# - include: install-apt-packages.yml
+ - include: install-apt-packages.yml
 
  # Create base directories, install Python virtual environment
  
-# - include: create-env.yml
+ - include: create-env.yml
 
  # Install CKAN and requirements 
 
-# - include: install-ckan-and-requirements.yml
+ - include: install-ckan-and-requirements.yml
 
  # Configure CKAN
 
@@ -28,7 +28,7 @@
  # NOTE: This step exists mainly to create some administrative accounts, since users
  # will usually be manipulated from either the web interface or from paster commands.
  
-# - include: create-ckan-users.yml
+ - include: create-ckan-users.yml
 
  # Serve WSGI application
 
