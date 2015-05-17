@@ -2,13 +2,16 @@
  
  - assert:
      that: '{{ckan.config_file| search("[.]ini$")}}'
+ 
+ - set_fact:
+     config_name: '{{ckan.config_file| regex_replace("[.]ini$", "")}}'
 
  - file: path={{ckan.temp_dir}}/conf.d state=directory owner=ckaner group=ckaner mode=0774
 
  - name: Generate INI configuration fragments
    template: 
      src: 'etc/ckan/conf.d/{{item.1}}' 
-     dest: '{{ckan.temp_dir}}/conf.d/s{{item.0}}.{{item.1}}' 
+     dest: '{{ckan.temp_dir}}/conf.d/{{config_name}}.section-{{item.0}}.{{item.1}}' 
      owner: ckaner
      group: ckaner
    with_indexed_items:
@@ -22,11 +25,17 @@
    assemble: 
      dest: '{{ckan.pyenv_dir}}/src/ckan/{{ckan.config_file}}' 
      src: '{{ckan.temp_dir}}/conf.d' 
+     regexp: '^{{config_name}}[.]'
      mode: 0660
      owner: ckaner
      group: ckaner 
      backup: yes
    when: ckan_config_fragments.changed
-   #notify: ['restart-apache2']
+   notify: ['restart-apache2']
    
-
+ - name: Link to generated configuration under config.ini
+   file:
+     state: link
+     force: yes
+     src: '{{ckan.config_file}}'
+     path: '{{ckan.pyenv_dir}}/src/ckan/config.ini'
