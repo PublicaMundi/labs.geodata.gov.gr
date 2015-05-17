@@ -1,7 +1,18 @@
 ---
   
- # TODO: Omit already existing users 
+ - name: List existing user accounts
+   sudo: yes
+   sudo_user: ckaner
+   shell: >
+     (. '{{ckan.pyenv_dir}}/bin/activate' && paster user -c '{{ckan.config_file}}' list)| 
+     grep -e '^name=' | awk -F '=' '{print $2}'
+   args:
+     chdir: '{{ckan.pyenv_dir}}/src/ckan'
+   register: paster_user_result
  
+ - set_fact:
+     existing_ckan_users: '{{paster_user_result.stdout_lines}}'
+
  - name: Create basic user accounts
    sudo: yes
    sudo_user: ckaner
@@ -11,6 +22,7 @@
    args:
      chdir: '{{ckan.pyenv_dir}}/src/ckan'
    with_items: ckan.users
+   when: '{{item.name not in existing_ckan_users}}'
 
  - name: Upgrade certain users to administrators
    sudo: yes
