@@ -6,14 +6,17 @@
  # Configure APT repos, install required packages
  
  - include: install-apt-packages.yml
+   tags: ['install']
 
  # Create base directories, install Python virtual environment
  
  - include: create-env.yml
+   tags: ['install', 'pyenv']
 
  # Install CKAN and requirements 
 
  - include: install-ckan-and-requirements.yml
+   tags: ['install']
 
  # Configure CKAN
 
@@ -22,6 +25,7 @@
  # Initialize database (create tables from model)
 
  - include: init-ckan-db.yml
+   tags: ['init-db']
 
  # Initialize users. 
  
@@ -32,14 +36,17 @@
 
  # Serve WSGI application
 
- - name: Check if deploy method is compatible with debug mode
+ - name: Check if given deploy method is compatible with debug mode
    assert: 
      that: 
      # The debugging middleware is not usable under apache2 (either as proxy or wsgi container)
      - (not ckan.debug) or ckan.serve.use == 'paster'
- 
+   tags: ['deploy']
+
  - include: serve-with-proxy.yml
    when: ckan.serve.use == 'apache2/paster'
+   tags: ['deploy']
  
  - include: serve-with-wsgi.yml
    when: ckan.serve.use == 'apache2-mod-wsgi'
+   tags: ['deploy']

@@ -13,9 +13,9 @@ ckan:
       push_url: ~
       branch: 'ckan-2.2'
   
-  # A UUID for this application instance
+  # A UUID for this application instance; generate one per cluster!
   instance_uuid: ~
-  #instance_uuid: '22d468de-2154-58ea-ac32-e5ffe8fd03b9' # generate one per cluster!
+  #instance_uuid: '22d468de-2154-58ea-ac32-e5ffe8fd03b9' 
   
   config_file: 'development.ini'
   debug: 1
@@ -25,16 +25,6 @@ ckan:
   config_dir: '/usr/local/ckan/default/etc'
   files_dir: '/var/local/ckan/default/files'
   temp_dir: '/var/tmp/ckan/default'
-   
-  # Provide Solr endpoint URLs 
-  solr:
-    core_url: 'http://localhost:8983/solr/ckan'
-  
-  # Provide database connection URLs
-  database:
-    url: 'postgresql://ckaner:ckaner@localhost/ckan'
-    datastore_read_url: 'postgresql://ckan_datareader:ckan_datareader@localhost/ckan_data'
-    datastore_write_url: 'postgresql://ckan_datastorer:ckan_datastorer@localhost/ckan_data'
   
   # Configure virtual environment
   pyenv:
@@ -47,8 +37,24 @@ ckan:
     - 'isodate'
     - 'argparse'
     - 'nose>=1.3'
+ 
+  # Provide Solr endpoint URLs 
+  solr:
+    core_url: 'http://localhost:8983/solr/ckan'
   
-  plugins: ~  
+  # Provide database connection URLs
+  database:
+    url: 'postgresql://ckaner:ckaner@localhost/ckan'
+    datastore_read_url: 'postgresql://ckan_datareader:ckan_datareader@localhost/ckan_data'
+    datastore_write_url: 'postgresql://ckan_datastorer:ckan_datastorer@localhost/ckan_data'
+    
+  plugins:
+  - 'stats'
+  - 'text_preview'
+  - 'recline_preview'
+  - 'pdf_preview'
+  - 'datastore' 
+  - 'resource_proxy' 
 
   # Serve as a WSGI application
   serve:
@@ -106,8 +112,9 @@ ckan:
     #cookie_domain: 'ckan.example.localdomain'
     cookie_lifetime: ~
     #cookie_lifetime: 7200
+    # The server-side secret to encrypt cookies with; generate one per cluster!
     secret: ~
-    #secret: 'TPLhty94bW90oYJt' # generate one per cluster!
+    #secret: 'TPLhty94bW90oYJt' #
 
 
 # TODO: Extensions for CKAN

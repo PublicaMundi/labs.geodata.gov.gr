@@ -55,8 +55,6 @@
          config_file: 'production.ini'
          debug: 0
          
-         plugins: ~
-         
          site:
            title: 'GEODATA.gov.gr'
            #url: 'http://catalog.publicamundi.localdomain' 

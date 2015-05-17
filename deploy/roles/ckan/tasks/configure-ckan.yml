@@ -2,11 +2,29 @@
  
  - assert:
      that: '{{ckan.config_file| search("[.]ini$")}}'
- 
+  
  - set_fact:
      config_name: '{{ckan.config_file| regex_replace("[.]ini$", "")}}'
 
  - file: path={{ckan.temp_dir}}/conf.d state=directory owner=ckaner group=ckaner mode=0774
+ 
+ - name: List entry points registered as CKAN plugins
+   sudo: yes
+   sudo_user: ckaner
+   shell: >
+     (. '{{ckan.pyenv_dir}}/bin/activate' && paster points 'ckan.plugins')| 
+     grep -Poe '\w+(?=[ ]*=)'
+   args:
+     chdir: '{{ckan.pyenv_dir}}/src/ckan'
+   register: paster_points_result
+
+ - set_fact:
+     selected_ckan_plugins: '{{ckan.plugins}}'
+     registered_ckan_plugins: '{{paster_points_result.stdout_lines}}'
+
+ - name: Check if given plugin names are valid entry points
+   assert:
+     that: not (selected_ckan_plugins| difference(registered_ckan_plugins))
 
  - name: Generate INI configuration fragments
    template: 
