@@ -8,7 +8,7 @@
     set_fact:
       solr_config_dir: files/groups/solr/etc/solr/ckan/conf
       solr_schema_url: >
-         https://api.github.com/repos/{{publicamundi.github_repos.ckan.name}}/contents/{{ckan.solr.schema_path}}?ref={{publicamundi.github_repos.ckan.branch}}
+         https://api.github.com/repos/{{publicamundi.github_repos.ckan.name}}/contents/{{ckan.solr.schema_path}}?ref={{publicamundi.github_repos.ckan.version}}
   - debug: var=solr_schema_url
   
   - file: path={{solr_config_dir}} state=directory mode=0755

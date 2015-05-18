@@ -13,11 +13,23 @@
  - include: create-env.yml
    tags: ['install', 'pyenv']
 
- # Install CKAN and requirements 
+ # Install base CKAN and requirements 
 
- - include: install-ckan-and-requirements.yml
+ - include: install-ckan.yml
    tags: ['install']
 
+ # Install CKAN extension: archiver
+
+ - include: install-ckanext-archiver.yml
+   when: ckanext.archiver.install
+   tags: ['install']
+  
+ # Install CKAN extension: datastorer
+
+ - include: install-ckanext-datastorer.yml
+   when: ckanext.datastorer.install
+   tags: ['install']
+ 
  # Configure CKAN
 
  - include: configure-ckan.yml 
@@ -28,10 +40,7 @@
    tags: ['init-db']
 
  # Initialize users. 
- 
- # NOTE: This step exists mainly to create some administrative accounts, since users
- # will usually be manipulated from either the web interface or from paster commands.
- 
+  
  - include: create-ckan-users.yml
 
  # Serve WSGI application

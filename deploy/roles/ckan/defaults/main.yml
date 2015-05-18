@@ -5,13 +5,11 @@ ckan_site_id: 'default'
 # Base CKAN
 ckan:
   source:
-    # Update source dir (pull new commits), if it already exists
-    update: yes 
     # Specify source Git repository
     repo:
       url: 'https://github.com/ckan/ckan.git'
       push_url: ~
-      branch: 'ckan-2.2'
+      version: 'ckan-2.2'
   
   # A UUID for this application instance; generate one per cluster!
   instance_uuid: ~
@@ -117,20 +115,25 @@ ckan:
     #secret: 'TPLhty94bW90oYJt' #
 
 
-# TODO: Extensions for CKAN
+# Basic extensions for CKAN
 ckanext:
-  'datastorer':
+  datastorer:
     install: yes
     source:
       repo:
         url: 'https://github.com/ckan/ckanext-datastorer.git' 
         push_url: ~
-        branch: master 
-  'archiver':
+        version: master 
+    plugins:
+    - 'datastorer'
+
+  archiver:
     install: yes
     source:  
       repo:
         url: 'https://github.com/ckan/ckanext-archiver.git'
         push_url: ~
-        branch: master
+        version: master
+    plugins:
+    - 'archiver'
   

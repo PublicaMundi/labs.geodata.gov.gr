@@ -6,16 +6,16 @@ publicamundi:
   github_repos:
     ckan:
       name: PublicaMundi/ckan
-      branch: dev.publicamundi.eu
+      version: dev.publicamundi.eu
     ckanext_archiver:
       name: PublicaMundi/ckanext-archiver
-      branch: dev.publicamundi.eu
+      version: dev.publicamundi.eu
     ckanext_datastorer:
       name: PublicaMundi/ckanext-datastorer
-      branch: dev.publicamundi.eu
+      version: dev.publicamundi.eu
     ckanext_publicamundi:
       name: PublicaMundi/ckanext-publicamundi
-      branch: dev.publicamundi.eu
+      version: dev.publicamundi.eu
 
 
 # Configuration (global) for CKAN application

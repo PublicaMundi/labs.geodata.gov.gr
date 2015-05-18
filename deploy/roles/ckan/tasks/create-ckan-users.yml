@@ -1,5 +1,8 @@
 ---
   
+  # NOTE: This part exists mainly to create some administrative accounts, since users
+  # will usually be manipulated from either the web interface or from paster commands.
+ 
  - name: List existing user accounts
    sudo: yes
    sudo_user: ckaner
