@@ -51,7 +51,7 @@
          solr:
            core_url: 'http://{{solr_server}}/solr/ckan'
          
-         config_file: 'production.ini'
+         config_name: 'production'
          debug: 0
          
          site:

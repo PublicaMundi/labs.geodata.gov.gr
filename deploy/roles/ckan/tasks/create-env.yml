@@ -22,9 +22,11 @@
 
  - name: Create virtual environment
    command: /usr/bin/virtualenv {{ckan.pyenv_dir}} creates={{ckan.pyenv_dir}}
+   register: virtualenv_result
  
  - name: Set ownership for virtual environment tree
    file: path={{ckan.pyenv_dir}} state=directory recurse=yes owner=ckaner group=ckaner 
+   when: virtualenv_result.changed
 
  - name: Install newest version of pip in virtual environment
    sudo: yes

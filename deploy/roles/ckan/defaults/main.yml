@@ -15,7 +15,7 @@ ckan:
   instance_uuid: ~
   #instance_uuid: '22d468de-2154-58ea-ac32-e5ffe8fd03b9' 
   
-  config_file: 'development.ini'
+  config_name: 'development'
   debug: 1
 
   # Basic directories

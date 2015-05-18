@@ -7,7 +7,7 @@
    sudo: yes
    sudo_user: ckaner
    shell: >
-     (. '{{ckan.pyenv_dir}}/bin/activate' && paster user -c '{{ckan.config_file}}' list)| 
+     (. '{{ckan.pyenv_dir}}/bin/activate' && paster user -c '{{ckan.config_name}}.ini' list)| 
      grep -e '^name=' | awk -F '=' '{print $2}'
    args:
      chdir: '{{ckan.pyenv_dir}}/src/ckan'
@@ -21,7 +21,7 @@
    sudo_user: ckaner
    shell: >
      . '{{ckan.pyenv_dir}}/bin/activate' 
-     && paster user -c '{{ckan.config_file}}' add '{{item.name}}' password='{{item.password}}' email='{{item.email}}'
+     && paster user -c '{{ckan.config_name}}.ini' add '{{item.name}}' password='{{item.password}}' email='{{item.email}}'
    args:
      chdir: '{{ckan.pyenv_dir}}/src/ckan'
    with_items: ckan.users
@@ -32,7 +32,7 @@
    sudo_user: ckaner
    shell: >
      . '{{ckan.pyenv_dir}}/bin/activate' 
-     && paster sysadmin -c '{{ckan.config_file}}' add '{{item.name}}'
+     && paster sysadmin -c '{{ckan.config_name}}.ini' add '{{item.name}}'
    args:
      chdir: '{{ckan.pyenv_dir}}/src/ckan'
    with_items: ckan.users

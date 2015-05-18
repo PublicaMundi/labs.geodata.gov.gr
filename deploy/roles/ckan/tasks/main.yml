@@ -6,14 +6,14 @@
  # Configure APT repos, install required packages
  
  - include: install-apt-packages.yml
-   tags: ['install']
+   tags: ['install', 'apt-get']
 
  # Create base directories, install Python virtual environment
  
  - include: create-env.yml
    tags: ['install', 'pyenv']
 
- # Install base CKAN and requirements 
+ # Install CKAN and requirements 
 
  - include: install-ckan.yml
    tags: ['install']
