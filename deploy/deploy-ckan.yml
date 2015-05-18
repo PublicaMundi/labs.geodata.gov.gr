@@ -51,15 +51,17 @@
          solr:
            core_url: 'http://{{solr_server}}/solr/ckan'
          
-         config_name: 'production'
-         debug: 0
+         config_name: 'development'
+         debug: 1
          
+         licenses_url: licenses.json
+
          site:
            title: 'GEODATA.gov.gr'
            #url: 'http://catalog.publicamundi.localdomain' 
          
          serve:
-           use: 'apache2-mod-wsgi'
+           use: 'paster'
            hostname: 'catalog.publicamundi.localdomain'
            url_prefix: '/'
            paster_opts:

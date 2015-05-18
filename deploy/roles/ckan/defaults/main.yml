@@ -53,6 +53,10 @@ ckan:
   - 'pdf_preview'
   - 'datastore' 
   - 'resource_proxy' 
+  
+  # Provide a JSON file with valid licenses records, either as a URL or as a local file (relative to config-file).
+  # See an example at: https://github.com/PublicaMundi/ckan/blob/dev.publicamundi.eu/licenses.json
+  licenses_url: http://licenses.opendefinition.org/licenses/groups/ckan.json
 
   # Serve as a WSGI application
   serve:
