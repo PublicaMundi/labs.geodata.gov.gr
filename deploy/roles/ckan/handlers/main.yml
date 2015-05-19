@@ -1,13 +1,18 @@
 ---
 
+  # NOTE: If a dependent role adds/modifies some of the configuration .ini
+  # fragments, this handler must be invoked to re-assemble the actual configuration.
+  - name: reassemble-config-file
+    assemble: 
+      dest: '{{ckan.pyenv_dir}}/src/ckan/{{config_file}}' 
+      src: '{{ckan.temp_dir}}/conf.d' 
+      regexp: '^{{ckan.config_name}}[.]'
+    notify: ['restart-apache2']
+  
   - name: restart-apache2
     service: name=apache2 state=restarted
   
   - name: ask-reboot
-    debug:
-      msg: ' ** Reboot for changes to take effect ** '
+    debug: { msg: " ** A system reboot is needed ** " }
 
-  # TODO  
-  - name: restart-paster
-    debug:
   
