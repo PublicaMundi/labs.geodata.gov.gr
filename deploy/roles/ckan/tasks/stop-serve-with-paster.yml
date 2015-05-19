@@ -1,0 +1,22 @@
+---
+
+ - name: Find paster-serve pid
+   sudo: yes
+   sudo_user: ckaner
+   shell: >
+     screen -ls| grep -P -o -e '\b[0-9]+[.](?=paster-serve-ckan\b)'
+   register: screen_ls_result
+   ignore_errors: yes
+
+ - set_fact:
+     paster_serve_pid: '{{screen_ls_result.stdout| int}}'
+
+ - name: Send Ctl-C to the screen session running paster-serve
+   sudo: yes
+   sudo_user: ckaner
+   command: >
+     screen -S "paster-serve-ckan" -X stuff "^C"
+   when: paster_serve_pid
+  
+ - name: Wait for paster-serve to shutdown
+   wait_for: path=/proc/{{paster_serve_pid}}/status state=absent

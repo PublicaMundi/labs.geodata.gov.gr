@@ -1,0 +1,11 @@
+---
+
+ - include: disable-serve-with-paster.yml
+
+ - name: Disable vhost
+   file:
+     state: absent
+     force: yes
+     path: '/etc/apache2/sites-enabled/ckan-{{ckan_site_id}}'
+   notify: ['restart-apache2']
+

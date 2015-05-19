@@ -1,0 +1,20 @@
+---
+
+ # NOTE: The `screen` command below fails frequently (only when invoked from Ansible) !?!?
+ # Until we solve the mystery, we comment it out and jusk ask for a system's reboot ...
+
+# - name: Start a screen session for paster-serve
+#   sudo: yes
+#   sudo_user: ckaner
+#   shell: screen -dm -S 'paster-serve-ckan' '~ckaner/scripts/paster-serve-ckan.sh'
+# 
+# - wait_for: port={{ckan.serve.paster_opts.port}} state=started delay=2 timeout=15
+#   register: wait_port_result
+#   ignore_errors: yes
+#
+# - command: /bin/true
+#   when: wait_port_result.failed
+#   notify: ['ask-reboot']
+
+ - command: /bin/true
+   notify: ['ask-reboot']

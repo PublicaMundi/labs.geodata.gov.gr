@@ -3,6 +3,13 @@
  - debug: var=ckan
  - debug: var=ckanext
 
+ - set_fact:
+     present_ckan: ~ 
+ - set_fact:
+     present_ckan: '{{ansible_local.current.ckan| default({})}}'
+   when: ansible_local is defined
+ - debug: var=present_ckan
+
  # Configure APT repos, install required packages
  
  - include: install-apt-packages.yml
@@ -42,20 +49,58 @@
  # Initialize users. 
   
  - include: create-ckan-users.yml
+   tags: ['create-users']
 
  # Serve WSGI application
-
+ 
  - name: Check if given deploy method is compatible with debug mode
    assert: 
      that: 
      # The debugging middleware is not usable under apache2 (either as proxy or wsgi container)
      - (not ckan.debug) or ckan.serve.use == 'paster'
    tags: ['deploy']
+ 
+ - include: stop-serve-with-paster.yml
+   when: present_ckan and (present_ckan.serve.use == 'paster' or present_ckan.serve.use == 'apache2/paster')
+   tags: ['deploy'] 
+ 
+ - include: rm-serve-with-paster.yml
+   when: present_ckan and (present_ckan.serve.use == 'paster') and (ckan.serve.use != 'paster')
+   tags: ['deploy']
+ 
+ - include: rm-serve-with-apache2-proxy.yml
+   when: present_ckan and (present_ckan.serve.use == 'apache2/paster') and (ckan.serve.use != 'apache2/paster')
+   tags: ['deploy']
+ 
+ - include: rm-serve-with-apache2-wsgi.yml
+   when: present_ckan and (present_ckan.serve.use == 'apache2-mod-wsgi') and (ckan.serve.use != 'apache2-mod-wsgi')
+   tags: ['deploy']
 
- - include: serve-with-proxy.yml
+ - include: serve-with-paster.yml
+   when: ckan.serve.use == 'paster'
+   tags: ['deploy']
+ 
+ - include: serve-with-apache2-proxy.yml
    when: ckan.serve.use == 'apache2/paster'
    tags: ['deploy']
  
- - include: serve-with-wsgi.yml
+ - include: serve-with-apache2-wsgi.yml
    when: ckan.serve.use == 'apache2-mod-wsgi'
    tags: ['deploy']
+
+ # Setup Celery
+
+ # TODO
+ 
+ # Dump current configuration
+
+ - file: path=/etc/ansible/facts.d state=directory mode=0775 
+   tags: ['dump-facts']
+ 
+ - name: Dump current configuration as facts
+   copy: 
+     content: '{{dict(ckan=ckan, ckanext=ckanext)}}'
+     dest: '/etc/ansible/facts.d/current.fact'
+     mode: 0640
+   tags: ['dump-facts']
+
