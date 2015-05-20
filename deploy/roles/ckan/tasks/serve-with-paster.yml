@@ -2,9 +2,9 @@
  
  - include: enable-serve-with-paster.yml
 
+ - name: Ensure session/cache dirs are writable by ckaner
+   file: path={{ckan.temp_dir}}/{{item}} state=directory recurse=yes owner=ckaner group=ckaner
+   with_items: ['session', 'cache']
+
  - include: start-serve-with-paster.yml
- 
- - name: Print paster-serve URL for debugging purposes
-   debug:
-     msg: 'Browse http://{{ckan.serve.hostname}}:{{ckan.serve.paster_opts.port}}'
-   when: ckan.serve.paster_opts.listen_address == '0.0.0.0'
+

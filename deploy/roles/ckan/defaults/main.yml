@@ -45,7 +45,7 @@ ckan:
     url: 'postgresql://ckaner:ckaner@localhost/ckan'
     datastore_read_url: 'postgresql://ckan_datareader:ckan_datareader@localhost/ckan_data'
     datastore_write_url: 'postgresql://ckan_datastorer:ckan_datastorer@localhost/ckan_data'
-    
+  
   plugins:
   - 'stats'
   - 'text_preview'
@@ -60,9 +60,7 @@ ckan:
 
   # Serve as a WSGI application
   serve:
-    # Choose the way to deploy it: 'apache2-mod-wsgi', 'apache2/paster' or 'paster'
-    # Note that in case 'apache2/paster' or 'paster' is chosen, the paster-serve process
-    # must be started/stopped manually.
+    # Choose the way to deploy it: 'manual', 'apache2-mod-wsgi', 'apache2/paster' or 'paster'
     use: 'paster'
     # Specify the hostname for this service (i.e. the virtual host)
     hostname: ~
@@ -77,6 +75,10 @@ ckan:
       listen_address: '127.0.0.1'
       port: 5000  
 
+  celery:
+    # Choose how to launch daemon: 'manual', 'paster'
+    use: 'paster'
+
   # Site info
   site:   
     # The URL under which the application will be accessible. Note that, if blank,
@@ -84,7 +86,7 @@ ckan:
     #url: 'http://ckan.example.localdomain'
     # Basic info
     title: Public Open Data
-    #description: Blah Blah    
+    #description: Public Open Data 
     # Logos
     favicon_url: '/images/icons/ckan.ico'
     logo_url: '/base/images/ckan-logo.png'

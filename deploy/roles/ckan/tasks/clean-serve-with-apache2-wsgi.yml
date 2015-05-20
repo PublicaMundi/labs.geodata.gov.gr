@@ -1,8 +1,6 @@
 ---
-
- - include: disable-serve-with-paster.yml
-
- - name: Disable vhost
+ 
+ - name: Disable Apache2 vhost
    file:
      state: absent
      force: yes

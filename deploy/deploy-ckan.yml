@@ -61,11 +61,12 @@
            url: 'http://catalog.publicamundi.localdomain' 
          
          serve:
-           use: 'paster'
+           use: 'apache2-mod-wsgi'
            hostname: 'catalog.publicamundi.localdomain'
            url_prefix: '/'
-           paster_opts:
-             listen_address: '0.0.0.0'
+           #paster_opts:
+           #  listen_address: '0.0.0.0'
+           #  port: 5001
          
          session:
            #cookie_domain: 'catalog.publicamundi.localdomain'

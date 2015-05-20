@@ -56,24 +56,20 @@
  - name: Check if given deploy method is compatible with debug mode
    assert: 
      that: 
-     # The debugging middleware is not usable under apache2 (either as proxy or wsgi container)
+     # The debug middleware not usable under Apache2 (either as proxy or as wsgi server)
      - (not ckan.debug) or ckan.serve.use == 'paster'
    tags: ['deploy']
  
- - include: stop-serve-with-paster.yml
-   when: present_ckan and (present_ckan.serve.use == 'paster' or present_ckan.serve.use == 'apache2/paster')
-   tags: ['deploy'] 
- 
- - include: rm-serve-with-paster.yml
-   when: present_ckan and (present_ckan.serve.use == 'paster') and (ckan.serve.use != 'paster')
+ - include: clean-serve-with-paster.yml
+   when: present_ckan and (present_ckan.serve.use == 'paster')
    tags: ['deploy']
  
- - include: rm-serve-with-apache2-proxy.yml
-   when: present_ckan and (present_ckan.serve.use == 'apache2/paster') and (ckan.serve.use != 'apache2/paster')
+ - include: clean-serve-with-apache2-proxy.yml
+   when: present_ckan and (present_ckan.serve.use == 'apache2/paster')
    tags: ['deploy']
  
- - include: rm-serve-with-apache2-wsgi.yml
-   when: present_ckan and (present_ckan.serve.use == 'apache2-mod-wsgi') and (ckan.serve.use != 'apache2-mod-wsgi')
+ - include: clean-serve-with-apache2-wsgi.yml
+   when: present_ckan and (present_ckan.serve.use == 'apache2-mod-wsgi')
    tags: ['deploy']
 
  - include: serve-with-paster.yml

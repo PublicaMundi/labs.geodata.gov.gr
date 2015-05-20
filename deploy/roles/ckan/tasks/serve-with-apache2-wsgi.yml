@@ -10,14 +10,14 @@
      dest: '/etc/apache2/sites-available/ckan-{{ckan_site_id}}.wsgi'
    notify: ['restart-apache2']
 
- - name: Enable vhost
+ - name: Enable Apache2 vhost
    file:
      state: link
      force: yes
      path: '/etc/apache2/sites-enabled/ckan-{{ckan_site_id}}'
      src: '../sites-available/ckan-{{ckan_site_id}}.wsgi'
-   notify: ['restart-apache2']
-
- - name: Print URL
-   debug:
-     msg: 'Browse http://{{ckan.serve.hostname}}{{ckan.serve.url_prefix}}'
+   notify: ['restart-apache2', 'print-url']
+ 
+ - name: Ensure session/cache dirs are writable by the webserver
+   file: path={{ckan.temp_dir}}/{{item}} state=directory recurse=yes owner=www-data group=www-data
+   with_items: ['session', 'cache']
