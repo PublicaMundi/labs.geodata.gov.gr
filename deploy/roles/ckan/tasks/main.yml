@@ -86,7 +86,13 @@
 
  # Setup Celery
 
- # TODO
+ - include: clean-celery-with-paster.yml
+   when: present_ckan and (present_ckan.celery.use == 'paster')
+   tags: ['celery']
+ 
+ - include: celery-with-paster.yml
+   when: ckan.celery.use == 'paster'
+   tags: ['celery']
  
  # Dump current configuration
 

@@ -76,7 +76,7 @@ ckan:
       port: 5000  
 
   celery:
-    # Choose how to launch daemon: 'manual', 'paster'
+    # Choose how to start daemon: 'manual', 'paster'
     use: 'paster'
 
   # Site info
