@@ -1,8 +1,61 @@
 ---
 
 ckan:
+  source:
+    repo:
+      url: 'https://github.com/{{publicamundi.github_repos.ckan.name}}.git'
+      push_url: 'git@github.com:{{publicamundi.github_repos.ckan.name}}.git'
+      version: '{{publicamundi.github_repos.ckan.version}}'
+
   pyenv_dir: '/usr/local/ckan/{{ckan_site_id}}/pyenv'
   config_dir: '/usr/local/ckan/{{ckan_site_id}}/etc'
   files_dir: '/var/local/ckan/{{ckan_site_id}}/files'
+  run_dir: '/var/local/ckan/{{ckan_site_id}}/run'
+  log_dir: '/var/local/ckan/{{ckan_site_id}}/log'
   temp_dir: '/var/tmp/ckan/{{ckan_site_id}}'
-   
+
+  config_name: 'development'
+  debug: 1
+  
+  celery:
+    use: ~
+  
+  email:
+    errors_to: 'webmaster@publicamundi.localdomain'
+    errors_from: 'ckaner@publicamundi.localdomain'
+         
+  licenses_url: 'licenses.json'
+
+  site:
+    title: 'GEODATA.gov.gr'
+    
+  session:
+    cookie_lifetime: 10800
+
+  serve:
+    use: 'paster'
+    paster_opts:
+      listen_address: '0.0.0.0'
+
+  users:
+  - name: admin
+    email: 'admin@publicamundi.localdomain'
+    is_admin: yes
+  - name: tester
+    email: 'tester@publicamundi.localdomain'
+
+ckanext:
+  datastorer:
+    source:
+      repo:
+        url: 'https://github.com/{{publicamundi.github_repos.ckanext_datastorer.name}}.git'
+        push_url: 'git@github.com:{{publicamundi.github_repos.ckanext_datastorer.name}}.git'
+        version: '{{publicamundi.github_repos.ckanext_datastorer.version}}'
+ 
+  archiver:
+    source:
+      repo:
+        url: 'https://github.com/{{publicamundi.github_repos.ckanext_archiver.name}}.git'
+        push_url: 'git@github.com:{{publicamundi.github_repos.ckanext_archiver.name}}.git'
+        version: '{{publicamundi.github_repos.ckanext_archiver.version}}'
+

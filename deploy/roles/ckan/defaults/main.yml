@@ -14,16 +14,21 @@ ckan:
   # A UUID for this application instance; generate one per cluster!
   instance_uuid: ~
   #instance_uuid: '22d468de-2154-58ea-ac32-e5ffe8fd03b9' 
-  
+   
   config_name: 'development'
   debug: 1
+  
+  # Provide a control-local directory to keep generated secrets under
+  secrets_dir: 'files/secrets'
 
   # Basic directories
   pyenv_dir: '/usr/local/ckan/default/pyenv'
   config_dir: '/usr/local/ckan/default/etc'
   files_dir: '/var/local/ckan/default/files'
   temp_dir: '/var/tmp/ckan/default'
-  
+  run_dir: '/var/local/ckan/default/run'
+  log_dir: '/var/local/ckan/default/log'
+
   # Configure virtual environment
   pyenv:
     # Provide packages to be installed befory any of the application requirements 
@@ -116,9 +121,6 @@ ckan:
     #cookie_domain: 'ckan.example.localdomain'
     cookie_lifetime: ~
     #cookie_lifetime: 7200
-    # The server-side secret to encrypt cookies with; generate one per cluster!
-    secret: ~
-    #secret: 'TPLhty94bW90oYJt' #
 
 
 # Basic extensions for CKAN

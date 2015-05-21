@@ -32,17 +32,12 @@
        db_server: '{{hostvars[db_host].db_server}}'
        db_credentials: '{{hostvars[db_host].db_credentials| to_map("username")}}'
        solr_server: '{{hostvars[solr_host].solr_server}}'
-   
+    
    - set_fact:
        ckan:
          instance_uuid: '{{"catalog.publicamundi.localdomain"| to_uuid}}'
-         
-         source:
-           repo:
-             url: 'https://github.com/{{publicamundi.github_repos.ckan.name}}.git'
-             push_url: 'git@github.com:{{publicamundi.github_repos.ckan.name}}.git'
-             version: '{{publicamundi.github_repos.ckan.version}}'
-         
+         secrets_dir: '{{"files/secrets/groups/ckan"| realpath}}'
+
          database:
            url: 'postgresql://ckaner:{{db_credentials["ckaner"].password}}@{{db_server}}/ckan'
            datastore_write_url: 'postgresql://ckan_datastorer:{{db_credentials["ckan_datastorer"].password}}@{{db_server}}/ckan_data'
@@ -50,62 +45,22 @@
          
          solr:
            core_url: 'http://{{solr_server}}/solr/ckan'
-         
-         config_name: 'production'
-         debug: 0
-         
-         licenses_url: licenses.json
 
          site:
-           title: 'GEODATA.gov.gr'
-           url: 'http://catalog.publicamundi.localdomain' 
+           url: 'http://catalog.publicamundi.localdomain:5000' 
          
          serve:
-           use: 'apache2-mod-wsgi'
            hostname: 'catalog.publicamundi.localdomain'
-           url_prefix: '/'
-           #paster_opts:
-           #  listen_address: '0.0.0.0'
-           #  port: 5001
          
-         celery:
-           use: 'paster'
-
          session:
-           #cookie_domain: 'catalog.publicamundi.localdomain'
-           secret: '{{lookup("password", "files/secrets/groups/ckan/session chars=ascii_letters,digits length=16")}}'
-         
-         email:
-           errors_to: 'webmaster@publicamundi.localdomain'
-           errors_from: 'ckaner@publicamundi.localdomain'
-         
-         users:
-         - name: admin
-           email: 'admin@publicamundi.localdomain'
-           password: '{{lookup("password", "files/secrets/groups/ckan/users/admin chars=ascii_letters,digits length=8")}}'
-           is_admin: yes
-         - name: tester
-           email: 'tester@publicamundi.localdomain'
-           password: '{{lookup("password", "files/secrets/groups/ckan/users/tester chars=ascii_letters,digits length=8")}}'
+           cookie_domain: 'catalog.publicamundi.localdomain'
    
    - set_fact:   
-       ckanext:
-         datastorer:
-           source:
-             repo:
-               url: 'https://github.com/{{publicamundi.github_repos.ckanext_datastorer.name}}.git'
-               push_url: 'git@github.com:{{publicamundi.github_repos.ckanext_datastorer.name}}.git'
-               version: '{{publicamundi.github_repos.ckanext_datastorer.version}}'
-         
-         archiver:
-           source:
-             repo:
-               url: 'https://github.com/{{publicamundi.github_repos.ckanext_archiver.name}}.git'
-               push_url: 'git@github.com:{{publicamundi.github_repos.ckanext_archiver.name}}.git'
-               version: '{{publicamundi.github_repos.ckanext_archiver.version}}'
+       ckanext: {}
 
    roles:
    - ckan
+   - celery
 
    tasks: ~
 

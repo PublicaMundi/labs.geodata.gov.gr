@@ -15,13 +15,23 @@
  
  - set_fact:
      existing_ckan_users: '{{paster_user_result.stdout_lines}}'
+ 
+ - set_fact:
+     password_spec: 'chars=ascii_letters,digits length=8'
+ 
+ - set_fact:
+     password: '{{lookup("password", ckan.secrets_dir ~ "/users/" ~ item ~ " " ~ password_spec)}}'  
+   register: passwords
+   with_items: ckan.users| map(attribute="name")| list
+ - set_fact: 
+     passwords: '{{passwords.results| to_map("item")| map_keys("*", "{0}.ansible_facts.password")}}'
 
  - name: Create basic user accounts
    sudo: yes
    sudo_user: ckaner
    shell: >
      . '{{ckan.pyenv_dir}}/bin/activate' 
-     && paster user -c '{{ckan.config_name}}.ini' add '{{item.name}}' password='{{item.password}}' email='{{item.email}}'
+     && paster user -c '{{ckan.config_name}}.ini' add '{{item.name}}' password='{{passwords[item.name]}}' email='{{item.email}}' 
    args:
      chdir: '{{ckan.pyenv_dir}}/src/ckan'
    with_items: ckan.users

@@ -1,7 +1,12 @@
 --- 
   
- - set_fact:
+ - name: Name target configuration file
+   set_fact:
      config_file: '{{ckan.config_name}}.ini'
+ 
+ - name: Generate server-side secret to encrypt auth cookies with
+   set_fact:
+     session_secret: '{{lookup("password", ckan.secrets_dir ~ "/session chars=ascii_letters,digits length=16")}}'
 
  - file: path={{ckan.temp_dir}}/conf.d state=directory owner=ckaner group=ckaner mode=0774
  

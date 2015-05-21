@@ -1,0 +1,16 @@
+---
+
+celery:
+  version: '2.4.2'
+
+  user: ckaner
+  run_as_user: ckaner
+  
+  pyenv_dir: '/usr/local/ckan/{{ckan_site_id}}/pyenv'
+  working_dir: '/var/local/ckan/{{ckan_site_id}}/'
+  
+  celeryconfig_module: 'ckan.config.celeryconfig'
+  
+  pidfile: '/var/local/ckan/{{ckan_site_id}}/run/celeryd.pid'
+  logfile: '/var/local/ckan/{{ckan_site_id}}/log/celeryd.log'
+
