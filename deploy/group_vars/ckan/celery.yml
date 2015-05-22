@@ -12,5 +12,8 @@ celery:
   celeryconfig_module: 'ckan.config.celeryconfig'
   
   pidfile: '/var/local/ckan/{{ckan_site_id}}/run/celeryd.pid'
+  
   logfile: '/var/local/ckan/{{ckan_site_id}}/log/celeryd.log'
-
+  log:
+    rotation_size: 14
+    rotation_max_filesize: 128 # MiBs
