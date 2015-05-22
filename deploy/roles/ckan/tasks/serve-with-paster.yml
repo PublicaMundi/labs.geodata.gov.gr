@@ -2,9 +2,5 @@
  
  - include: enable-serve-with-paster.yml
 
- - name: Ensure session/cache dirs are writable by ckaner
-   file: path={{ckan.temp_dir}}/{{item}} state=directory recurse=yes owner=ckaner group=ckaner
-   with_items: ['session', 'cache']
-
  - include: start-serve-with-paster.yml
 

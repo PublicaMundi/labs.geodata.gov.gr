@@ -80,6 +80,10 @@ ckan:
       listen_address: '127.0.0.1'
       port: 5000  
 
+  log:
+    rotation_max_filesize: 32 # MiBs
+    rotation_size: 9
+  
   celery:
     # Choose how to start daemon: 'manual', 'paster'
     use: 'paster'

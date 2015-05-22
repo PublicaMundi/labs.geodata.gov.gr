@@ -50,7 +50,7 @@
    notify: ['restart-apache2']
    
  - name: Set ownership for configuration file
-   file: path={{ckan.pyenv_dir}}/src/ckan/{{config_file}} owner=ckaner group=www-data mode=0640
+   file: path={{ckan.pyenv_dir}}/src/ckan/{{config_file}} owner=ckaner group=ckaner mode=0660
  
  - name: Link to configuration file under config.ini
    file:

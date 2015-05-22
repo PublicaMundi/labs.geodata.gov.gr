@@ -10,17 +10,17 @@
 
  - name: Create root directory for file storage
    file: path={{ckan.files_dir}} state=directory
- - file: path={{ckan.files_dir}} state=directory mode=0775 owner=ckaner group=www-data
+ - file: path={{ckan.files_dir}} state=directory mode=0775 owner=ckaner group=ckaner
   
  - name: Create directory for temporary session/cache data
    file: path={{ckan.temp_dir}} state=directory
- - file: path={{ckan.temp_dir}} state=directory mode=0775 owner=ckaner group=www-data
+ - file: path={{ckan.temp_dir}} state=directory mode=0775 owner=ckaner group=ckaner
  
  - name: Create directory to keep pids for running daemons 
-   file: path={{ckan.run_dir}} state=directory mode=0774 owner=ckaner group=ckaner
+   file: path={{ckan.run_dir}} state=directory mode=0775 owner=ckaner group=ckaner
  
  - name: Create directory for logs 
-   file: path={{ckan.log_dir}} state=directory mode=0774 owner=ckaner group=ckaner
+   file: path={{ckan.log_dir}} state=directory mode=0775 owner=ckaner group=ckaner
 
  - name: Create a directory for helper scripts
    file: path=~ckaner/scripts state=directory mode=0770 owner=ckaner group=ckaner
