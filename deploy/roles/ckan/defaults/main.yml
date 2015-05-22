@@ -81,8 +81,8 @@ ckan:
       port: 5000  
 
   log:
-    rotation_max_filesize: 32 # MiBs
-    rotation_size: 9
+    rotation_max_filesize: 128 # MiBs
+    rotation_size: 14
   
   celery:
     # Choose how to start daemon: 'manual', 'paster'

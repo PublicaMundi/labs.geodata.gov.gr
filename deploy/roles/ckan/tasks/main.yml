@@ -1,7 +1,8 @@
 ---
 
- - debug: var=ckan
- - debug: var=ckanext
+ #- debug: var=ckan
+ #- debug: var=ckanext
+ #pause:
 
  - set_fact:
      present_ckan: ~ 
