@@ -66,9 +66,13 @@ ckan:
   serve:
     # Choose the way to deploy it: 'manual', 'apache2-mod-wsgi', 'apache2/paster' or 'paster'
     use: 'paster'
-    # Specify the hostname for this service (i.e. the virtual host)
-    hostname: ~
-    # hostname: 'ckan.example.localdomain'
+    # Specify the canonical hostname for this service (i.e. the virtual host)
+    name: ~
+    # name: 'catalog.example.localdomain'
+    # Specify any name aliases for this service
+    name_aliases: []
+    #name_aliases: ['ckan.example.localdomain']
+    # The URL path prefix for the application
     url_prefix: '/'
     # Spawn WSGI processes/threads (applicable for 'apache2-mod-wsgi')
     wsgi_opts:

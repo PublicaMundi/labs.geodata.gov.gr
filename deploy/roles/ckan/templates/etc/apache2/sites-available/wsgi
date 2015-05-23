@@ -1,7 +1,11 @@
 <VirtualHost *:80>
     ServerAdmin "{{ckan.email.errors_to}}"
-    ServerName "{{ckan.serve.hostname}}"
+    ServerName "{{ckan.serve.name}}"
 
+    {% for alias in ckan.serve.name_aliases -%}
+    ServerAlias "{{alias}}"
+    {% endfor %}
+    
     DocumentRoot /var/www
     <Directory />
         Options FollowSymLinks
@@ -24,5 +28,6 @@
     
     ErrorLog "${APACHE_LOG_DIR}/error.ckan-{{ckan_site_id}}.log"
     LogLevel info
-    CustomLog "${APACHE_LOG_DIR}/access.ckan-{{ckan_site_id}}.log" combined
+    LogFormat "%{Host}i:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined_1
+    CustomLog "${APACHE_LOG_DIR}/access.ckan-{{ckan_site_id}}.log" vhost_combined_1
 </VirtualHost>

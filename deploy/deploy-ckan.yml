@@ -49,11 +49,14 @@
          site:
            url: 'http://catalog.publicamundi.localdomain:5000' 
          
-         serve:
-           hostname: 'catalog.publicamundi.localdomain'
          
-         session:
-           cookie_domain: 'catalog.publicamundi.localdomain'
+         config_name: 'production'
+         debug: 0
+
+         serve:
+           use: 'apache2-mod-wsgi'
+           name: 'catalog.publicamundi.localdomain'
+           name_aliases: ['www.publicamundi.localdomain', 'ckan.publicamundi.localdomain']
    
    - set_fact:   
        ckanext: {}

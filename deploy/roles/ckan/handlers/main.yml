@@ -16,10 +16,10 @@
     debug: { msg: " ** A system reboot is needed" }
 
   - name: print-url 
-    debug: { msg: " ** Browse http://{{ckan.serve.hostname}}{{ckan.serve.url_prefix}}" }
+    debug: { msg: " ** Browse http://{{ckan.serve.name}}{{ckan.serve.url_prefix}}" }
 
   - name: print-debug-url
-    debug: { msg: " ** Browse http://{{ckan.serve.hostname}}:{{ckan.serve.paster_opts.port}}" }
+    debug: { msg: " ** Browse http://{{ckan.serve.name}}:{{ckan.serve.paster_opts.port}}" }
     when: ckan.serve.paster_opts.listen_address == '0.0.0.0'
 
 
