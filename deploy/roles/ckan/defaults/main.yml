@@ -23,7 +23,6 @@ ckan:
 
   # Basic directories
   pyenv_dir: '/usr/local/ckan/default/pyenv'
-  config_dir: '/usr/local/ckan/default/etc'
   files_dir: '/var/local/ckan/default/files'
   temp_dir: '/var/tmp/ckan/default'
   run_dir: '/var/local/ckan/default/run'

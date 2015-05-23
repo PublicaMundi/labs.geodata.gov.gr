@@ -8,7 +8,6 @@ ckan:
       version: '{{publicamundi.github_repos.ckan.version}}'
 
   pyenv_dir: '/usr/local/ckan/{{ckan_site_id}}/pyenv'
-  config_dir: '/usr/local/ckan/{{ckan_site_id}}/etc'
   files_dir: '/var/local/ckan/{{ckan_site_id}}/files'
   run_dir: '/var/local/ckan/{{ckan_site_id}}/run'
   log_dir: '/var/local/ckan/{{ckan_site_id}}/log'

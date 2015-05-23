@@ -3,10 +3,6 @@
  #
  # Create basic directories
  #
- 
- - name: Create directory for configuration files
-   file: path={{ckan.config_dir}} state=directory
- - file: path={{ckan.config_dir}} state=directory mode=0775 owner=ckaner group=ckaner
 
  - name: Create root directory for file storage
    file: path={{ckan.files_dir}} state=directory
