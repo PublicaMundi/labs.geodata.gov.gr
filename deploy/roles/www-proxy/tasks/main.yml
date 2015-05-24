@@ -1,0 +1,38 @@
+---
+
+ - debug: var=haproxy
+
+ # Install APT requirements
+
+ - name: Install APT requirements
+   apt: pkg={{item}} state=latest
+   with_items: ['rsyslog', 'ssl-cert', 'haproxy']
+ 
+ - name: Install APT haproxy-suggested packages
+   apt: pkg={{item}} state=latest
+   with_items: ['haproxy-doc', 'hatop', 'vim-haproxy']
+
+ # Configure rsyslog (send over UDP)
+ 
+ - include: configure-rsyslog.yml
+
+ # Configure HAProxy
+ 
+ - set_fact:
+     cert_file: '/etc/haproxy/cert.pem'
+ 
+ - name: Generate password for admin web interface
+   set_fact:
+     admin_password: '{{lookup("password", haproxy.secrets_dir ~ "/users/admin chars=ascii_letters,digits length=10")}}'
+ 
+ - name: Assemble a certificate file for haproxy
+   shell: >
+     cat /etc/ssl/certs/ssl-cert-snakeoil.pem /etc/ssl/private/ssl-cert-snakeoil.key >{{cert_file}}
+ 
+ - name: Set ownership for certificate file
+   file: path={{cert_file}} owner=root group=root mode=0600
+ 
+ - name: Generate haproxy.cfg
+   template: src=etc/haproxy/haproxy.cfg dest=/etc/haproxy/haproxy.cfg backup=yes
+   notify: ['restart-haproxy'] 
+   

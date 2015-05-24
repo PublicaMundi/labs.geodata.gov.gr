@@ -1,0 +1,26 @@
+---
+ 
+ - name: Enable syslog module for UDP reception 
+   replace:
+     dest: /etc/rsyslog.conf
+     regexp: '^#[$]ModLoad[ ]+imudp[ ]*$'
+     replace: '$ModLoad imudp'
+   notify: ['restart-rsyslog']
+ 
+ - name: Enable syslog server at UDP/514
+   lineinfile:
+     dest: /etc/rsyslog.conf
+     insertafter: '^[$]ModLoad imudp'
+     line: '{{item}}'
+   with_items:
+   - '$UDPServerRun 514'
+   - '$UDPServerAddress 127.0.0.1'
+   notify: ['restart-rsyslog']
+
+ - name: Keep a separate file for local0 syslog facility
+   lineinfile:
+     dest: /etc/rsyslog.conf
+     insertafter: EOF
+     line: 'local0.* /var/log/local0.log'
+   notify: ['restart-rsyslog']
+

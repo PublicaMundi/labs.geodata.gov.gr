@@ -1,0 +1,48 @@
+---
+
+ - hosts: ckan
+   tasks:
+   - set_fact:
+       ckan_server: '{{inventory_hostname}}:5000'
+   - set_fact:
+       ckan_url: 'http://{{inventory_hostname}}:5000/'
+       
+ - hosts: proxy
+   remote_user: root
+  
+   pre_tasks:
+   - set_fact:
+       ckan_hosts: '{{groups["ckan"]}}'
+
+   - set_fact:
+       haproxy:
+         secrets_dir: '{{"files/secrets/groups/proxy"| realpath}}'
+        
+         frontends:
+           'default':
+             name: 'default'
+             bind:
+             - { address: '{{networking.if.internal_ipv4.address}}:80' }
+             vhosts: 
+             - name: 'www'
+               hostname: 
+               - 'www.publicamundi.localdomain'
+               - 'web.publicamundi.localdomain'
+               path:
+               - name: 'ckan'
+                 prefix: ~
+                 backend:
+                   opts: { forwardfor: ~ }
+                   servers: '{{hostvars| map_keys(ckan_hosts, "{0}/ckan_server", "/")| list_values}}'
+             - name: 'any'
+               path:
+               - name: 'any'
+                 prefix: ~
+                 backend:
+                   servers:
+                   - address: '{{inventory_hostname}}:8080'
+
+   roles:
+   - www-proxy
+  
+   tasks:

@@ -47,18 +47,16 @@
            core_url: 'http://{{solr_server}}/solr/ckan'
 
          site:
-           url: 'http://catalog.publicamundi.localdomain:5000' 
-         
-         
-         config_name: 'production'
-         debug: 0
+           url: 'http://{{inventory_hostname}}:5000' 
 
          serve:
-           use: 'apache2-mod-wsgi'
-           name: 'catalog.publicamundi.localdomain'
-           name_aliases: ['www.publicamundi.localdomain', 'ckan.publicamundi.localdomain']
+           use: 'paster'
+           name: '{{inventory_hostname}}'
+           #name_aliases: 
+           #- 'www.publicamundi.localdomain'
+           #- 'catalog.publicamundi.localdomain'
    
-   - set_fact:   
+   - set_fact:
        ckanext: {}
 
    roles:
