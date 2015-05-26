@@ -50,11 +50,13 @@ ckanext:
         url: 'https://github.com/{{publicamundi.github_repos.ckanext_datastorer.name}}.git'
         push_url: 'git@github.com:{{publicamundi.github_repos.ckanext_datastorer.name}}.git'
         version: '{{publicamundi.github_repos.ckanext_datastorer.version}}'
- 
+    plugins: ['datastorer']
+
   archiver:
     source:
       repo:
         url: 'https://github.com/{{publicamundi.github_repos.ckanext_archiver.name}}.git'
         push_url: 'git@github.com:{{publicamundi.github_repos.ckanext_archiver.name}}.git'
         version: '{{publicamundi.github_repos.ckanext_archiver.version}}'
+    plugins: [] # disabled
 
