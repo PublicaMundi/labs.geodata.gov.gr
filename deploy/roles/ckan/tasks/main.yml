@@ -72,6 +72,17 @@
  - include: clean-serve-with-apache2-wsgi.yml
    when: present_ckan and (present_ckan.serve.use == 'apache2-mod-wsgi')
    tags: ['deploy']
+ 
+ # NOTE This is because we want outgoing HTTP traffic to one of our names to be 
+ # short-circuited here. But, of course, it hides these names (which typically 
+ # are the virtual names of our frontend proxy).
+ - name: Ensure our names are always resolved to a local address
+   lineinfile:
+     dest: /etc/hosts
+     line: '127.0.100.1 {{item}}'
+     insertafter: EOF
+   with_items: '{{[ckan.serve.name] + ckan.serve.name_aliases}}' 
+   tags: ['deploy']
 
  - include: serve-with-paster.yml
    when: ckan.serve.use == 'paster'

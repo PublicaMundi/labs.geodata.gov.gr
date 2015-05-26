@@ -3,9 +3,9 @@
  - hosts: ckan
    tasks:
    - set_fact:
-       ckan_server: '{{inventory_hostname}}:5000'
+       ckan_server: '{{inventory_hostname}}:80'
    - set_fact:
-       ckan_url: 'http://{{inventory_hostname}}:5000/'
+       ckan_url: 'http://{{inventory_hostname}}/'
        
  - hosts: proxy
    remote_user: root
@@ -24,10 +24,9 @@
              bind:
              - { address: '{{networking.if.internal_ipv4.address}}:80' }
              vhosts: 
-             - name: 'www'
+             - name: 'catalog'
                hostname: 
-               - 'www.publicamundi.localdomain'
-               - 'web.publicamundi.localdomain'
+               - 'catalog.publicamundi.localdomain'
                path:
                - name: 'ckan'
                  prefix: ~
