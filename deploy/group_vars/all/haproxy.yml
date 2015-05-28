@@ -1,0 +1,4 @@
+---
+
+haproxy:
+  secrets_dir: '{{"files/secrets/groups/proxy/haproxy"| realpath}}' 

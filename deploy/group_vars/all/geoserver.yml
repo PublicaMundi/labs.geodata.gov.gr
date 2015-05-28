@@ -1,0 +1,14 @@
+---
+
+geoserver:
+  # The (internal?) endpoint to the REST API interface (convention!)
+  api_url: 'http://{{groups["geoserver"]| first}}:8081/geoserver'
+  
+  # The (internal?) endpoint to reload configuration for the cluster (by convention!)
+  reload_url: 'http://{{groups["geoserver"]| first}}:8081/reload'
+
+  # The public endpoint
+  url: 'http://{{common_name}}/geoserver'
+
+  secrets_dir: '{{"files/secrets/groups/geoserver"| realpath}}' 
+

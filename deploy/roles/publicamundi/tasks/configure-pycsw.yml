@@ -1,0 +1,11 @@
+---
+
+ - name: Generate configuration for pycsw service
+   template: 
+     src: 'etc/pycsw/default.cfg'
+     dest: '{{ckan.pyenv_dir}}/src/pycsw/default.cfg'
+     owner: ckaner
+     group: ckaner
+
+ - name: Set ownership for configuration file
+   file: path={{ckan.pyenv_dir}}/src/pycsw/default.cfg owner=ckaner group=ckaner mode=0660

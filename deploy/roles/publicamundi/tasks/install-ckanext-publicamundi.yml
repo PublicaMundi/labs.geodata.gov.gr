@@ -1,0 +1,56 @@
+---
+
+ - name: Install ckanext-publicamundi from repo
+   sudo: yes
+   sudo_user: ckaner
+   pip: 
+     virtualenv: '{{ckan.pyenv_dir}}'
+     name: 'git+{{ckanext.publicamundi.source.repo.url}}@{{ckanext.publicamundi.source.repo.version}}#egg=ckanext-publicamundi'
+     state: present
+     extra_args: '-e'
+ 
+ - name: Set push-URL for ckanext-publicamundi repo
+   sudo: yes
+   sudo_user: ckaner
+   command: git remote set-url --push origin '{{ckanext.publicamundi.source.repo.push_url}}'
+   args:
+     chdir: '{{ckan.pyenv_dir}}/src/ckanext-publicamundi'
+   when: ckanext.publicamundi.source.repo.push_url| default(false)
+ 
+ - name: Install pip requirements for ckanext-publicamundi
+   sudo: yes
+   sudo_user: ckaner
+   pip:
+     virtualenv: '{{ckan.pyenv_dir}}'
+     requirements: '{{ckan.pyenv_dir}}/src/ckanext-publicamundi/requirements.txt'
+
+ - file: path={{ckan.pyenv_dir}}/src/ckanext-publicamundi/ckanext/publicamundi/public/js/scratch.js state=touch
+   sudo: yes
+   sudo_user: ckaner
+
+ - name: Install pip requirements for rasterstorer plugin of ckanext-publicamundi
+   sudo: yes
+   sudo_user: ckaner
+   pip:
+     virtualenv: '{{ckan.pyenv_dir}}'
+     requirements: '{{ckan.pyenv_dir}}/src/ckanext-publicamundi/rasterstorer-requirements.txt'
+   when: '{{"publicamundi_raster" in ckanext.publicamundi.plugins}}'
+ 
+ - name: Install pip requirements for vectorstorer plugin of ckanext-publicamundi
+   sudo: yes
+   sudo_user: ckaner
+   pip:
+     virtualenv: '{{ckan.pyenv_dir}}'
+     requirements: '{{ckan.pyenv_dir}}/src/ckanext-publicamundi/vectorstorer-requirements.txt'
+   when: '{{"publicamundi_vector" in ckanext.publicamundi.plugins}}'
+
+ - name: Setup ckanext-publicamundi 
+   sudo: yes
+   sudo_user: ckaner
+   shell: >
+     . '{{ckan.pyenv_dir}}/bin/activate' 
+     && paster --plugin=ckanext-publicamundi publicamundi-setup -c '{{ckan.config_name}}.ini'
+   args:
+     chdir: '{{ckan.pyenv_dir}}/src/ckan'
+
+  

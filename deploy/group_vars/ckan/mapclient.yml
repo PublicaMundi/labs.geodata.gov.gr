@@ -1,0 +1,10 @@
+---
+
+mapclient:
+  install: yes
+  source:
+    repo:
+      url: 'https://github.com/{{publicamundi.github_repos.mapclient.name}}.git'
+      push_url: 'git@github.com:{{publicamundi.github_repos.mapclient.name}}.git'
+      version: '{{publicamundi.github_repos.mapclient.version}}'
+

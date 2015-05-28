@@ -1,0 +1,19 @@
+---
+ 
+ - set_fact:
+     mapclient_config_name: '{{ckan.config_name}}'
+ - set_fact:
+     mapclient_config_file: '{{ckan.pyenv_dir}}/src/mapclient/{{mapclient_config_name}}.ini'
+
+ - name: Generate configuration for mapclient application
+   template: src=etc/mapclient/config.ini dest={{mapclient_config_file}} owner=ckaner group=ckaner
+ 
+ - name: Set ownership for configuration file
+   file: path={{mapclient_config_file}} owner=ckaner group=ckaner mode=0660
+ 
+ - name: Link to configuration file under config.ini
+   file:
+     state: link
+     force: yes
+     src: '{{mapclient_config_name}}.ini'
+     path: '{{ckan.pyenv_dir}}/src/mapclient/config.ini'

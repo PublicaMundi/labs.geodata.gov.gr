@@ -1,13 +1,13 @@
 ---
 
-#
-# Install additional APT packages needed by ckanext-publicamundi
-#
+ #
+ # Install additional APT packages needed by ckanext-publicamundi
+ #
 
  - name: Install geospatial libraries and utilities
    apt: pkg={{item}} state=latest
    with_items:
-   - libgeos
+   - libgeos-c1
    - libgeos-dev
    - libgdal-dev
    - python-gdal

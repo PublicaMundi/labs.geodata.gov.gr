@@ -1,0 +1,8 @@
+---
+
+ - name: Re-generate vhost configuration
+   template: 
+     src: 'etc/apache2/sites-available/wsgi' 
+     dest: '/etc/apache2/sites-available/ckan-{{ckan_site_id}}.wsgi'
+   notify: ['restart-apache2']
+

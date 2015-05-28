@@ -1,0 +1,9 @@
+---
+
+ - name: Configure ckanext-spatial
+   template:
+     src: etc/ckan/conf.d/app-spatial.ini 
+     dest: '{{ckan.temp_dir}}/conf.d/{{ckan.config_name}}.section-{{app_config_section_num}}spatial.ini'
+     owner: ckaner
+     group: ckaner
+   notify: ['reassemble-ckan-config']  

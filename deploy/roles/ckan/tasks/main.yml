@@ -1,15 +1,18 @@
 ---
 
- #- debug: var=ckan
- #- debug: var=ckanext
- #pause:
+ - debug: var=ckan
+ - debug: var=ckanext
 
  - set_fact:
      present_ckan: ~ 
+     present_ckanext: ~ 
  - set_fact:
-     present_ckan: '{{ansible_local.current.ckan| default({})}}'
+     present_ckan: '{{ansible_local.ckan| default({})}}'
+     present_ckanext: '{{ansible_local.ckanext| default({})}}'
    when: ansible_local is defined
+ 
  - debug: var=present_ckan
+ - debug: var=present_ckanext
 
  # Configure APT repos, install required packages
  
@@ -39,8 +42,9 @@
    tags: ['install']
  
  # Configure CKAN
-
+ 
  - include: configure-ckan.yml 
+   tags: ['configure']
 
  # Initialize database (create tables from model)
 
@@ -73,9 +77,9 @@
    when: present_ckan and (present_ckan.serve.use == 'apache2-mod-wsgi')
    tags: ['deploy']
  
- # NOTE This is because we want outgoing HTTP traffic to one of our names to be 
- # short-circuited here. But, of course, it hides these names (which typically 
- # are the virtual names of our frontend proxy).
+ # NOTE This is because we want to short-circuit outgoing HTTP traffic to (one of) 
+ # our names. But, of course, it shadows these actual names (which typically are
+ # the virtual names of our frontend proxy).
  - name: Ensure our names are always resolved to a local address
    lineinfile:
      dest: /etc/hosts
@@ -113,8 +117,11 @@
  
  - name: Dump current configuration as facts
    copy: 
-     content: '{{dict(ckan=ckan, ckanext=ckanext)}}'
-     dest: '/etc/ansible/facts.d/current.fact'
+     content: '{{item.value| to_nice_json}}'
+     dest: '/etc/ansible/facts.d/{{item.key}}.fact'
      mode: 0640
+   with_dict:
+     ckan: '{{ckan}}'
+     ckanext: '{{ckanext}}'
    tags: ['dump-facts']
 

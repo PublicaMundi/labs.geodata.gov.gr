@@ -1,0 +1,11 @@
+---
+
+ - name: Install mapclient from repo
+   sudo: yes
+   sudo_user: ckaner
+   pip: 
+     virtualenv: '{{ckan.pyenv_dir}}'
+     name: 'git+{{mapclient.source.repo.url}}@{{mapclient.source.repo.version}}#egg=mapclient'
+     state: present
+     extra_args: '-e'
+ 

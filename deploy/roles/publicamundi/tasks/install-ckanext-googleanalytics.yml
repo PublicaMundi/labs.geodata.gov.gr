@@ -1,0 +1,19 @@
+---
+
+ - name: Install ckanext-googleanalytics from repo
+   sudo: yes
+   sudo_user: ckaner
+   pip: 
+     virtualenv: '{{ckan.pyenv_dir}}'
+     name: 'git+{{ckanext.googleanalytics.source.repo.url}}@{{ckanext.googleanalytics.source.repo.version}}#egg=ckanext-googleanalytics'
+     state: present
+     extra_args: '-e'
+ 
+ - name: Set push-URL for ckanext-googleanalytics repo
+   sudo: yes
+   sudo_user: ckaner
+   command: git remote set-url --push origin '{{ckanext.googleanalytics.source.repo.push_url}}'
+   args:
+     chdir: '{{ckan.pyenv_dir}}/src/ckanext-googleanalytics'
+   when: ckanext.googleanalytics.source.repo.push_url| default(false)
+ 

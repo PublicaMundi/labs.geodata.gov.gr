@@ -1,0 +1,14 @@
+---
+
+pycsw:
+  # The public endpoint
+  url: 'http://{{common_name}}/csw'
+
+  title: >
+    geodata.gov.gr CSW Geospatial Catalogue
+  abstract: >
+    geodata.gov.gr OGC CSW server implemented with pycsw
+  keywords: ['catalogue', 'discovery', 'metadata']
+  
+  provider_name: 'PublicaMundi FP7 project'
+  provider_url: 'http://publicamundi.eu'

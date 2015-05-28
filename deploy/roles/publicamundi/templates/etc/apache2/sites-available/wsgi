@@ -17,16 +17,21 @@
         Order allow,deny
         allow from all
     </Directory>
-
-    # Serve CKAN WSGI application
     
-    {% set url_prefix = ckan.serve.url_prefix| default("/") -%}
-    {% set num_processes = ckan.serve.wsgi_opts.num_processes| int| default(2) -%}
-    {% set num_threads = ckan.serve.wsgi_opts.num_threads| int| default(12) -%}
-    WSGIScriptAlias "{{url_prefix}}" {{ckan.pyenv_dir}}/src/ckan/wsgi.py
+    # Serve in daemon-process mode
     WSGIPassAuthorization On
-    WSGIDaemonProcess "ckan_{{ckan_site_id}}" user=ckaner group=ckaner display-name="ckan/{{ckan_site_id}}" processes={{num_processes}} threads={{num_threads}}
+    WSGIDaemonProcess "ckan_{{ckan_site_id}}" user=ckaner group=ckaner display-name="ckan/{{ckan_site_id}}" processes=4 threads=16
     WSGIProcessGroup "ckan_{{ckan_site_id}}"
+
+    # Serve PyCSW
+    WSGIScriptAlias "/csw" {{ckan.pyenv_dir}}/src/pycsw/csw.wsgi
+    SetEnvIf Request_URI "/csw" PYCSW_CONFIG={{ckan.pyenv_dir}}/src/pycsw/default.cfg
+
+    # Serve MapClient
+    WSGIScriptAlias "/maps" {{ckan.pyenv_dir}}/src/mapclient/wsgi.py
+
+    # Serve CKAN (default application)
+    WSGIScriptAlias "/" {{ckan.pyenv_dir}}/src/ckan/wsgi.py
     
     ErrorLog "${APACHE_LOG_DIR}/error.ckan-{{ckan_site_id}}.log"
     LogLevel info

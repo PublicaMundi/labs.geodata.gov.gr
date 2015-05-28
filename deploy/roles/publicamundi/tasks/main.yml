@@ -1,3 +1,89 @@
 ---
 
+ - set_fact:
+     app_config_section_num: '{{ckan.config_sections.index("app.ini")| int}}'
+ 
+ - assert:
+     that: selected_ckan_plugins is sequence
+
+ # Install APT packages required for ckanext-publicamundi
+ 
  - include: install-apt-packages.yml
+   tags: ['install', 'apt-get']
+
+ # Setup CKAN extension: spatial
+ 
+ - include: install-ckanext-spatial.yml
+   when: ckanext.spatial.install
+   tags: ['install', 'init-db']
+   
+ - set_fact:
+     selected_ckan_plugins: '{{selected_ckan_plugins + ckanext.spatial.plugins}}'
+   when: ckanext.spatial.install
+   tags: ['configure']
+ 
+ - include: configure-ckanext-spatial.yml
+   when: ckanext.spatial.install
+   tags: ['configure']
+
+ # Setup PyCSW
+ 
+ - include: install-pycsw.yml
+   tags: ['install']
+
+ - include: configure-pycsw.yml
+   tags: ['configure']
+ 
+ # Setup CKAN extension: publicamundi
+ 
+ - include: install-ckanext-publicamundi.yml
+   tags: ['install', 'init-db']
+ 
+ - set_fact:
+     selected_ckan_plugins: '{{selected_ckan_plugins + ckanext.publicamundi.plugins}}'
+   tags: ['configure']
+
+ - include: configure-ckanext-publicamundi.yml
+   tags: ['configure']
+
+ # Setup CKAN extension: googleanalytics
+  
+ - include: install-ckanext-googleanalytics.yml
+   when: ckanext.googleanalytics.install
+   tags: ['install']
+  
+ - set_fact:
+     selected_ckan_plugins: '{{selected_ckan_plugins + ckanext.googleanalytics.plugins}}'
+   when: ckanext.googleanalytics.install
+   tags: ['configure']
+  
+ - include: configure-ckanext-googleanalytics.yml
+   when: ckanext.googleanalytics.install
+   tags: ['configure']
+
+ # Reconfigure base CKAN; enable selected plugins 
+ 
+ - set_fact:
+     selected_ckan_plugins: '{{selected_ckan_plugins + ckanext.publicamundi.theme_plugins}}'
+   tags: ['configure']
+
+ - include: enable-ckan-plugins.yml
+   tags: ['configure']
+ 
+ # Setup mapclient
+ 
+ - include: install-mapclient.yml
+   tags: ['install']
+
+ - include: configure-mapclient.yml
+   tags: ['configure']
+
+ # Serve WSGI apps
+
+ # NOTE The satellite applications (pycsw,mapclient) will be deployed as WSGI only if CKAN
+ # is deployed under apache2-mod-wsgi. In any other case (e.g. when CKAN is deployed under
+ # paster), this has to be done manually (e.g. by starting other paster-serve processes).
+ - include: serve-with-apache2-wsgi.yml
+   when: ckan.serve.use == 'apache2-mod-wsgi'
+   tags: ['deploy']
+

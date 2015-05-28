@@ -18,7 +18,7 @@
        db_server: '{{inventory_hostname}}:{{postgres.service.port}}'
    - set_fact:
        db_credentials: '{{postgres.credentials}}'
-
+   
  
  - hosts: ckan
    remote_user: root
@@ -35,9 +35,6 @@
     
    - set_fact:
        ckan:
-         instance_uuid: '{{"catalog.publicamundi.localdomain"| to_uuid}}'
-         secrets_dir: '{{"files/secrets/groups/ckan"| realpath}}'
-
          database:
            url: 'postgresql://ckaner:{{db_credentials["ckaner"].password}}@{{db_server}}/ckan'
            datastore_write_url: 'postgresql://ckan_datastorer:{{db_credentials["ckan_datastorer"].password}}@{{db_server}}/ckan_data'
@@ -46,23 +43,20 @@
          solr:
            core_url: 'http://{{solr_server}}/solr/ckan'
 
-         site:
-           url: 'http://{{inventory_hostname}}' 
-
          config_name: production
          debug: 0
-
+         
          serve:
            use: 'apache2-mod-wsgi'
            name: '{{inventory_hostname}}'
            name_aliases: 
-           - 'catalog.publicamundi.localdomain'
-   
+           - '{{common_name}}'
+      
    - set_fact:
        ckanext: {}
 
    roles:
-   - ckan
+   - publicamundi
    - celery
 
    tasks: ~

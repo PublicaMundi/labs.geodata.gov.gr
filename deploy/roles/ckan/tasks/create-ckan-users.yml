@@ -17,9 +17,6 @@
      existing_ckan_users: '{{paster_user_result.stdout_lines}}'
  
  - set_fact:
-     password_spec: 'chars=ascii_letters,digits length=8'
- 
- - set_fact:
      password: '{{lookup("password", ckan.secrets_dir ~ "/users/" ~ item ~ " " ~ password_spec)}}'  
    register: passwords
    with_items: ckan.users| map(attribute="name")| list

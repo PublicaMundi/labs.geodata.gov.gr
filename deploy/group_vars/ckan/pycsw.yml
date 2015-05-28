@@ -1,0 +1,9 @@
+---
+
+pycsw:
+  source:
+    repo:
+      url: 'https://github.com/{{publicamundi.github_repos.pycsw.name}}.git'
+      push_url: 'git@github.com:{{publicamundi.github_repos.pycsw.name}}.git'
+      version: '{{publicamundi.github_repos.pycsw.version}}'
+

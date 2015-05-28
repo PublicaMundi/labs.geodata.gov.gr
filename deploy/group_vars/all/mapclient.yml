@@ -1,0 +1,5 @@
+---
+
+mapclient:
+  # The public endpoint
+  url: 'http://{{common_name}}/maps'

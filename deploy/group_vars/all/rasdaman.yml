@@ -1,0 +1,11 @@
+---
+
+rasdaman:
+  # The (internal?) API endpoint to OWS services (convention!)  
+  api_url: 'http://{{groups["rasdaman"]| first}}:8081/rasdaman'
+  
+  # The public endpoint
+  url: 'http://{{common_name}}/rasdaman'
+
+  secrets_dir: '{{"files/secrets/groups/rasdaman"| realpath}}' 
+

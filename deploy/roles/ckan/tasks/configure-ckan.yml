@@ -9,36 +9,17 @@
      session_secret: '{{lookup("password", ckan.secrets_dir ~ "/session chars=ascii_letters,digits length=16")}}'
 
  - file: path={{ckan.temp_dir}}/conf.d state=directory owner=ckaner group=ckaner mode=0774
- 
- - name: List entry points registered as CKAN plugins
-   sudo: yes
-   sudo_user: ckaner
-   shell: >
-     (. '{{ckan.pyenv_dir}}/bin/activate' && paster points 'ckan.plugins')| 
-     grep -P -o -e '\w+(?=[ ]*=)'
-   args:
-     chdir: '{{ckan.pyenv_dir}}/src/ckan'
-   register: paster_points_result
 
  - set_fact:
      selected_ckan_plugins: '{{ckan.plugins + ckanext.archiver.plugins + ckanext.datastorer.plugins}}'
-     registered_ckan_plugins: '{{paster_points_result.stdout_lines}}'
-
- - name: Check if given plugins are valid entry points
-   assert:
-     that: not (selected_ckan_plugins| difference(registered_ckan_plugins))
 
  - name: Generate .ini configuration fragments
    template: 
      src: 'etc/ckan/conf.d/{{item.1}}' 
-     dest: '{{ckan.temp_dir}}/conf.d/{{ckan.config_name}}.section-{{item.0}}.{{item.1}}' 
+     dest: '{{ckan.temp_dir}}/conf.d/{{ckan.config_name}}.section-{{item.0}}.ini' 
      owner: ckaner
      group: ckaner
-   with_indexed_items:
-   - 'global.ini'
-   - 'server.ini'
-   - 'app.ini'
-   - 'logging.ini'
+   with_indexed_items: ckan.config_sections
    register: ckan_config_fragments
 
  - name: Assemble configuration file
@@ -47,7 +28,9 @@
      src: '{{ckan.temp_dir}}/conf.d' 
      regexp: '^{{ckan.config_name}}[.]'
    when: ckan_config_fragments.changed
-   notify: ['restart-apache2']
+   notify: 
+   - 'check-selected-ckan-plugins' 
+   - 'restart-apache2'
    
  - name: Set ownership for configuration file
    file: path={{ckan.pyenv_dir}}/src/ckan/{{config_file}} owner=ckaner group=ckaner mode=0660

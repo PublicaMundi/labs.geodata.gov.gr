@@ -1,0 +1,19 @@
+---
+
+ - name: Install pycsw from repo
+   sudo: yes
+   sudo_user: ckaner
+   pip: 
+     virtualenv: '{{ckan.pyenv_dir}}'
+     name: 'git+{{pycsw.source.repo.url}}@{{pycsw.source.repo.version}}#egg=pycsw'
+     state: present
+     extra_args: '-e'
+ 
+ - name: Set push-URL for pycsw repo
+   sudo: yes
+   sudo_user: ckaner
+   command: git remote set-url --push origin '{{pycsw.source.repo.push_url}}'
+   args:
+     chdir: '{{ckan.pyenv_dir}}/src/pycsw'
+   when: pycsw.source.repo.push_url| default(false)
+ 

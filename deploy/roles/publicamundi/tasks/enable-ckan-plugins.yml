@@ -1,0 +1,8 @@
+---
+
+ - name: Reconfigure CKAN; enable selected plugins
+   lineinfile:
+     dest: '{{ckan.temp_dir}}/conf.d/{{ckan.config_name}}.section-{{app_config_section_num}}.ini'
+     regexp: '^ckan.plugins[ ]*='
+     line: 'ckan.plugins = {{selected_ckan_plugins| join(" ")}}'
+   notify: ['reassemble-ckan-config']  

@@ -22,5 +22,5 @@
      force: yes
      path: '/etc/apache2/sites-enabled/ckan-{{ckan_site_id}}'
      src: '../sites-available/ckan-{{ckan_site_id}}.proxy-to-paster'
-   notify: ['restart-apache2', 'print-url']
+   notify: ['restart-apache2', 'print-ckan-url']
 

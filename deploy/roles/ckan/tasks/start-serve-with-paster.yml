@@ -8,7 +8,7 @@
    #sudo: yes
    #sudo_user: ckaner
    shell: sudo -u ckaner screen -dm -S paster-serve-ckan ~ckaner/scripts/paster-serve-ckan.sh
-   notify: ['print-debug-url']
+   notify: ['print-ckan-debug-url']
  
  - wait_for: port={{ckan.serve.paster_opts.port}} state=started delay=2 timeout=15
    register: wait_port_result
@@ -17,6 +17,3 @@
  - command: /bin/true
    when: wait_port_result.failed is defined
    notify: ['ask-reboot']
-
-# - command: /bin/true
-#   notify: ['ask-reboot']

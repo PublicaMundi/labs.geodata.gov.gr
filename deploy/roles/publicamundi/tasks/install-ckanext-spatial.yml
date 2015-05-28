@@ -1,0 +1,37 @@
+---
+
+ - name: Install ckanext-spatial from repo
+   sudo: yes
+   sudo_user: ckaner
+   pip: 
+     virtualenv: '{{ckan.pyenv_dir}}'
+     name: 'git+{{ckanext.spatial.source.repo.url}}@{{ckanext.spatial.source.repo.version}}#egg=ckanext-spatial'
+     state: present
+     extra_args: '-e'
+ 
+ - name: Set push-URL for ckanext-spatial repo
+   sudo: yes
+   sudo_user: ckaner
+   command: git remote set-url --push origin '{{ckanext.spatial.source.repo.push_url}}'
+   args:
+     chdir: '{{ckan.pyenv_dir}}/src/ckanext-spatial'
+   when: ckanext.spatial.source.repo.push_url| default(false)
+ 
+ - name: Install pip requirements for ckanext-spatial
+   sudo: yes
+   sudo_user: ckaner
+   pip:
+     virtualenv: '{{ckan.pyenv_dir}}'
+     requirements: '{{ckan.pyenv_dir}}/src/ckanext-spatial/pip-requirements.txt'
+
+
+ - name: Create database schema needed by ckanext-spatial
+   sudo: yes
+   sudo_user: ckaner
+   shell: >
+     . '{{ckan.pyenv_dir}}/bin/activate' 
+     && paster --plugin=ckanext-spatial spatial -c '{{ckan.config_name}}.ini' initdb
+   args:
+     chdir: '{{ckan.pyenv_dir}}/src/ckan'
+
+

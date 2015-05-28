@@ -1,5 +1,9 @@
 ---
 
+#
+# Base CKAN
+#
+
 ckan:
   source:
     repo:
@@ -15,7 +19,7 @@ ckan:
 
   config_name: 'development'
   debug: 1
-  
+
   celery:
     use: ~
   
@@ -43,20 +47,86 @@ ckan:
   - name: tester
     email: 'tester@publicamundi.localdomain'
 
+#
+# Extensions for CKAN
+#
+
 ckanext:
   datastorer:
+    install: yes
     source:
       repo:
         url: 'https://github.com/{{publicamundi.github_repos.ckanext_datastorer.name}}.git'
         push_url: 'git@github.com:{{publicamundi.github_repos.ckanext_datastorer.name}}.git'
         version: '{{publicamundi.github_repos.ckanext_datastorer.version}}'
-    plugins: ['datastorer']
+    plugins: 
+    - 'datastorer'
 
   archiver:
+    install: yes
     source:
       repo:
         url: 'https://github.com/{{publicamundi.github_repos.ckanext_archiver.name}}.git'
         push_url: 'git@github.com:{{publicamundi.github_repos.ckanext_archiver.name}}.git'
         version: '{{publicamundi.github_repos.ckanext_archiver.version}}'
-    plugins: [] # disabled
+    # Currently, the archiver plugin is disabled: we only carry ckanext-archiver as a
+    # code dependency for caknext-datastorer
+    plugins: []
+
+  spatial:
+    install: yes
+    source:
+      repo:
+        url: 'https://github.com/{{publicamundi.github_repos.ckanext_spatial.name}}.git'
+        push_url: 'git@github.com:{{publicamundi.github_repos.ckanext_spatial.name}}.git'
+        version: '{{publicamundi.github_repos.ckanext_spatial.version}}'
+    plugins:
+    - 'spatial_metadata'
+    - 'spatial_query'
+  
+  googleanalytics:
+    install: no
+    source:
+      repo:
+        url: 'https://github.com/{{publicamundi.github_repos.ckanext_googleanalytics.name}}.git' 
+        push_url: 'git@github.com:{{publicamundi.github_repos.ckanext_googleanalytics.name}}.git'
+        version: '{{publicamundi.github_repos.ckanext_googleanalytics.version}}'
+    plugins: 
+    - 'googleanalytics'
+    tracking_id: 'UA-57666469-1'
+ 
+  publicamundi:
+    install: yes
+    source:
+      repo:
+        url: 'https://github.com/{{publicamundi.github_repos.ckanext_publicamundi.name}}.git'
+        push_url: 'git@github.com:{{publicamundi.github_repos.ckanext_publicamundi.name}}.git'
+        version: '{{publicamundi.github_repos.ckanext_publicamundi.version}}' 
+    plugins:
+    - 'publicamundi_errorware'
+    - 'publicamundi_dataset_with_spatial'
+    - 'publicamundi_package'
+    #- 'publicamundi_vector'
+    #- 'publicamundi_raster'
+    # See note about `theme_plugins` at roles/publicamundi/defaults/main.yml 
+    theme_plugins:
+    #- 'publicamundi_geodata_theme'
+    - 'spatial_publicamundi_preview'
+
+    themes:
+      geodata:
+        feedback_form: 'https://docs.google.com/forms/d/1_biYR042tPc7bvQ7UimOVCFTvRLFjuh5BH3SwegfIgI/viewform'
+
+    vectorstorer:
+      geoserver:
+        username: admin
+        url: '{{geoserver.url}}'
+        rest_url: '{{geoserver.api_url}}'
+        reload_url: '{{geoserver.reload_url}}'
+
+    rasterstorer:
+      rasdaman:
+        url: '{{rasdaman.url}}'
+        wcst_url: '{{rasdaman.api_url}}/ows'
+        wms_url: '{{rasdaman.api_url}}/ows/wms13'
 

@@ -4,6 +4,12 @@
 publicamundi:
   # List project repos
   github_repos:
+    pycsw:
+      name: PublicaMundi/pycsw
+      version: dev.publicamundi.eu
+    mapclient:
+      name: PublicaMundi/mapclient
+      version: dev.publicamundi.eu 
     ckan:
       name: PublicaMundi/ckan
       version: dev.publicamundi.eu
@@ -13,17 +19,13 @@ publicamundi:
     ckanext_datastorer:
       name: PublicaMundi/ckanext-datastorer
       version: dev.publicamundi.eu
+    ckanext_spatial:
+      name: PublicaMundi/ckanext-spatial
+      version: dev.publicamundi.eu
+    ckanext_googleanalytics:
+      name: PublicaMundi/ckanext-googleanalytics
+      version: dev.publicamundi.eu
     ckanext_publicamundi:
       name: PublicaMundi/ckanext-publicamundi
       version: dev.publicamundi.eu
-
-
-# Configuration (global) for CKAN application
-
-ckan_site_id: default
-
-ckan:
-  solr:
-    # Specify path for schema.xml relative to the above CKAN repo 
-    schema_path: ckan/config/solr/schema.xml
 

@@ -1,6 +1,6 @@
 ---
 
- - name: Create model in database
+ - name: Create database schema
    sudo: yes
    sudo_user: ckaner
    shell: >

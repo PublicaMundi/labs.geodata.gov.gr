@@ -1,0 +1,12 @@
+---
+
+ - set_fact:
+     geoserver_admin_password: '{{lookup("password", geoserver.secrets_dir ~ "/users/admin" ~ " " ~ password_spec)}}'
+ 
+ - name: Configure ckanext-publicamundi
+   template:
+     src: etc/ckan/conf.d/app-publicamundi.ini 
+     dest: '{{ckan.temp_dir}}/conf.d/{{ckan.config_name}}.section-{{app_config_section_num}}publicamundi.ini'
+     owner: ckaner
+     group: ckaner
+   notify: ['reassemble-ckan-config']  

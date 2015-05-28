@@ -1,0 +1,5 @@
+---
+
+ckan:
+
+  serve: { url_prefix: "/" }

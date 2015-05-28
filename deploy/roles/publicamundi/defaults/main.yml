@@ -1,0 +1,92 @@
+---
+
+#
+# Extensions for CKAN
+#
+
+# NOTE: 
+# See the note on `ckanext.foo.plugins` in base `ckan` role. Although all 'ckanext.*.plugins'
+# will be taken into account, this is not the case for `ckanext.*.theme_plugins`. This is 
+# a special category of plugins (must be listed in the end to override all blocks) that can
+# only be provided by `ckanext.publicamundi.theme_plugins`
+
+ckanext:
+  spatial:
+    install: yes
+    source:
+      repo:
+        url: 'https://github.com/ckan/ckanext-spatial.git' 
+        push_url: ~
+        version: master
+    plugins:
+    - 'spatial_metadata'
+    - 'spatial_query'
+
+  googleanalytics:
+    install: yes
+    source:
+      repo:
+        url: 'https://github.com/ckan/ckanext-googleanalytics.git' 
+        push_url: ~
+        version: master
+    plugins:
+    - 'googleanalytics'
+    tracking_id: ~ 
+    #tracking_id: 'UA-57666469-1'
+  
+  publicamundi:
+    install: yes
+    source:
+      repo:
+        url: 'https://github.com/PublicaMundi/ckanext-publicamundi.git' 
+        push_url: ~
+        version: master
+    plugins:
+    - 'publicamundi_errorware'
+    - 'publicamundi_dataset'
+    theme_plugins: []
+    #- 'publicamundi_geodata_theme'
+    #- 'spatial_publicamundi_preview'
+    
+    themes:
+      geodata:
+        feedback_form: 'http://foo.example.com/feedback'
+
+    vectorstorer:
+      geoserver:
+        username: admin
+        url: 'http://catalog.localdomain/geoserver'
+        rest_url: 'http://geoserver.localdomain:8080/geoserver'
+        reload_url: 'http://geoserver.localdomain:8080/reload'
+
+    rasterstorer:
+      rasdaman:
+        url: 'http://catalog.localdomain/rasdaman'
+        wcst_url: 'http://rasdaman.localdomain:8080/rasdaman/ows'
+        wms_url: 'http://rasdaman.localdomain:8080/rasdaman/ows/wms13'
+
+#
+# PyCSW
+# 
+
+pycsw:
+  url: 'http://{{inventory_hostname}}/csw'  
+  source:
+    repo:
+      url: 'https://github.com/PublicaMundi/pycsw.git' 
+      push_url: ~
+      version: master
+
+#
+# MapClient
+# 
+
+mapclient:
+  url: 'http://{{inventory_hostname}}/maps'  
+  install: yes
+  source:
+    repo:
+      url: 'https://github.com/PublicaMundi/MapClient.git' 
+      push_url: ~
+      version: master
+

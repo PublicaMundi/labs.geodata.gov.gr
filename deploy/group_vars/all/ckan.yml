@@ -1,0 +1,14 @@
+---
+
+ckan_site_id: default
+
+ckan:
+  instance_uuid: '{{common_name| to_uuid}}'
+  
+  url: 'http://{{common_name}}'
+
+  solr:
+    # Specify path for schema.xml relative to the above CKAN repo 
+    schema_path: 'ckan/config/solr/schema.xml'
+
+  secrets_dir: '{{"files/secrets/groups/ckan"| realpath}}'
