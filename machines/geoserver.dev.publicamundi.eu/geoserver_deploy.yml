@@ -1,0 +1,138 @@
+- hosts: geoserver
+  gather_facts: yes
+  #gather_facts: no #Enable on first run, cause Debian does not have python installed by default
+  user: root
+  tasks:
+    #- name: Install ansible prerequisites
+      #script: ansible_prereqs.sh creates=/root/.ansible_prereqs_installed
+
+    - name: Update apt packages cache
+      action: apt update_cache=yes
+
+    - name: Install needed packages
+      action: apt pkg={{item}} state=installed
+      with_items:
+        - htop
+        - python
+        - vim
+        - screen
+        - sudo
+        - less
+        - rsync
+        - curl
+        - wget
+        - unzip
+
+    # Adding new tomcat user
+    - user: name=tomcat state=present shell=/bin/bash group=users
+    #- user: name=tomcat state=absent
+
+    #####################
+    # Java installation #
+    #####################
+
+    - name: Download Java
+      get_url: url="http://aiolos.survey.ntua.gr/tmp/oracle-j2sdk1.7_1.7.0+update67_amd64.deb" dest="~/"
+
+    - name: Install Java
+      shell: "cd ~/ && dpkg -i oracle-j2sdk1.7_1.7.0+update67_amd64.deb"
+
+    - name: Clean up
+      shell: "cd ~/ && rm oracle-j2sdk1.7_1.7.0+update67_amd64.deb"
+
+    #######################
+    # GeoServer downloads #
+    #######################
+
+    - name: Download Tomcat
+      get_url: url="http://apache.otenet.gr/dist/tomcat/tomcat-7/v7.0.62/bin/apache-tomcat-7.0.62.tar.gz" dest="~/"
+
+    - name: Download GeoServer 2.7.1
+      get_url: url="http://sourceforge.net/projects/geoserver/files/GeoServer/2.7.1/geoserver-2.7.1-war.zip" dest="~/"
+
+    - name: Unpack GeoServer war
+      shell: "cd ~/ && unzip -e geoserver-2.7.1-war.zip"
+
+    - name: Clean up
+      shell: "cd ~/ && rm -rf target && rm GPL.txt LICENSE.txt"
+
+    #################
+    # Scripts setup #
+    #################
+
+    - name: Create scripts folder
+      shell: "mkdir -p ~/scripts"
+
+    - name: Copy start/stop tomcat scripts
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - root/scripts/start_tomcat1.sh
+        - root/scripts/start_tomcat2.sh
+        - root/scripts/start_tomcat3.sh
+        - root/scripts/start_tomcat4.sh
+        - root/scripts/start_tomcat5.sh
+        - root/scripts/stop_tomcat1.sh
+        - root/scripts/stop_tomcat2.sh
+        - root/scripts/stop_tomcat3.sh
+        - root/scripts/stop_tomcat4.sh
+        - root/scripts/stop_tomcat5.sh
+
+    - name: Change scripts to 755
+      shell: "chmod -R 755 ~/scripts/*"
+
+    - name: Create logs folder
+      shell: "mkdir -p /home/tomcat/logs && chown -R tomcat:users /home/tomcat/*"
+
+    ################
+    # Tomcat1 setup#
+    ################
+
+    - name: Unpack Tomcat
+      shell: "cd ~/ && tar zxvf apache-tomcat-7.0.62.tar.gz"
+
+    - name: Setup Tomcat home folder
+      shell: "mv ~/apache-tomcat-7.0.62 /home/tomcat/tomcat1 && chown -R tomcat:users /home/tomcat/*"
+
+    - name: Remove Tomcat configuration file
+      action: file path=/{{item}} state=absent
+      with_items:
+        - home/tomcat/tomcat1/bin/catalina.sh
+        - home/tomcat/tomcat1/conf/server.xml
+        - home/tomcat/tomcat1/conf/web.xml
+
+    - name: Copy Tomcat configuration file
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - home/tomcat/tomcat1/bin/catalina.sh
+        - home/tomcat/tomcat1/conf/server.xml
+        - home/tomcat/tomcat1/conf/web.xml
+
+    - name: Change catalina.sh to 755
+      shell: "chmod -R 755 /home/tomcat/tomcat1/bin/catalina.sh"
+
+    - name: Copy GeoServer war
+      shell: "cp ~/geoserver.war /home/tomcat/tomcat1/webapps/geoserver.war && chown -R tomcat:users /home/tomcat/tomcat1/*"
+
+    - name: Start Tomcat
+      shell: "cd ~/scripts && ./start_tomcat1.sh"
+
+    - name: Wait for 60 secs so that war is deployed
+      action: pause seconds=60
+
+    - name: Stop Tomcat
+      shell: "cd ~/scripts && ./stop_tomcat1.sh"
+
+    - name: Remove Tomcat war file
+      action: file path=/home/tomcat/tomcat1/webapps/geoserver.war state=absent
+
+    - name: Remove GeoServer config file
+      action: file path=/home/tomcat/tomcat1/webapps/geoserver/WEB-INF/web.xml state=absent
+
+    - name: Copy GeoServer configuration file
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - home/tomcat/tomcat1/webapps/geoserver/WEB-INF/web.xml
+
+    - name: Move data folder
+      shell: "mv /home/tomcat/tomcat1/webapps/geoserver/data /home/tomcat/geoserver_data"
+
