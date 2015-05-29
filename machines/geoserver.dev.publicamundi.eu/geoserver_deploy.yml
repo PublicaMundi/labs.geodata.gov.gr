@@ -122,6 +122,9 @@
     - name: Stop Tomcat
       shell: "cd ~/scripts && ./stop_tomcat1.sh"
 
+    - name: Wait for 10 secs
+      action: pause seconds=10
+
     - name: Remove Tomcat war file
       action: file path=/home/tomcat/tomcat1/webapps/geoserver.war state=absent
 
@@ -136,3 +139,226 @@
     - name: Move data folder
       shell: "mv /home/tomcat/tomcat1/webapps/geoserver/data /home/tomcat/geoserver_data"
 
+    #################
+    # Tomcat2 setup #
+    #################
+
+    - name: Unpack Tomcat
+      shell: "cd ~/ && tar zxvf apache-tomcat-7.0.62.tar.gz"
+
+    - name: Setup Tomcat home folder
+      shell: "mv ~/apache-tomcat-7.0.62 /home/tomcat/tomcat2 && chown -R tomcat:users /home/tomcat/*"
+
+    - name: Remove Tomcat configuration file
+      action: file path=/{{item}} state=absent
+      with_items:
+        - home/tomcat/tomcat2/bin/catalina.sh
+        - home/tomcat/tomcat2/conf/server.xml
+        - home/tomcat/tomcat2/conf/web.xml
+
+    - name: Copy Tomcat configuration file
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - home/tomcat/tomcat2/bin/catalina.sh
+        - home/tomcat/tomcat2/conf/server.xml
+        - home/tomcat/tomcat2/conf/web.xml
+
+    - name: Change catalina.sh to 755
+      shell: "chmod -R 755 /home/tomcat/tomcat2/bin/catalina.sh"
+
+    - name: Copy GeoServer war
+      shell: "cp ~/geoserver.war /home/tomcat/tomcat2/webapps/geoserver.war && chown -R tomcat:users /home/tomcat/tomcat2/*"
+
+    - name: Start Tomcat
+      shell: "cd ~/scripts && ./start_tomcat2.sh"
+
+    - name: Wait for 60 secs so that war is deployed
+      action: pause seconds=60
+
+    - name: Stop Tomcat
+      shell: "cd ~/scripts && ./stop_tomcat2.sh"
+
+    - name: Wait for 10 secs
+      action: pause seconds=10
+
+    - name: Remove Tomcat war file
+      action: file path=/home/tomcat/tomcat2/webapps/geoserver.war state=absent
+
+    - name: Remove GeoServer config file
+      action: file path=/home/tomcat/tomcat2/webapps/geoserver/WEB-INF/web.xml state=absent
+
+    - name: Copy GeoServer configuration file
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - home/tomcat/tomcat2/webapps/geoserver/WEB-INF/web.xml
+
+    - name: Remove data folder
+      shell: "rm -rf /home/tomcat/tomcat2/webapps/geoserver/data"
+
+    #################
+    # Tomcat3 setup #
+    #################
+
+    - name: Unpack Tomcat
+      shell: "cd ~/ && tar zxvf apache-tomcat-7.0.62.tar.gz"
+
+    - name: Setup Tomcat home folder
+      shell: "mv ~/apache-tomcat-7.0.62 /home/tomcat/tomcat3 && chown -R tomcat:users /home/tomcat/*"
+
+    - name: Remove Tomcat configuration file
+      action: file path=/{{item}} state=absent
+      with_items:
+        - home/tomcat/tomcat3/bin/catalina.sh
+        - home/tomcat/tomcat3/conf/server.xml
+        - home/tomcat/tomcat3/conf/web.xml
+
+    - name: Copy Tomcat configuration file
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - home/tomcat/tomcat3/bin/catalina.sh
+        - home/tomcat/tomcat3/conf/server.xml
+        - home/tomcat/tomcat3/conf/web.xml
+
+    - name: Change catalina.sh to 755
+      shell: "chmod -R 755 /home/tomcat/tomcat3/bin/catalina.sh"
+
+    - name: Copy GeoServer war
+      shell: "cp ~/geoserver.war /home/tomcat/tomcat3/webapps/geoserver.war && chown -R tomcat:users /home/tomcat/tomcat3/*"
+
+    - name: Start Tomcat
+      shell: "cd ~/scripts && ./start_tomcat3.sh"
+
+    - name: Wait for 60 secs so that war is deployed
+      action: pause seconds=60
+
+    - name: Stop Tomcat
+      shell: "cd ~/scripts && ./stop_tomcat3.sh"
+
+    - name: Wait for 10 secs
+      action: pause seconds=10
+
+    - name: Remove Tomcat war file
+      action: file path=/home/tomcat/tomcat3/webapps/geoserver.war state=absent
+
+    - name: Remove GeoServer config file
+      action: file path=/home/tomcat/tomcat3/webapps/geoserver/WEB-INF/web.xml state=absent
+
+    - name: Copy GeoServer configuration file
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - home/tomcat/tomcat3/webapps/geoserver/WEB-INF/web.xml
+
+    - name: Remove data folder
+      shell: "rm -rf /home/tomcat/tomcat3/webapps/geoserver/data"
+
+    #################
+    # Tomcat4 setup #
+    #################
+
+    - name: Unpack Tomcat
+      shell: "cd ~/ && tar zxvf apache-tomcat-7.0.62.tar.gz"
+
+    - name: Setup Tomcat home folder
+      shell: "mv ~/apache-tomcat-7.0.62 /home/tomcat/tomcat4 && chown -R tomcat:users /home/tomcat/*"
+
+    - name: Remove Tomcat configuration file
+      action: file path=/{{item}} state=absent
+      with_items:
+        - home/tomcat/tomcat4/bin/catalina.sh
+        - home/tomcat/tomcat4/conf/server.xml
+        - home/tomcat/tomcat4/conf/web.xml
+
+    - name: Copy Tomcat configuration file
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - home/tomcat/tomcat4/bin/catalina.sh
+        - home/tomcat/tomcat4/conf/server.xml
+        - home/tomcat/tomcat4/conf/web.xml
+
+    - name: Change catalina.sh to 755
+      shell: "chmod -R 755 /home/tomcat/tomcat4/bin/catalina.sh"
+
+    - name: Copy GeoServer war
+      shell: "cp ~/geoserver.war /home/tomcat/tomcat4/webapps/geoserver.war && chown -R tomcat:users /home/tomcat/tomcat4/*"
+
+    - name: Start Tomcat
+      shell: "cd ~/scripts && ./start_tomcat4.sh"
+
+    - name: Wait for 60 secs so that war is deployed
+      action: pause seconds=60
+
+    - name: Stop Tomcat
+      shell: "cd ~/scripts && ./stop_tomcat4.sh"
+
+    - name: Wait for 10 secs
+      action: pause seconds=10
+
+    - name: Remove Tomcat war file
+      action: file path=/home/tomcat/tomcat4/webapps/geoserver.war state=absent
+
+    - name: Remove GeoServer config file
+      action: file path=/home/tomcat/tomcat4/webapps/geoserver/WEB-INF/web.xml state=absent
+
+    - name: Copy GeoServer configuration file
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - home/tomcat/tomcat4/webapps/geoserver/WEB-INF/web.xml
+
+    - name: Remove data folder
+      shell: "rm -rf /home/tomcat/tomcat4/webapps/geoserver/data"
+
+    #################
+    # Tomcat5 setup #
+    #################
+
+    - name: Unpack Tomcat
+      shell: "cd ~/ && tar zxvf apache-tomcat-7.0.62.tar.gz"
+
+    - name: Setup Tomcat home folder
+      shell: "mv ~/apache-tomcat-7.0.62 /home/tomcat/tomcat5 && chown -R tomcat:users /home/tomcat/*"
+
+    - name: Remove Tomcat configuration file
+      action: file path=/{{item}} state=absent
+      with_items:
+        - home/tomcat/tomcat5/bin/catalina.sh
+        - home/tomcat/tomcat5/conf/server.xml
+        - home/tomcat/tomcat5/conf/web.xml
+
+    - name: Copy Tomcat configuration file
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - home/tomcat/tomcat5/bin/catalina.sh
+        - home/tomcat/tomcat5/conf/server.xml
+        - home/tomcat/tomcat5/conf/web.xml
+
+    - name: Change catalina.sh to 755
+      shell: "chmod -R 755 /home/tomcat/tomcat5/bin/catalina.sh"
+
+    - name: Copy GeoServer war
+      shell: "cp ~/geoserver.war /home/tomcat/tomcat5/webapps/geoserver.war && chown -R tomcat:users /home/tomcat/tomcat5/*"
+
+    - name: Start Tomcat
+      shell: "cd ~/scripts && ./start_tomcat5.sh"
+
+    - name: Wait for 60 secs so that war is deployed
+      action: pause seconds=60
+
+    - name: Stop Tomcat
+      shell: "cd ~/scripts && ./stop_tomcat5.sh"
+
+    - name: Wait for 10 secs
+      action: pause seconds=10
+
+    - name: Remove Tomcat war file
+      action: file path=/home/tomcat/tomcat5/webapps/geoserver.war state=absent
+
+    - name: Remove GeoServer config file
+      action: file path=/home/tomcat/tomcat5/webapps/geoserver/WEB-INF/web.xml state=absent
+
+    - name: Copy GeoServer configuration file
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - home/tomcat/tomcat5/webapps/geoserver/WEB-INF/web.xml
+
+    - name: Remove data folder
+      shell: "rm -rf /home/tomcat/tomcat5/webapps/geoserver/data"
