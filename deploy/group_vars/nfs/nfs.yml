@@ -5,7 +5,7 @@ nfs:
   directories:
     'share':
       export:
-        allowed_clients: '{{groups["all"]}}'
+        allowed_clients: '{{groups["internal"]}}'
         opts:
           readonly: no
           subtree_check: yes
@@ -16,7 +16,7 @@ nfs:
           noauto: ~
     'backups':
       export:
-        allowed_clients: '{{groups["all"])}}'
+        allowed_clients: '{{groups["internal"]| difference(groups["admin"])}}'
         opts:
           readonly: no
           subtree_check: yes
