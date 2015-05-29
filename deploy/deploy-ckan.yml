@@ -18,7 +18,7 @@
        db_server: '{{inventory_hostname}}:{{postgres.service.port}}'
    - set_fact:
        db_credentials: '{{postgres.credentials}}'
-   
+
  
  - hosts: ckan
    remote_user: root
@@ -45,13 +45,13 @@
 
          config_name: production
          debug: 0
-         
+
          serve:
            use: 'apache2-mod-wsgi'
            name: '{{inventory_hostname}}'
            name_aliases: 
            - '{{common_name}}'
-      
+   
    - set_fact:
        ckanext: {}
 

@@ -39,7 +39,6 @@ apt:
 hostname: '{{inventory_hostname_short}}-publicamundi'
 
 # Configuration for generated passwords
-
 password_spec: 'chars=ascii_letters,digits length=9' 
 
 # Preferences for programs and shells (cli)

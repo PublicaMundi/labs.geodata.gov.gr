@@ -18,7 +18,7 @@
        haproxy:
          frontends:
            'default':
-             name: 'default'
+             name: 'http-in'
              bind:
              - { address: '{{networking.if.internal_ipv4.address}}:80' }
              vhosts: 
