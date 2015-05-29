@@ -69,7 +69,7 @@
 
     <context-param>
         <param-name>GEOSERVER_LOG_LOCATION</param-name>
-        <param-value>/home/tomcat/logs/geoserver_tomcat1.log</param-value>
+        <param-value>/home/tomcat/logs/geoserver_tomcat5.log</param-value>
     </context-param>
 
     <!-- pick up all spring application contexts -->
