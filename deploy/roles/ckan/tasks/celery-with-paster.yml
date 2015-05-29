@@ -1,5 +1,0 @@
----
-
- - include: enable-celery-with-paster.yml
-
- - include: start-celery-with-paster.yml

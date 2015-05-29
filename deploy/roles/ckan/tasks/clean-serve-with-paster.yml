@@ -1,5 +1,0 @@
----
- 
- - include: stop-serve-with-paster.yml
-
- - include: disable-serve-with-paster.yml

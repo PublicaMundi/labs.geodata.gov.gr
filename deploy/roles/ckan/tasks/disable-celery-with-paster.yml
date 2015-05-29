@@ -1,9 +1,0 @@
----
-
- - name: Remove cronjob for paster-celeryd
-   cron: 
-     name: "paster-celeryd" 
-     user: ckaner 
-     special_time: reboot 
-     state: absent
-
