@@ -55,6 +55,7 @@ ckanext:
     vectorstorer:
       geoserver:
         username: admin
+        workspace: publicamundi
         url: 'http://catalog.localdomain/geoserver'
         rest_url: 'http://geoserver.localdomain:8080/geoserver'
         reload_url: 'http://geoserver.localdomain:8080/reload'
