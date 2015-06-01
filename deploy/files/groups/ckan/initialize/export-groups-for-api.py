@@ -16,6 +16,8 @@ OUTPUT_BASE_DIR = 'out'
 URL_BASE = 'http://ckan.example.com:5000'
 API_KEY = 'XXX'
 
+logging.basicConfig(level=logging.INFO)
+
 input_name = os.path.splitext(os.path.basename(INPUT))[0]
 
 def csv_to_json():
@@ -38,7 +40,12 @@ def csv_to_json():
         for item in reader:
             i = i + 1
             name = item['name']
-            assert name, 'Found an empty name at line %d' %(i)           
+            if not name: 
+                logging.error('Found an empty name (record %d, at line %d): Skipping' %(
+                    i, reader.line_num))
+                continue
+            else:
+                logging.info('Reading fields for group: %s' %(name))
             title_el = item['title_el'].decode('utf-8')
             title_en =  item['title_en'].decode('utf-8')
             description_el = item['description_el'].decode('utf-8')
