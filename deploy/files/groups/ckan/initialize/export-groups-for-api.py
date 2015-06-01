@@ -50,7 +50,7 @@ def csv_to_json():
             title_en =  item['title_en'].decode('utf-8')
             description_el = item['description_el'].decode('utf-8')
             description_en = item['description_en'].decode('utf-8')
-            image_url = item['logo_url']
+            image_url = item['logo_url'].decode('ascii')
 
             org_dict = {
                'name': name,
