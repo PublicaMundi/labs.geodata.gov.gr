@@ -33,20 +33,6 @@ A certain number of files should be provided at Ansible's control machine:
 
  * If `authorized_keys` or `private_keys` are supplied, the corresponding key files must exist under `files/keys`. See details in the dedicated README for the `cli` role.
 
-#### Required variables
-
-A certain number of variables must also be provided at group/host level. Some of them are considered sensitive data and must be placed under `group_vars/group-name/secrets.yml` (not under source control):
-
- * `tomcat.manager.password` (under `group_vars/search-engine/secrets.yml`).
-    This is a plain string value. The provided password will be assigned to a Tomcat user holding the 
-    manager role (grants access to the manager gui).
- * `postgres.credentials` (under `group_vars/database/secrets.yml`).
-    This is a list of dictionaries with keys of "username", "password". Provided credentials will be 
-    assigned to existing PostgreSQL users (for normal logins).
- * `collectd.cgp.authn.credentials` (under `group_vars/monitor/secrets.yml`). 
-    This is a list of dictionaries with keys of "username", "password". Provided credentials will be
-    used to grant access to the CGP web application (via HTTP Digest Authentication) 
-
 ## Quickstart
 
 See `deploy.sh`.

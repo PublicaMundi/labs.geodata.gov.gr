@@ -9,6 +9,8 @@ tomcat:
   connector:
     port: 8983
     address: '{{networking.if.internal_ipv4.address}}'
+  
+  secrets_dir: '{{"files/secrets/groups/solr/tomcat"| realpath}}'
 
 solr:
   share_dir: /usr/local/share/solr

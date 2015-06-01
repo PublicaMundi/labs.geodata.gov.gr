@@ -9,6 +9,8 @@ postgres:
     - '{{networking.if.internal_ipv4.address}}'
     port: 5432
 
+  secrets_dir: '{{"files/secrets/groups/database"| realpath}}'
+
   users:
   
   - name: 'ckaner'
@@ -49,8 +51,6 @@ postgres:
   
   - name: 'collectd'
     trusted: true
-  
-  credentials: []
 
   tablespaces:
   - name: tablespace_1

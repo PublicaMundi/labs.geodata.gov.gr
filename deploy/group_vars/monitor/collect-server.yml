@@ -1,0 +1,8 @@
+---
+
+collectd:
+  cgp:
+    authn:
+      users: ['collectd']
+  
+  secrets_dir: '{{"files/secrets/groups/monitor"| realpath}}'

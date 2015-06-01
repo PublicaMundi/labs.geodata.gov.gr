@@ -17,7 +17,7 @@
    - set_fact:
        db_server: '{{inventory_hostname}}:{{postgres.service.port}}'
    - set_fact:
-       db_credentials: '{{postgres.credentials}}'
+       db_secrets: '{{postgres.secrets_dir}}'
 
  
  - hosts: ckan
@@ -30,15 +30,18 @@
    
    - set_fact:
        db_server: '{{hostvars[db_host].db_server}}'
-       db_credentials: '{{hostvars[db_host].db_credentials| to_map("username")}}'
+       db_secrets: '{{hostvars[db_host].db_secrets}}'
        solr_server: '{{hostvars[solr_host].solr_server}}'
     
    - set_fact:
        ckan:
          database:
-           url: 'postgresql://ckaner:{{db_credentials["ckaner"].password}}@{{db_server}}/ckan'
-           datastore_write_url: 'postgresql://ckan_datastorer:{{db_credentials["ckan_datastorer"].password}}@{{db_server}}/ckan_data'
-           datastore_read_url: 'postgresql://ckan_datareader:{{db_credentials["ckan_datareader"].password}}@{{db_server}}/ckan_data'
+           url: >
+             postgresql://ckaner:{{lookup("password", db_secrets ~ "/users/ckaner")}}@{{db_server}}/ckan
+           datastore_write_url: >
+             postgresql://ckan_datastorer:{{lookup("password", db_secrets ~ "/users/ckan_datastorer")}}@{{db_server}}/ckan_data
+           datastore_read_url: >
+             postgresql://ckan_datareader:{{lookup("password", db_secrets ~ "/users/ckan_datareader")}}@{{db_server}}/ckan_data
          
          solr:
            core_url: 'http://{{solr_server}}/solr/ckan'
