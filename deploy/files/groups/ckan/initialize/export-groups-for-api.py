@@ -1,31 +1,31 @@
 #!/usr/bin/env python
 
-import sys
 import csv
 import os
 import json
 import urllib2
 import urllib
 import pprint
-from unidecode import unidecode
+import argparse
 import logging
 
-INPUT = sys.argv[1]
+#logging.basicConfig(level=logging.INFO)
+
 OUTPUT_BASE_DIR = 'out'
 
 URL_BASE = 'http://ckan.example.com:5000'
 API_KEY = 'XXX'
 
-logging.basicConfig(level=logging.INFO)
+argp = argparse.ArgumentParser()
+argp.add_argument("inputs", metavar='INFILE', type=str, nargs=1)
+argp.add_argument("--translate", dest='translate', default=False, action='store_true')
 
-input_name = os.path.splitext(os.path.basename(INPUT))[0]
-
-def csv_to_json():
-    res = {
-        'groups': {}
-    }
-
+def csv_to_json(infile, translate=False):
+    res = []
+    
+    input_name = os.path.splitext(os.path.basename(infile))[0]
     output_dir = os.path.join(OUTPUT_BASE_DIR, 'json', input_name)
+    
     try:
        os.makedirs(output_dir)
     except OSError as ex:
@@ -33,67 +33,60 @@ def csv_to_json():
             raise ex
     
     logging.info('Using output directory at %s' %(output_dir))
-
-    with open(INPUT, 'r') as ifp:
+    with open(infile, 'r') as ifp:
         i = 0
         reader = csv.DictReader(ifp)
         for item in reader:
             i = i + 1
+            
             name = item['name']
-            if not name: 
-                logging.error('Found an empty name (record %d, at line %d): Skipping' %(
-                    i, reader.line_num))
-                continue
-            else:
-                logging.info('Reading fields for group: %s' %(name))
+            assert name, 'Found an empty name (record %d, at line %d)' %(i, reader.line_num)
+            logging.info('Reading fields for group: %s' %(name))
+            
             title_el = item['title_el'].decode('utf-8')
             title_en =  item['title_en'].decode('utf-8')
             description_el = item['description_el'].decode('utf-8')
             description_en = item['description_en'].decode('utf-8')
-            image_url = item['logo_url'].decode('ascii')
+            image_url = item['logo_url'].decode('ascii', errors='ignore')
 
-            org_dict = {
-               'name': name,
-               'title': title_en if title_en else title_el,
-               'description': description_en if description_en else description_el,
-               'image_url': image_url,
-            }
-
-            translate_dict = {'data': []}
-            
-            if description_en:
-                translate_dict['data'].append({
-                    'term': description_en,
-                    'term_translation': description_el,
-                    'lang_code': 'el'
-                })
-
-            if title_en:
-                translate_dict['data'].append({
-                    'term': title_en,
-                    'term_translation': title_el,
-                    'lang_code': 'el'
-                })
-            
-
-            res['groups'][name] = {}
-
-            outfile = os.path.join(output_dir, '%s.json' %(name))
-            with open(outfile, 'w') as ofp:
-                ofp.write(json.dumps(org_dict))
-            res['groups'][name]['create'] = os.path.realpath(outfile)
-            
-            if translate_dict['data']:
-                # Create only if at least 1 actual translation exists
-                outfile = os.path.join(output_dir, 'translate-%s.json' %(name)) 
+            if not translate:
+                # Print the path for JSON that creates group
+                org_dict = {
+                    'name': name,
+                    'title': title_en if title_en else title_el,
+                    'description': description_en if description_en else description_el,
+                    'image_url': image_url,
+                }
+                outfile = os.path.join(output_dir, '%s.json' %(name))
                 with open(outfile, 'w') as ofp:
-                    ofp.write(json.dumps(translate_dict))
-                res['groups'][name]['translate'] = os.path.realpath(outfile)
+                    ofp.write(json.dumps(org_dict))
+                res.append(dict(name=name, path=os.path.realpath(outfile)))
             else:
-                logging.warn('Skipping translation for group (%s): %s' % (input_name, name))
-        
-        # Done
-        print json.dumps(res, indent=4)
+                # Print the path for JSON that translates group title/description
+                translate_dict = {'data': []}
+                if description_en:
+                    translate_dict['data'].append({
+                        'term': description_en,
+                        'term_translation': description_el,
+                        'lang_code': 'el'
+                    })
+
+                if title_en:
+                    translate_dict['data'].append({
+                        'term': title_en,
+                        'term_translation': title_el,
+                        'lang_code': 'el'
+                    })
+                if translate_dict['data']:
+                    # Create only if at least 1 actual translation exists
+                    outfile = os.path.join(output_dir, 'translate-%s.json' %(name)) 
+                    with open(outfile, 'w') as ofp:
+                        ofp.write(json.dumps(translate_dict))
+                    res.append(dict(name=name, path=os.path.realpath(outfile)))
+                else:
+                    logging.warn('Skipping translation for group (%s): %s' % (input_name, name))
+    # Done
+    print json.dumps(res)
 
 def make_api_call(org_dict, api_action):
     '''
@@ -127,5 +120,7 @@ def make_api_call(org_dict, api_action):
         pass
 
 if __name__ == '__main__':
-    csv_to_json()
+    args = argp.parse_args()
+    csv_to_json(args.inputs[0], args.translate)
+
 
