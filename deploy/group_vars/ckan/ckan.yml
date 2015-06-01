@@ -19,6 +19,16 @@ ckan:
 
   config_name: 'development'
   debug: 1
+  
+  plugins:
+  - 'stats'
+  - 'text_preview'
+  - 'recline_preview'
+  - 'pdf_preview'
+  - 'datastore' 
+  - 'resource_proxy'
+  - 'multilingual_group'
+  - 'multilingual_tag'
 
   celery:
     use: ~
