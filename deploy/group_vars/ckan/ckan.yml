@@ -36,7 +36,11 @@ ckan:
   email:
     errors_to: 'webmaster@publicamundi.localdomain'
     errors_from: 'ckaner@publicamundi.localdomain'
-         
+    smtp:
+      server: mail.localdomain:587
+      user: contact@publicamundi.localdomain
+      mail_from: no-reply@publicamundi.localdomain
+        
   licenses_url: 'licenses.json'
 
   site:
