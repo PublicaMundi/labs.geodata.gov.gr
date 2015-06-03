@@ -89,7 +89,7 @@
           <gmd:identifier>
             <gmd:RS_Identifier>
               <gmd:code>
-                <gco:CharacterString>UID</gco:CharacterString>
+                <gco:CharacterString>ec4efe37-76bb-426f-af38-36d57d39dfba</gco:CharacterString>
               </gmd:code>
               <gmd:codeSpace>
                 <gco:CharacterString>http://geodata.gov.gr</gco:CharacterString>
