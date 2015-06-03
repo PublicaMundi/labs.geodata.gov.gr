@@ -53,4 +53,7 @@
    args:
      chdir: '{{ckan.pyenv_dir}}/src/ckan'
 
-  
+ - file: path=~ckaner/scripts state=directory owner=ckaner group=ckaner
+ 
+ - name: Copy helper shell scripts
+   copy: src=scripts/ dest=~ckaner/scripts/ owner=ckaner group=ckaner

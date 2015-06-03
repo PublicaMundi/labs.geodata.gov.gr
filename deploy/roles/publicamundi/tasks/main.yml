@@ -15,7 +15,7 @@
  
  - include: install-ckanext-spatial.yml
    when: ckanext.spatial.install
-   tags: ['install', 'init-db']
+   tags: ['install', 'init-db', 'ckanext-spatial']
    
  - set_fact:
      selected_ckan_plugins: '{{selected_ckan_plugins + ckanext.spatial.plugins}}'
@@ -24,33 +24,33 @@
  
  - include: configure-ckanext-spatial.yml
    when: ckanext.spatial.install
-   tags: ['configure']
+   tags: ['configure', 'ckanext-spatial']
 
  # Setup PyCSW
  
  - include: install-pycsw.yml
-   tags: ['install']
+   tags: ['install', 'pycsw']
 
  - include: configure-pycsw.yml
-   tags: ['configure']
+   tags: ['configure', 'pycsw']
  
  # Setup CKAN extension: publicamundi
  
  - include: install-ckanext-publicamundi.yml
-   tags: ['install', 'init-db']
+   tags: ['install', 'init-db', 'ckanext-publicamundi']
  
  - set_fact:
      selected_ckan_plugins: '{{selected_ckan_plugins + ckanext.publicamundi.plugins}}'
    tags: ['configure']
 
  - include: configure-ckanext-publicamundi.yml
-   tags: ['configure']
+   tags: ['configure', 'ckanext-publicamundi']
 
  # Setup CKAN extension: googleanalytics
   
  - include: install-ckanext-googleanalytics.yml
    when: ckanext.googleanalytics.install
-   tags: ['install']
+   tags: ['install', 'ckanext-googleanalytics']
   
  - set_fact:
      selected_ckan_plugins: '{{selected_ckan_plugins + ckanext.googleanalytics.plugins}}'
@@ -59,7 +59,7 @@
   
  - include: configure-ckanext-googleanalytics.yml
    when: ckanext.googleanalytics.install
-   tags: ['configure']
+   tags: ['configure', 'ckanext-googleanalytics']
 
  # Reconfigure base CKAN; enable selected plugins 
  
@@ -73,10 +73,10 @@
  # Setup mapclient
  
  - include: install-mapclient.yml
-   tags: ['install']
+   tags: ['install', 'mapclient']
 
  - include: configure-mapclient.yml
-   tags: ['configure']
+   tags: ['configure', 'mapclient']
 
  # Serve WSGI apps
 
