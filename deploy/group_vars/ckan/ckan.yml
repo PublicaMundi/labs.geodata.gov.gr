@@ -45,6 +45,7 @@ ckan:
 
   site:
     title: 'GEODATA.gov.gr'
+    favicon_url: '/images/icons/geodatagovgr.ico'
     
   session:
     cookie_lifetime: 10800
