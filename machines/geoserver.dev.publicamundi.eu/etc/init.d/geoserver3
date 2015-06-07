@@ -1,0 +1,30 @@
+#! /bin/bash
+
+### BEGIN INIT INFO
+# Provides:          geoserver3
+# Required-Start:    $local_fs $network
+# Required-Stop:     $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: GeoServer service
+# Description:       Run GeoServer service
+### END INIT INFO
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+    echo "Starting GeoServer 3 ..."
+    sudo -u tomcat bash -c '/home/tomcat/tomcat3/bin/startup.sh'
+    ;;
+  stop)
+    echo "Stopping GeoServer 3 ..."
+    sudo -u tomcat bash -c '/home/tomcat/tomcat3/bin/shutdown.sh'
+    sleep 3
+    ;;
+  *)
+    echo "Usage: /etc/init.d/geoserver3 {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0

@@ -3,8 +3,8 @@
   #gather_facts: no #Enable on first run, cause Debian does not have python installed by default
   user: root
   tasks:
-    #- name: Install ansible prerequisites
-      #script: ansible_prereqs.sh creates=/root/.ansible_prereqs_installed
+    # - name: Install ansible prerequisites
+    #   script: ansible_prereqs.sh creates=/root/.ansible_prereqs_installed
 
     - name: Update apt packages cache
       action: apt update_cache=yes
@@ -106,9 +106,13 @@
         - home/tomcat/tomcat1/bin/catalina.sh
         - home/tomcat/tomcat1/conf/server.xml
         - home/tomcat/tomcat1/conf/web.xml
+        - etc/init.d/geoserver1
 
     - name: Change catalina.sh to 755
       shell: "chmod -R 755 /home/tomcat/tomcat1/bin/catalina.sh"
+
+    - name: Change init.d script to 755
+      shell: "chmod -R 755 /etc/init.d/geoserver1"
 
     - name: Copy GeoServer war
       shell: "cp ~/geoserver.war /home/tomcat/tomcat1/webapps/geoserver.war && chown -R tomcat:users /home/tomcat/tomcat1/*"
@@ -139,6 +143,9 @@
     - name: Move data folder
       shell: "mv /home/tomcat/tomcat1/webapps/geoserver/data /home/tomcat/geoserver_data"
 
+    - name: Enable init.d service
+      shell: "update-rc.d geoserver1 defaults"
+
     #################
     # Tomcat2 setup #
     #################
@@ -162,9 +169,13 @@
         - home/tomcat/tomcat2/bin/catalina.sh
         - home/tomcat/tomcat2/conf/server.xml
         - home/tomcat/tomcat2/conf/web.xml
+        - etc/init.d/geoserver2
 
     - name: Change catalina.sh to 755
       shell: "chmod -R 755 /home/tomcat/tomcat2/bin/catalina.sh"
+
+    - name: Change init.d script to 755
+      shell: "chmod -R 755 /etc/init.d/geoserver2"
 
     - name: Copy GeoServer war
       shell: "cp ~/geoserver.war /home/tomcat/tomcat2/webapps/geoserver.war && chown -R tomcat:users /home/tomcat/tomcat2/*"
@@ -195,6 +206,9 @@
     - name: Remove data folder
       shell: "rm -rf /home/tomcat/tomcat2/webapps/geoserver/data"
 
+    - name: Enable init.d service
+      shell: "update-rc.d geoserver2 defaults"
+
     #################
     # Tomcat3 setup #
     #################
@@ -218,9 +232,13 @@
         - home/tomcat/tomcat3/bin/catalina.sh
         - home/tomcat/tomcat3/conf/server.xml
         - home/tomcat/tomcat3/conf/web.xml
+        - etc/init.d/geoserver3
 
     - name: Change catalina.sh to 755
       shell: "chmod -R 755 /home/tomcat/tomcat3/bin/catalina.sh"
+
+    - name: Change init.d script to 755
+      shell: "chmod -R 755 /etc/init.d/geoserver3"
 
     - name: Copy GeoServer war
       shell: "cp ~/geoserver.war /home/tomcat/tomcat3/webapps/geoserver.war && chown -R tomcat:users /home/tomcat/tomcat3/*"
@@ -251,6 +269,9 @@
     - name: Remove data folder
       shell: "rm -rf /home/tomcat/tomcat3/webapps/geoserver/data"
 
+    - name: Enable init.d service
+      shell: "update-rc.d geoserver3 defaults"
+
     #################
     # Tomcat4 setup #
     #################
@@ -274,9 +295,13 @@
         - home/tomcat/tomcat4/bin/catalina.sh
         - home/tomcat/tomcat4/conf/server.xml
         - home/tomcat/tomcat4/conf/web.xml
+        - etc/init.d/geoserver4
 
     - name: Change catalina.sh to 755
       shell: "chmod -R 755 /home/tomcat/tomcat4/bin/catalina.sh"
+
+    - name: Change init.d script to 755
+      shell: "chmod -R 755 /etc/init.d/geoserver4"
 
     - name: Copy GeoServer war
       shell: "cp ~/geoserver.war /home/tomcat/tomcat4/webapps/geoserver.war && chown -R tomcat:users /home/tomcat/tomcat4/*"
@@ -307,6 +332,9 @@
     - name: Remove data folder
       shell: "rm -rf /home/tomcat/tomcat4/webapps/geoserver/data"
 
+    - name: Enable init.d service
+      shell: "update-rc.d geoserver4 defaults"
+
     #################
     # Tomcat5 setup #
     #################
@@ -330,9 +358,13 @@
         - home/tomcat/tomcat5/bin/catalina.sh
         - home/tomcat/tomcat5/conf/server.xml
         - home/tomcat/tomcat5/conf/web.xml
+        - etc/init.d/geoserver5
 
     - name: Change catalina.sh to 755
       shell: "chmod -R 755 /home/tomcat/tomcat5/bin/catalina.sh"
+
+    - name: Change init.d script to 755
+      shell: "chmod -R 755 /etc/init.d/geoserver5"
 
     - name: Copy GeoServer war
       shell: "cp ~/geoserver.war /home/tomcat/tomcat5/webapps/geoserver.war && chown -R tomcat:users /home/tomcat/tomcat5/*"
@@ -362,3 +394,6 @@
 
     - name: Remove data folder
       shell: "rm -rf /home/tomcat/tomcat5/webapps/geoserver/data"
+
+    - name: Enable init.d service
+      shell: "update-rc.d geoserver5 defaults"
