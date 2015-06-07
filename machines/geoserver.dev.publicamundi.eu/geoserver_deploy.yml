@@ -397,3 +397,22 @@
 
     - name: Enable init.d service
       shell: "update-rc.d geoserver5 defaults"
+
+    ####################
+    # Supervisor setup #
+    ####################
+
+    - name: Install supervisor package
+      action: apt pkg=supervisor state=installed
+
+    - name: create reloader folder
+      shell: "mkdir -p /root/reloader"
+
+    - name: Copy reloader configuration files
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - /root/reloader/reload.py
+        - etc/supervisor/conf.d/reloader.conf
+
+    - name: restart supervisor service
+      shell: "service supervisor restart"
