@@ -5,7 +5,8 @@ import json
 PORT = 8000
 
 BACKEND_RELOAD_URL = 'http://%(host)s/geoserver/rest/reload'
-NUM_BACKEND_SERVERS = 4
+NUM_CLUSTERS = 2
+NUM_BACKEND_SERVERS = 5
 FRONTEND_SERVER_PORT = 8080
 
 USERPWD = 'admin:password'
@@ -17,25 +18,26 @@ def application(environ, start_response):
     result = {}
     details = {}
     success = True
-    for i in range(1, NUM_BACKEND_SERVERS + 1):
-        name = 'backend-%d' %(i) 
-        host = 'localhost:%d' % (FRONTEND_SERVER_PORT + i)
-        # Prepare a cURL request
-        c = pycurl.Curl()
-        c.setopt(pycurl.URL,  BACKEND_RELOAD_URL % dict(host=host))
-        c.setopt(pycurl.POST, 1)
-        c.setopt(pycurl.USERPWD, USERPWD)
-        c.setopt(pycurl.POSTFIELDS, '')
-        # Perform, trap errors
-        try:
-            c.perform()
-            response_code = int(c.getinfo(c.RESPONSE_CODE))
-            if response_code != 200:
+    for j in range(1, NUM_CLUSTERS + 1):
+        for i in range(1, NUM_BACKEND_SERVERS + 1):
+            name = 'backend%d-%d' %(j, i) 
+            host = 'geoserver-n%d.publicamundi.eu:%d' % (j, FRONTEND_SERVER_PORT + i)
+            # Prepare a cURL request
+            c = pycurl.Curl()
+            c.setopt(pycurl.URL,  BACKEND_RELOAD_URL % dict(host=host))
+            c.setopt(pycurl.POST, 1)
+            c.setopt(pycurl.USERPWD, USERPWD)
+            c.setopt(pycurl.POSTFIELDS, '')
+            # Perform, trap errors
+            try:
+                c.perform()
+                response_code = int(c.getinfo(c.RESPONSE_CODE))
+                if response_code != 200:
+                    success = False
+                    details[name] = dict(message='Failed (HTTP %d)' % (response_code)) 
+            except pycurl.error as ex:
                 success = False
-                details[name] = dict(message='Failed (HTTP %d)' % (response_code)) 
-        except pycurl.error as ex:
-            success = False
-            details[name] = dict(message='Failed (pycurl %d: %s)' % (ex.args))
+                details[name] = dict(message='Failed (pycurl %d: %s)' % (ex.args))
     
     # Build a Celery-compliant webhook response with an overall status
 
