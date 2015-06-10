@@ -10,3 +10,11 @@
      owner: ckaner
      group: ckaner
    notify: ['reassemble-ckan-config']  
+
+ - name: Configure ckanext-publicamundi tests
+   template:
+     src: etc/ckan/tests-conf.d/app-publicamundi.ini 
+     dest: '{{ckan.temp_dir}}/conf.d/tests.section-{{app_config_section_num}}publicamundi.ini'
+     owner: ckaner
+     group: ckaner
+   notify: ['reassemble-ckan-tests-config']

@@ -27,6 +27,13 @@
  - file: path={{ckan.pyenv_dir}}/src/ckanext-publicamundi/ckanext/publicamundi/public/js/scratch.js state=touch
    sudo: yes
    sudo_user: ckaner
+ 
+ - name: Install pip requirements for ckanext-publicamundi tests
+   sudo: yes
+   sudo_user: ckaner
+   pip:
+     virtualenv: '{{ckan.pyenv_dir}}'
+     requirements: '{{ckan.pyenv_dir}}/src/ckanext-publicamundi/test-requirements.txt'
 
  - name: Install pip requirements for rasterstorer plugin of ckanext-publicamundi
    sudo: yes

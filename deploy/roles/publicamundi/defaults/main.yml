@@ -15,9 +15,9 @@ ckanext:
     install: yes
     source:
       repo:
-        url: 'https://github.com/ckan/ckanext-spatial.git' 
+        url: 'https://github.com/PublicaMundi/ckanext-spatial.git' 
         push_url: ~
-        version: master
+        version: 'dev.publicamundi.eu'
     plugins:
     - 'spatial_metadata'
     - 'spatial_query'
@@ -48,6 +48,10 @@ ckanext:
     #- 'publicamundi_geodata_theme'
     #- 'spatial_publicamundi_preview'
     
+    tests:
+      plugins:
+      - 'publicamundi_dataset'
+
     themes:
       geodata:
         feedback_form: 'http://foo.example.com/feedback'
@@ -76,7 +80,7 @@ pycsw:
     repo:
       url: 'https://github.com/PublicaMundi/pycsw.git' 
       push_url: ~
-      version: master
+      version: 'dev.publicamundi.eu'
 
 #
 # MapClient
