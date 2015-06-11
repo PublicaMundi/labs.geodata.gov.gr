@@ -20,7 +20,7 @@ argp = argparse.ArgumentParser()
 argp.add_argument("inputs", metavar='INFILE', type=str, nargs=1)
 argp.add_argument("--translate", dest='translate', default=False, action='store_true')
 
-def csv_to_json(infile, translate=False):
+def prepare_json_requests(infile, translate=False):
     res = []
     
     input_name = os.path.splitext(os.path.basename(infile))[0]
@@ -121,6 +121,6 @@ def make_api_call(org_dict, api_action):
 
 if __name__ == '__main__':
     args = argp.parse_args()
-    csv_to_json(args.inputs[0], args.translate)
+    prepare_json_requests(args.inputs[0], args.translate)
 
 

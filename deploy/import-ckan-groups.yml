@@ -54,51 +54,51 @@
   # Create topics (groups)
   
   - name: Export topics in JSON format suitable for CKAN API
-    command: python export-groups-for-api.py topics.csv
+    command: python prepare-api-request-for-groups.py topics.csv
     args:
       chdir: files/groups/ckan/initialize
-    register: export_topics_result
+    register: prepare_topics_result
  
   - name: Create CKAN topics (groups)
     shell: >
       curl -f -X POST '{{api_url}}/group_create' -d '@{{item.path}}' -H 'Content-Type: application/json' -H 'Authorization: {{api_key}}'
-    with_items: export_topics_result.stdout
+    with_items: prepare_topics_result.stdout
     when: item.name not in existing_ckan_groups
   
   # Create organizations
   
   - name: Export organizations in JSON format suitable for CKAN API
-    command: python export-groups-for-api.py organizations.csv
+    command: python prepare-api-request-for-groups.py organizations.csv
     args:
       chdir: files/groups/ckan/initialize
-    register: export_orgs_result
+    register: prepare_orgs_result
   
   - name: Create CKAN organizations
     shell: >
       curl -f -X POST '{{api_url}}/organization_create' -d '@{{item.path}}' -H 'Content-Type: application/json' -H 'Authorization: {{api_key}}'
-    with_items: export_orgs_result.stdout
+    with_items: prepare_orgs_result.stdout
     when: item.name not in existing_ckan_orgs
   
   # Provide translations for topics/organizations
   
   - name: Export topic translations in JSON format suitable for CKAN API
-    command: python export-groups-for-api.py --translate topics.csv
+    command: python prepare-api-request-for-groups.py --translate topics.csv
     args:
       chdir: files/groups/ckan/initialize
-    register: export_topics_result
+    register: prepare_topics_result
   
   - name: Export organization translations in JSON format suitable for CKAN API
-    command: python export-groups-for-api.py --translate organizations.csv
+    command: python prepare-api-request-for-groups.py --translate organizations.csv
     args:
       chdir: files/groups/ckan/initialize
-    register: export_orgs_result
+    register: prepare_orgs_result
   
   - name: Provide translations for CKAN topics (groups)
     shell: >
       curl -f -X POST '{{api_url}}/term_translation_update_many' -d '@{{item.path}}' -H 'Content-Type: application/json' -H 'Authorization: {{api_key}}'
     with_flattened: 
-    - export_topics_result.stdout
-    - export_orgs_result.stdout
+    - prepare_topics_result.stdout
+    - prepare_orgs_result.stdout
 
 
 - hosts: ckan

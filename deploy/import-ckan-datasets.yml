@@ -3,3 +3,60 @@
 #
 # Import datasets from XML metadata
 #
+
+- hosts: ckan
+  remote_user: root
+  
+  tasks:
+  
+  - name: Find api-key for administrative user
+    sudo: yes
+    sudo_user: ckaner
+    shell: >
+      (. '{{ckan.pyenv_dir}}/bin/activate' && paster user -c 'config.ini' admin)|
+      grep -e '^<User '| grep -P -o -e '(?<=apikey=)([\w]+([-\w]+)*)'
+    args:
+      chdir: '{{ckan.pyenv_dir}}/src/ckan'
+    register: grep_result
+
+  # FIXME: Compute at the end of CKAN role
+  - set_fact: 
+      ckan_api_key: '{{grep_result.stdout}}'
+  - set_fact:
+      ckan_url: 'http://{{inventory_hostname}}'
+
+  - name: The web folder with datasets should be accessible
+    get_url: url={{datasets_folder}} dest=/tmp/index-datasets.html
+
+- hosts: admin
+  connection: local
+
+  tasks:
+
+  - set_fact:
+      ckan_host: '{{groups["ckan"]| first}}'
+  - set_fact: 
+      api_key: '{{hostvars[ckan_host].ckan_api_key}}'
+      api_url: '{{hostvars[ckan_host].ckan_url}}/api/action'
+
+  # Import datasets
+  
+  - name: Prepare CKAN API requests for importing datasets
+    command: >
+      python prepare-api-request-for-datasets.py --web-folder {{datasets_folder}} dataset-organization.csv
+    args:
+      chdir: files/groups/ckan/initialize
+    register: prepare_datasets_result
+  
+  - debug: var=prepare_datasets_result.stdout
+  
+  - name: Import datasets into CKAN
+    shell: >
+      curl -s -X POST '{{api_url}}/dataset_import' -d '@{{item.path}}' -H 'Content-Type: application/json' -H 'Authorization: {{api_key}}'|
+      jq '{success: .success, error: .error, result: .result}'
+    with_items: prepare_datasets_result.stdout
+    register: import_datasets_result
+
+  - set_fact:  
+      import_results: '{{import_datasets_result.results| to_map("item.name")| map_keys("*", "{0}.stdout", decode_json=1)}}'
+  - debug: var=import_results
