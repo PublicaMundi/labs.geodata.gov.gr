@@ -3,9 +3,6 @@
 import csv
 import os
 import json
-import urllib2
-import urllib
-import pprint
 import argparse
 import logging
 
