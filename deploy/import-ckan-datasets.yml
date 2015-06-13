@@ -25,8 +25,8 @@
   - set_fact:
       ckan_url: 'http://{{inventory_hostname}}'
 
-  - name: The web folder with datasets should be accessible
-    get_url: url={{datasets_folder}} dest=/tmp/index-datasets.html
+  - name: The web folder containing our datasets should be accessible
+    get_url: url={{web_folder}} dest=/tmp/index-datasets.html
 
 - hosts: admin
   connection: local
@@ -41,9 +41,11 @@
 
   # Import datasets
   
+  - pause:
+
   - name: Prepare CKAN API requests for importing datasets
     command: >
-      python prepare-api-request-for-datasets.py --web-folder {{datasets_folder}} dataset-organization.csv
+      python prepare-api-request-for-datasets.py --web-folder {{web_folder}} dataset-organization.csv
     args:
       chdir: files/groups/ckan/initialize
     register: prepare_datasets_result
@@ -58,5 +60,31 @@
     register: import_datasets_result
 
   - set_fact:  
-      import_results: '{{import_datasets_result.results| to_map("item.name")| map_keys("*", "{0}.stdout", decode_json=1)}}'
-  - debug: var=import_results
+      results: '{{import_datasets_result.results| to_map("item.name")| map_keys("*", "{0}.stdout", decode_json=1)}}'
+  - debug: var=results
+
+  # Add datasets into topics (groups)
+  
+  - pause:
+
+  - name: Prepare CKAN API requests for importing datasets
+    command: >
+      python prepare-api-request-for-dataset-topics.py --folder {{folder}} topics.csv dataset-organization.csv
+    args:
+      chdir: files/groups/ckan/initialize
+    register: prepare_dataset_topics_result
+
+  - debug: var=prepare_dataset_topics_result.stdout
+
+  - name: Add datasets in topics
+    shell: >
+      curl -s -X POST '{{api_url}}/member_create' -d '@{{item.path}}' -H 'Content-Type: application/json' -H 'Authorization: {{api_key}}'|
+      jq '{success: .success, error: .error, result: .result}'
+    with_items: prepare_dataset_topics_result.stdout
+    register: dataset_topics_result
+   
+  - set_fact:  
+      results: '{{dataset_topics_result.results| map(attribute="stdout")| map("from_json")| list}}'
+  - debug: var=results
+
+
