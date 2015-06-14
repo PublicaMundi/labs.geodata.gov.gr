@@ -1,4 +1,11 @@
 ---
 
-geoserver: {}
+geoserver:
+
+  # A single geoserver host may run multiple server instances sharing the
+  # same data directory. The 1st of them will be (by convention) the master
+  # instance of this cluster of servers.
+  servers:
+  - port: 8081
+  - port: 8082
 

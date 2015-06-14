@@ -1,0 +1,7 @@
+---
+
+rasdaman:
+
+  servers:
+  - port: 8081
+  - port: 8082
