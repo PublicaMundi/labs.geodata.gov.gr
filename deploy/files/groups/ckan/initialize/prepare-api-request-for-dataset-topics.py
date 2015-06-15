@@ -16,7 +16,7 @@ OUTPUT_BASE_DIR = 'out'
 argp = argparse.ArgumentParser()
 argp.add_argument('topics_file', metavar='TOPICS_FILE', nargs=1)
 argp.add_argument('datasets_file', metavar='DATASETS_FILE', nargs=1)
-argp.add_argument("--datasets-folder", dest='datasets_folder', 
+argp.add_argument('-f', '--folder', dest='datasets_folder', 
     default='datasets/xml')
 
 namespaces = {

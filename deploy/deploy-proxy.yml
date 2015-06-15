@@ -6,13 +6,32 @@
        ckan_server: '{{inventory_hostname}}:80'
    - set_fact:
        ckan_url: 'http://{{inventory_hostname}}/'
-       
+ 
+
+ - hosts: geoserver
+   connection: local # FIXME
+   tasks:
+   - set_fact:
+       geoserver_main_server: '{{inventory_hostname}}:{{(geoserver.servers| first).port}}'
+       geoserver_servers: '{{geoserver.servers| map(attribute="port")| format_items(inventory_hostname ~ ":{0:d}")}}'
+ 
+
+ - hosts: rasdaman
+   connection: local # FIXME
+   tasks:
+   - set_fact:
+       rasdaman_servers: '{{rasdaman.servers| map(attribute="port")| format_items(inventory_hostname ~ ":{0:d}")}}'
+
+
  - hosts: proxy
    remote_user: root
   
    pre_tasks:
    - set_fact:
        ckan_hosts: '{{groups["ckan"]}}'
+       geoserver_hosts: '{{groups["geoserver"]}}'
+       geoserver_main_host: '{{groups["geoserver"]| first}}'
+       rasdaman_hosts: '{{groups["rasdaman"]}}'
 
    - set_fact:
        haproxy:
@@ -26,6 +45,24 @@
                hostname: 
                - '{{common_name}}'
                path:
+               - name: 'geoserver-admin'
+                 prefix: '/geoserver/web'
+                 backend:
+                   servers:
+                   - '{{hostvars[geoserver_main_host].geoserver_main_server}}'
+               - name: 'geoserver-rest'
+                 prefix: '/geoserver/rest'
+                 backend:
+                   servers:
+                   - '{{hostvars[geoserver_main_host].geoserver_main_server}}'
+               - name: 'geoserver'
+                 prefix: '/geoserver'
+                 backend:
+                   servers: '{{hostvars| map_keys(geoserver_hosts, "{0}/geoserver_servers", "/")| list_values| flatten_list}}' 
+               - name: 'rasdaman'
+                 prefix: '/rasdaman'
+                 backend:
+                   servers: '{{hostvars| map_keys(rasdaman_hosts, "{0}/rasdaman_servers", "/")| list_values| flatten_list}}'
                - name: 'ckan'
                  prefix: ~
                  backend:
