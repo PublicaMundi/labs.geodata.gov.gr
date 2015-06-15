@@ -39,6 +39,8 @@
       api_key: '{{hostvars[ckan_host].ckan_api_key}}'
       api_url: '{{hostvars[ckan_host].ckan_url}}/api/action'
 
+  - file: path=/tmp/import-ckan-datasets state=directory
+  
   # Import datasets
   
   - pause:
@@ -59,15 +61,20 @@
     with_items: prepare_datasets_result.stdout
     register: import_datasets_result
 
+  - set_fact:
+      results: '{{import_datasets_result.results}}'
   - set_fact:  
-      results: '{{import_datasets_result.results| to_map("item.name")| map_keys("*", "{0}.stdout", decode_json=1)}}'
-  - debug: var=results
+      results: '{{results| to_map("item.name")| map_keys("*", "{0}.stdout", decode_json=1)}}'
+  #- debug: var=results
+  - copy: 
+      content: '{{results}}' 
+      dest: /tmp/import-ckan-datasets/results.dataset-import.json
 
   # Add datasets into topics (groups)
   
   - pause:
 
-  - name: Prepare CKAN API requests for importing datasets
+  - name: Prepare CKAN API requests for adding datasets to topics
     command: >
       python prepare-api-request-for-dataset-topics.py --folder {{folder}} topics.csv dataset-organization.csv
     args:
@@ -83,8 +90,12 @@
     with_items: prepare_dataset_topics_result.stdout
     register: dataset_topics_result
    
+  - set_fact:
+      results: '{{dataset_topics_result.results}}'
   - set_fact:  
-      results: '{{dataset_topics_result.results| map(attribute="stdout")| map("from_json")| list}}'
+      results: '{{results| map(attribute="stdout")| map("from_json")| list}}'
   - debug: var=results
-
+  - copy: 
+      content: '{{dict(results=results)}}' 
+      dest: /tmp/import-ckan-datasets/results.member-create.json
 

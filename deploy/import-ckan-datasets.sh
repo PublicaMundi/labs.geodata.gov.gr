@@ -18,7 +18,7 @@ screen -dm -S ${screen_name} scripts/serve-folder.py -p ${port} -l ${host} ${fol
 # Import datasets
 ansible-playbook -v \
   -e web_folder=http://${host}:${port}/xml -e folder=${folder}/xml \
-  scratch.yml
+  import-ckan-datasets.yml
 
 # Stop HTTP server
 screen -S ${screen_name} -X quit
