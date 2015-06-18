@@ -1,0 +1,6 @@
+dataset_uid,resource_name,resource_machine_name,resource_type,location,category
+3fead307-166b-4714-88d4-699acb71284a,Δημόσια Σημεία Πρόσβασης WiFi,dhmosia_wifi,shapefile,3fead307-166b-4714-88d4-699acb71284a/dhmosia_wifi.zip,1.ordinary
+ec4efe37-76bb-426f-af38-36d57d39dfba,Δίκτυο ποταμών του Υδροσκόπιου,potamoi,shapefile,ec4efe37-76bb-426f-af38-36d57d39dfba/potamoi.zip,1.ordinary
+6b2da554-ecb4-4a29-8a8b-bbf7195470ee,Φορείς Διαχείρισης Προστατευόμενων Περιοχών,oria_foreon_diaxeirisis,shapefile,6b2da554-ecb4-4a29-8a8b-bbf7195470ee/oria_foreon_diaxeirisis.zip,1.ordinary
+6b1d06b6-b1d3-4ba2-8e62-c5c410ed502a,Αιολικός χάρτης της Ελλάδας,aiolikos_charths,shapefile,6b1d06b6-b1d3-4ba2-8e62-c5c410ed502a/aiolikos_charths.7z,3.minor_issues
+6b1d06b6-b1d3-4ba2-8e62-c5c410ed502a,Sacramento State Transactions,sacramento-transactions-1,csv,6b1d06b6-b1d3-4ba2-8e62-c5c410ed502a/sacramento-t1.csv,1.ordinary
