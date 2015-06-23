@@ -52,13 +52,15 @@
       chdir: files/groups/ckan/initialize
     register: prepare_datasets_result
   
-  - debug: var=prepare_datasets_result.stdout
+  - set_fact:
+      prepare_datasets_result: '{{prepare_datasets_result.stdout| from_json}}'
+  #- debug: var=prepare_datasets_result
   
   - name: Import datasets into CKAN
     shell: >
       curl -s -X POST '{{api_url}}/dataset_import' -d '@{{item.path}}' -H 'Content-Type: application/json' -H 'Authorization: {{api_key}}'|
       jq '{success: .success, error: .error, result: .result}'
-    with_items: prepare_datasets_result.stdout
+    with_items: prepare_datasets_result
     register: import_datasets_result
     tags: ['datasets']
 
@@ -80,14 +82,18 @@
     args:
       chdir: files/groups/ckan/initialize
     register: prepare_dataset_topics_result
+    tags: ['topics']
 
-  - debug: var=prepare_dataset_topics_result.stdout
+  - set_fact:
+      prepare_dataset_topics_result: '{{prepare_dataset_topics_result.stdout| from_json}}'
+    tags: ['topics']
+  #- debug: var=prepare_dataset_topics_result
 
   - name: Add datasets in topics
     shell: >
       curl -s -X POST '{{api_url}}/member_create' -d '@{{item.path}}' -H 'Content-Type: application/json' -H 'Authorization: {{api_key}}'|
       jq '{success: .success, error: .error, result: .result}'
-    with_items: prepare_dataset_topics_result.stdout
+    with_items: prepare_dataset_topics_result
     register: dataset_topics_result
     tags: ['topics']
    
@@ -108,42 +114,48 @@
       chdir: files/groups/ckan/initialize
     register: prepare_resources_result
 
-  - debug: var=prepare_resources_result.stdout
+  - set_fact: 
+      prepare_resources_result: '{{prepare_resources_result.stdout| from_json}}'
+  #- debug: var=prepare_resources_result
 
   - name: Gather sha1 digests for imported datasets
     shell: >
       curl -s -X GET '{{api_url}}/package_show?id={{item}}' -H 'Authorization: {{api_key}}'|
       jq '.result.resources| map(.hash)'
-    with_items: '{{prepare_datasets_result.stdout| from_json| map(attribute="name")| list}}'
+    with_items: '{{prepare_datasets_result| map(attribute="name")| list}}'
     register: existing_resources_result
     tags: ['resources']
-  - debug: var=existing_resources_result
+  #- debug: var=existing_resources_result
    
   - set_fact:
       existing_resources: '{{existing_resources_result.results| to_map("item")| map_keys("*", "{0}.stdout", decode_json=1)}}'
     tags: ['resources']
-  - debug: var=existing_resources
-    
+  #- debug: var=existing_resources
+
   - name: Create resources if not exist
     shell: >
-      curl -s -X POST '{{api_url}}/resource_create' -H 'Authorization: {{api_key}}' 
+      curl -s -X POST '{{api_url}}/resource_create' 
+      -H 'Authorization: {{api_key}}' -H 'Host: {{common_name}}'
       -F 'package_id={{item.package_id}}' 
-      -F 'name={{item.name.decode("unicode-escape")}}' 
+      -F 'name={{item.name}}'
+      -F 'mimetype={{item.mimetype| default("application/octet-stream")}}'
       -F 'format={{item.format}}'
+      -F 'size={{item.size}}'
       -F 'hash={{item.hash}}' 
       -F 'upload=@{{item.upload}}'|
       jq '{success: .success, error: .error, result: .result}'
-    with_items: prepare_resources_result.stdout
-    when: '{{item.hash not in existing_resources[item.package_id]}}'
+    with_items: prepare_resources_result
+    when: '{{item.hash not in existing_resources.get(item.package_id)}}'
     register: resources_result
     tags: ['resources']
     
   - set_fact:  
-      results: '{{resources_result.results| rejectattr("skipped", "defined")| to_map("item.hash")| map_keys("*", "{0}.stdout", decode_json=1)}}'
+      results: '{{resources_result.results| rejectattr("skipped", "defined")| map(attribute="stdout")| map("from_json")| list}}'
     tags: ['resources']
   - debug: var=results
   - copy: 
-      content: '{{results}}' 
+      content: '{{results| to_json}}' 
       dest: /tmp/import-ckan-datasets/results.resource-create.json
+    when: results
     tags: ['resources']
 
