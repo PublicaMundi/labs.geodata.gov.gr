@@ -22,13 +22,13 @@ ckan:
   
   plugins:
   - 'stats'
-  - 'text_preview'
   - 'recline_preview'
   - 'pdf_preview'
   - 'datastore' 
   - 'resource_proxy'
   - 'multilingual_group'
   - 'multilingual_tag'
+  #- 'text_preview'
 
   celery:
     use: ~
