@@ -138,6 +138,7 @@
       -H 'Authorization: {{api_key}}' -H 'Host: {{common_name}}'
       -F 'package_id={{item.package_id}}' 
       -F 'name={{item.name}}'
+      -F 'description={{item.description}}'
       -F 'mimetype={{item.mimetype| default("application/octet-stream")}}'
       -F 'format={{item.format}}'
       -F 'size={{item.size}}'

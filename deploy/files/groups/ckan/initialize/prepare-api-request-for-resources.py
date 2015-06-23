@@ -27,6 +27,7 @@ def prepare_json_requests(infile, resources_folder, limit=None):
             package_id = item['dataset_uid'].decode('ascii')
             
             resource_name = item['resource_machine_name'].decode('ascii')
+            resource_description = item['resource_description'].decode('utf-8')
             resource_title = item['resource_name'].decode('utf-8')
             resource_type = item['resource_type'].decode('ascii')
             
@@ -50,7 +51,8 @@ def prepare_json_requests(infile, resources_folder, limit=None):
             req_data = {
                 'package_id': package_id,
                 'format': resource_type,
-                'name': resource_title,
+                'name': resource_title or resource_name,
+                'description': resource_description,
                 'mimetype': mimetype,
                 'hash': hexdigest,
                 'size': size,
