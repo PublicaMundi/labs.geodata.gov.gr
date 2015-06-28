@@ -109,7 +109,7 @@
   
   - name: Prepare CKAN API requests for creating resources
     command: >
-      python prepare-api-request-for-resources.py -b resources resources.csv
+      python prepare-api-request-for-resources.py -r -b resources resources.csv
     args:
       chdir: files/groups/ckan/initialize
     register: prepare_resources_result
@@ -138,6 +138,7 @@
       -H 'Authorization: {{api_key}}' -H 'Host: {{common_name}}'
       -F 'package_id={{item.package_id}}' 
       -F 'name={{item.name}}'
+      -F 'description={{item.description}}'
       -F 'mimetype={{item.mimetype| default("application/octet-stream")}}'
       -F 'format={{item.format}}'
       -F 'size={{item.size}}'
@@ -152,7 +153,7 @@
   - set_fact:  
       results: '{{resources_result.results| rejectattr("skipped", "defined")| map(attribute="stdout")| map("from_json")| list}}'
     tags: ['resources']
-  - debug: var=results
+  #- debug: var=results
   - copy: 
       content: '{{results| to_json}}' 
       dest: /tmp/import-ckan-datasets/results.resource-create.json

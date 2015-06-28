@@ -7,6 +7,7 @@ import argparse
 import logging
 import hashlib
 import mimetypes
+import random
 
 logging.basicConfig(level=logging.INFO)
 
@@ -15,8 +16,9 @@ argp.add_argument("inputs", metavar='INFILE', type=str, nargs=1)
 argp.add_argument("-b", "--resources-folder", dest='resources_folder', 
     default='resources', help=u'The base directory for resource files') 
 argp.add_argument("-l", "--limit", dest='limit', type=int) 
+argp.add_argument("-r", "--shuffle", dest='shuffle', action='store_true', default=False) 
 
-def prepare_json_requests(infile, resources_folder, limit=None):
+def prepare_json_requests(infile, resources_folder, limit=None, shuffle=False):
     res = []
     
     with open(infile, 'r') as ifp:
@@ -27,6 +29,7 @@ def prepare_json_requests(infile, resources_folder, limit=None):
             package_id = item['dataset_uid'].decode('ascii')
             
             resource_name = item['resource_machine_name'].decode('ascii')
+            resource_description = item['resource_description'].decode('utf-8')
             resource_title = item['resource_name'].decode('utf-8')
             resource_type = item['resource_type'].decode('ascii')
             
@@ -50,7 +53,8 @@ def prepare_json_requests(infile, resources_folder, limit=None):
             req_data = {
                 'package_id': package_id,
                 'format': resource_type,
-                'name': resource_title,
+                'name': resource_title or resource_name,
+                'description': resource_description,
                 'mimetype': mimetype,
                 'hash': hexdigest,
                 'size': size,
@@ -58,12 +62,15 @@ def prepare_json_requests(infile, resources_folder, limit=None):
             }
             res.append(req_data)
 
-            if limit and limit == len(res):
-                break
+    if shuffle:
+        random.shuffle(res)
+    
+    if limit:
+        res = res[0:limit]
 
     print json.dumps(res)
 
 if __name__ == '__main__':
     args = argp.parse_args()
-    prepare_json_requests(args.inputs[0], args.resources_folder, args.limit)
+    prepare_json_requests(args.inputs[0], args.resources_folder, args.limit, args.shuffle)
 
