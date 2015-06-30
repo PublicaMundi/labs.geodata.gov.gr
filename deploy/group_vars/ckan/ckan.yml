@@ -121,7 +121,7 @@ ckanext:
     - 'publicamundi_errorware'
     - 'publicamundi_dataset_with_spatial'
     - 'publicamundi_package'
-    #- 'publicamundi_vector'
+    - 'publicamundi_vector'
     #- 'publicamundi_raster'
     # See note about `theme_plugins` at roles/publicamundi/defaults/main.yml 
     theme_plugins:
