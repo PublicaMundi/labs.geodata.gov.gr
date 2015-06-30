@@ -1,0 +1,9 @@
+---
+
+ - name: Configure ckanext-datastorer
+   template:
+     src: etc/ckan/conf.d/app-datastorer.ini 
+     dest: '{{ckan.temp_dir}}/conf.d/{{ckan.config_name}}.section-{{app_config_section_num}}datastorer.ini'
+     owner: ckaner
+     group: ckaner
+   notify: ['reassemble-ckan-config']  

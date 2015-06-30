@@ -11,6 +11,11 @@
  - include: install-apt-packages.yml
    tags: ['install', 'apt-get']
 
+ # Setup CKAN extension: datastorer
+ 
+ - include: configure-ckanext-datastorer.yml
+   tags: ['configure', 'ckanext-datastorer']
+ 
  # Setup CKAN extension: spatial
  
  - include: install-ckanext-spatial.yml
