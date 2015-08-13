@@ -33,6 +33,6 @@
    file: path={{cert_file}} owner=root group=root mode=0600
  
  - name: Generate haproxy.cfg
-   template: src=etc/haproxy/haproxy.cfg dest=/etc/haproxy/haproxy.cfg backup=yes
+   template: src=etc/haproxy/haproxy.cfg dest=/etc/haproxy/haproxy.cfg
    notify: ['restart-haproxy'] 
    

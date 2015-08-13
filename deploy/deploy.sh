@@ -22,4 +22,6 @@ play 'deploy-solr.yml'
 
 play 'deploy-ckan.yml'
 
+play 'deploy-geoserver.yml'
+
 play 'deploy-proxy.yml'

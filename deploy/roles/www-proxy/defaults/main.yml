@@ -29,6 +29,30 @@ haproxy:
 #             servers:
 #             - address: 'solr.example.localdomain:8983'
 #               opts: { weight: 1, maxconn: 64, check: ~ }
+#         - name: 'grocery'
+#           prefix: 'grocery'
+#             # Enable cookie-based persistance at the proxy level (alt to appsession).
+#             # See http://cbonte.github.io/haproxy-dconv/configuration-1.6.html#4.2-cookie
+#             cookie:
+#               name: 'SERVER'
+#             servers:
+#             - address: 'grocery-n1.localdomain:80'
+#             - address: 'grocery-n2.localdomain:80'
+#         - name: 'geoserver'
+#           prefix: 'geoserver'
+#           backend:
+#             # Enable session stickiness based on existing application cookie
+#             # See http://cbonte.github.io/haproxy-dconv/configuration-1.6.html#4-appsession
+#             appsession:
+#               name: 'JSESSIONID'
+#               length: 128
+#               prefix: ~
+#             # Provide backend servers 
+#             servers:
+#             - address: 'geoserver-n1.localdomain:8081'
+#             - address: 'geoserver-n1.localdomain:8082'
+#             - address: 'geoserver-n2.localdomain:8081'
+#             - address: 'geoserver-n2.localdomain:8082'
 #         - name: 'catalog'
 #           prefix: ~
 #           backend:

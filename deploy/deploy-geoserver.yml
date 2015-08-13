@@ -1,0 +1,30 @@
+---
+
+ - hosts: geoserver
+   remote_user: root
+   
+   #
+   # Setup 2 geoserver instances
+   #
+
+   roles:
+   - role: geoserver
+     tomcat:
+       instance_id: 1 
+       shutdown: 
+         port: '{{geoserver.servers[0].shutdown_port}}'
+       connector: 
+         port: '{{geoserver.servers[0].port}}'
+       ajp_connector:
+         port: ~
+   - role: geoserver
+     tomcat:
+       instance_id: 2 
+       shutdown: 
+         port: '{{geoserver.servers[1].shutdown_port}}'
+       connector: 
+         port: '{{geoserver.servers[1].port}}'
+       ajp_connector:
+         port: ~
+
+

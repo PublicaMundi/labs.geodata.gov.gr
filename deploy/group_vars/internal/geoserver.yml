@@ -15,3 +15,6 @@ geoserver:
 
   secrets_dir: '{{"files/secrets/groups/geoserver"| realpath}}' 
 
+tomcat:
+  secrets_dir: '{{"files/secrets/groups/geoserver/tomcat"| realpath}}'
+
