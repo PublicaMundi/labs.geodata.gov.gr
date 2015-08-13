@@ -76,6 +76,6 @@
                    - address: '{{inventory_hostname}}:8080'
 
    roles:
-   - www-proxy
+   - web-proxy
   
    tasks:
