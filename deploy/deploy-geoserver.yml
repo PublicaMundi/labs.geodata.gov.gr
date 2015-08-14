@@ -26,5 +26,26 @@
          port: '{{geoserver.servers[1].port}}'
        ajp_connector:
          port: ~
+   
+   tasks:
 
-
+   #
+   # Setup a service to trigger reloading of all geoserver intances
+   #
+   
+   - name: Install dependencies for reloader script
+     apt: name={{item}} state=latest
+     with_items: ['python-pycurl']
+   
+   - file: path=~/scripts state=directory mode=0755
+   
+   - name: Generate reloader script
+     template: src=templates/groups/geoserver/scripts/reloader.py dest=~/scripts/reloader.py mode=0700
+   
+   - name: Create reboot cronjob for reloader
+     cron: 
+       name: reloader
+       user: root
+       special_time: reboot 
+       state: present
+       job: 'screen -dm -S reloader ~/scripts/reloader.py'
