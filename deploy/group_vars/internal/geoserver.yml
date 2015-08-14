@@ -1,13 +1,10 @@
 ---
 
 geoserver:
-  # The internal endpoint to the REST API interface (convention!)
-  api_url: 'http://{{groups["geoserver"]| first}}:8081/geoserver/rest'
+  # The internal endpoint to the REST API (convention!)
+  api_url: 'http://{{groups["geoserver"]| first}}:8081/geoserver'
   
-  # The internal URL to the web administration interface (convention!)
-  admin_url: 'http://{{groups["geoserver"]| first}}:8081/geoserver/web'
-  
-  # The internal endpoint to reload configuration for the cluster (by convention!)
+  # The internal endpoint to reload configuration for the cluster (convention!)
   reload_url: 'http://{{groups["geoserver"]| first}}:8000/reload'
 
   # The public endpoint

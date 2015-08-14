@@ -11,7 +11,7 @@ BACKEND_RELOAD_URL = 'http://%(host)s/geoserver/rest/reload'
 NUM_BACKEND_SERVERS = {{geoserver.servers| length}}
 BACKEND_SERVER_PORT_0 = 8081
 
-USERPWD = 'admin:geoserver'
+USERPWD = 'admin:{{lookup("password", geoserver.secrets_dir ~ "/users/admin")}}'
 
 logging.basicConfig(level=logging.INFO)
 
