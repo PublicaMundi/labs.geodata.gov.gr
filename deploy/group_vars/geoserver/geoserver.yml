@@ -7,5 +7,7 @@ geoserver:
   # instance of this cluster of servers.
   servers:
   - port: 8081
+    shutdown_port: 8001
   - port: 8082
+    shutdown_port: 8002
 

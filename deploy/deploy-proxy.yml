@@ -9,10 +9,9 @@
  
 
  - hosts: geoserver
-   connection: local # FIXME
    tasks:
    - set_fact:
-       geoserver_main_server: '{{inventory_hostname}}:{{(geoserver.servers| first).port}}'
+       geoserver_primary_server: '{{inventory_hostname}}:{{(geoserver.servers| first).port}}'
        geoserver_servers: '{{geoserver.servers| map(attribute="port")| format_items(inventory_hostname ~ ":{0:d}")}}'
  
 
@@ -30,7 +29,7 @@
    - set_fact:
        ckan_hosts: '{{groups["ckan"]}}'
        geoserver_hosts: '{{groups["geoserver"]}}'
-       geoserver_main_host: '{{groups["geoserver"]| first}}'
+       geoserver_master_host: '{{groups["geoserver"]| first}}'
        rasdaman_hosts: '{{groups["rasdaman"]}}'
 
    - set_fact:
@@ -49,12 +48,12 @@
                  prefix: '/geoserver/web'
                  backend:
                    servers:
-                   - '{{hostvars[geoserver_main_host].geoserver_main_server}}'
+                   - '{{hostvars[geoserver_master_host].geoserver_primary_server}}'
                - name: 'geoserver-rest'
                  prefix: '/geoserver/rest'
                  backend:
                    servers:
-                   - '{{hostvars[geoserver_main_host].geoserver_main_server}}'
+                   - '{{hostvars[geoserver_master_host].geoserver_primary_server}}'
                - name: 'geoserver'
                  prefix: '/geoserver'
                  backend:
@@ -77,6 +76,6 @@
                    - address: '{{inventory_hostname}}:8080'
 
    roles:
-   - www-proxy
+   - web-proxy
   
    tasks:
