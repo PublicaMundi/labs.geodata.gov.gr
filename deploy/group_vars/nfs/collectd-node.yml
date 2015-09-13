@@ -1,0 +1,9 @@
+---
+
+collectd:
+  plugins:    
+    df:
+      devices:
+      - mountpoint: /
+      - mountpoint: /var/local/nfs
+
