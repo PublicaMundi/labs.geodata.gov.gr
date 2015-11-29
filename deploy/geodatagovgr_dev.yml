@@ -367,6 +367,12 @@
     - name: Get ckanext-publicamundi from git
       action: git repo=https://github.com/PublicaMundi/ckanext-publicamundi.git dest=/var/local/ckan/default/pyenv/src/ckanext-publicamundi version=dev.publicamundi.eu
 
+    - name: Get ckanext-multilingual-datastore from git
+      action: git repo=https://github.com/PublicaMundi/ckanext-multilingual-datastore.git dest=/var/local/ckan/default/pyenv/src/ckanext-multilingual-datastore version=dev.publicamundi.eu
+
+    - name: Get ckanext-interlinking from git
+      action: git repo=https://github.com/PublicaMundi/ckanext-interlinking.git dest=/var/local/ckan/default/pyenv/src/ckanext-interlinking version=dev.publicamundi.eu
+
     - name: Change owner of source folder
       shell: chown -R ckaner:users /var/local/ckan/default/pyenv/src
 
@@ -382,6 +388,21 @@
 
     - name: Install ckanext-publicamundi vector requirements
       action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/vectorstorer-requirements.txt virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Run setup.py develop for ckanext-multilingual-datastore
+      action: command chdir=/var/local/ckan/default/pyenv/src/ckanext-multilingual-datastore/ ../../bin/python setup.py develop
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Install ckanext-multilingual-datastore requirements
+      action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-multilingual-datastore/requirements.txt virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Run setup.py develop for ckanext-interlinking
+      action: command chdir=/var/local/ckan/default/pyenv/src/ckanext-interlinking/ ../../bin/python setup.py develop
       sudo: yes
       sudo_user: ckaner
 
