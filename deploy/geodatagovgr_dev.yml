@@ -70,8 +70,8 @@
     - name: Restarting tomcat service
       command: service tomcat6 restart
 
-    - name: Wait for 15 secs so that war is deployed
-      action: pause seconds=15
+    - name: Wait for 30 secs so that war is deployed
+      action: pause seconds=30
 
     - name: Copy SOLR config file
       action: copy src=var/lib/tomcat6/webapps/solr/WEB-INF/web.xml dest=/var/lib/tomcat6/webapps/solr/WEB-INF/web.xml
@@ -91,11 +91,11 @@
     # GeoServer setup #
     ###################
 
-    - name: Download GeoServer 2.5.4
-      get_url: url="http://sourceforge.net/projects/geoserver/files/GeoServer/2.5.4/geoserver-2.5.4-war.zip" dest="~/"
+    - name: Download GeoServer 2.7.4
+      get_url: url="http://sourceforge.net/projects/geoserver/files/GeoServer/2.7.4/geoserver-2.7.4-war.zip" dest="~/"
 
     - name: Unpack GeoServer war
-      shell: "cd ~/ && unzip -e geoserver-2.5.4-war.zip && cp geoserver.war /var/lib/tomcat6/webapps/geoserver.war"
+      shell: "cd ~/ && unzip -e geoserver-2.7.4-war.zip && cp geoserver.war /var/lib/tomcat6/webapps/geoserver.war"
 
     - name: Copy tuned tomcat files
       action: copy src={{item}} dest=/{{item}}
@@ -163,6 +163,9 @@
 
     - name: Create ckan database
       action: postgresql_db name=ckan owner=ckaner encoding='UTF-8'
+
+    - name: Create mapclient database
+      action: postgresql_db name=mapclient owner=ckaner encoding='UTF-8'
 
     - name: Create ckan_tests database
       action: postgresql_db name=ckan_tests owner=ckaner encoding='UTF-8'
@@ -437,16 +440,13 @@
       sudo: yes
       sudo_user: ckaner
 
-    - name: Create data folder for MapClient
-      shell: mkdir -p /var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data
-
-    - name: Initialize cached data for MapClient
-      shell: /var/local/ckan/default/pyenv/bin/python /var/local/ckan/default/pyenv/src/mapclient/bin/pm-resource-gen -o /var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data -g /var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data/topics.csv -c http://localhost/ -t 10
+    - name: Install user-agents
+      action: pip name=user-agents virtualenv=/var/local/ckan/default/pyenv/
       sudo: yes
       sudo_user: ckaner
 
-    - name: Install cron job for MapClient
-      cron: name="mapclient" hour="3" minute="0" user="ckaner" job="/var/local/ckan/default/pyenv/bin/python /var/local/ckan/default/pyenv/src/mapclient/bin/pm-resource-gen -o /var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data -g /var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data/topics.csv -c http://localhost/ -t 10"
+    - name: Create data folder for MapClient
+      shell: mkdir -p /var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data
 
     - name: Download latest topics file
       get_url: url="https://github.com/PublicaMundi/labs.geodata.gov.gr/raw/devel/deploy/files/groups/ckan/initialize/topics.csv" dest="/var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data/topics.csv" validate_certs=no
@@ -469,6 +469,19 @@
       action: copy src={{item}} dest=/{{item}} mode=644
       with_items:
         - var/local/ckan/default/pyenv/src/mapclient/development.ini
+
+    - name: Initialize mapclient database
+      action: command psql -d mapclient -a -f /var/local/ckan/default/pyenv/src/mapclient/sql/db-create.sql
+      sudo: yes
+      sudo_user: postgres
+
+    - name: Initialize cached data for MapClient
+      shell: /var/local/ckan/default/pyenv/bin/python /var/local/ckan/default/pyenv/src/mapclient/bin/pm-resource-gen.py -o /var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data -g /var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data/topics.csv -c http://localhost/ -t 10 -e http://localhost/maps/ -d postgresql://ckaner:ckaner@localhost/mapclient
+      sudo: yes
+      sudo_user: ckaner
+
+    - name: Install cron job for MapClient
+      cron: name="mapclient" hour="3" minute="0" user="ckaner" job="/var/local/ckan/default/pyenv/bin/python /var/local/ckan/default/pyenv/src/mapclient/bin/pm-resource-gen.py -o /var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data -g /var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data/topics.csv -c http://localhost/ -t 10 -e http://localhost/maps/ -d postgresql://ckaner:ckaner@localhost/mapclient"
 
     ################
     # apache setup #
