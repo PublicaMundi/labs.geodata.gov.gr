@@ -196,6 +196,11 @@
       sudo: yes
       sudo_user: postgres
 
+    - name: Install postgis to mapclient database
+      action: command psql -d mapclient -c 'CREATE EXTENSION "postgis";'
+      sudo: yes
+      sudo_user: postgres
+
     - name: Change postgis owner to ckan database
       action: command psql -d ckan -c 'ALTER TABLE spatial_ref_sys OWNER TO ckaner'
       sudo: yes
@@ -380,11 +385,6 @@
       sudo: yes
       sudo_user: ckaner
 
-    - name: Install ckanext-publicamundi raster requirements
-      action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/rasterstorer-requirements.txt virtualenv=/var/local/ckan/default/pyenv/
-      sudo: yes
-      sudo_user: ckaner
-
     - name: Copy CKAN configuration files
       action: copy src={{item}} dest=/{{item}} mode=644
       with_items:
@@ -397,6 +397,16 @@
       action: file path=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/ckanext/publicamundi/public/js/scratch.js state=touch
       sudo: yes
       sudo_user: ckaner
+
+    - name: Download MapClient database schema
+      get_url: url="https://github.com/PublicaMundi/MapClient/raw/dev.publicamundi.eu/sql/db-create.sql" dest="/tmp/db-create.sql" validate_certs=no
+      sudo: yes
+      sudo_user: postgres
+
+    - name: Initialize MapClient database
+      action: command psql -d mapclient -a -f /tmp/db-create.sql
+      sudo: yes
+      sudo_user: postgres
 
     - name: Initialize CKAN database
       action: command chdir=/var/local/ckan/default/pyenv/src/ckan/ ../../bin/paster db init -c development.ini
@@ -435,23 +445,20 @@
       sudo: yes
       sudo_user: ckaner
 
-    - name: Run setup build for MapClient
-      action: command chdir=/var/local/ckan/default/pyenv/src/mapclient/ ../../bin/python setup.py build
-      sudo: yes
-      sudo_user: ckaner
-
-    - name: Run setup install for MapClient
-      action: command chdir=/var/local/ckan/default/pyenv/src/mapclient/ ../../bin/python setup.py install
-      sudo: yes
-      sudo_user: ckaner
-
     - name: Install user-agents
       action: pip name=user-agents virtualenv=/var/local/ckan/default/pyenv/
       sudo: yes
       sudo_user: ckaner
 
+    - name: Run setup build for MapClient
+      action: command chdir=/var/local/ckan/default/pyenv/src/mapclient/ ../../bin/python setup.py develop
+      sudo: yes
+      sudo_user: ckaner
+
     - name: Create data folder for MapClient
       shell: mkdir -p /var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data
+      sudo: yes
+      sudo_user: ckaner
 
     - name: Download latest topics file
       get_url: url="https://github.com/PublicaMundi/labs.geodata.gov.gr/raw/devel/deploy/files/groups/ckan/initialize/topics.csv" dest="/var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data/topics.csv" validate_certs=no
@@ -474,11 +481,6 @@
       action: copy src={{item}} dest=/{{item}} mode=644
       with_items:
         - var/local/ckan/default/pyenv/src/mapclient/development.ini
-
-    - name: Initialize mapclient database
-      action: command psql -d mapclient -a -f /var/local/ckan/default/pyenv/src/mapclient/sql/db-create.sql
-      sudo: yes
-      sudo_user: postgres
 
     - name: Initialize cached data for MapClient
       shell: /var/local/ckan/default/pyenv/bin/python /var/local/ckan/default/pyenv/src/mapclient/bin/pm-resource-gen.py -o /var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data -g /var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data/topics.csv -c http://localhost/ -t 10 -e http://localhost/maps/ -d postgresql://ckaner:ckaner@localhost/mapclient
