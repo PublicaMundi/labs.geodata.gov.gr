@@ -380,6 +380,11 @@
       sudo: yes
       sudo_user: ckaner
 
+    - name: Install ckanext-publicamundi raster requirements
+      action: pip requirements=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/rasterstorer-requirements.txt virtualenv=/var/local/ckan/default/pyenv/
+      sudo: yes
+      sudo_user: ckaner
+
     - name: Copy CKAN configuration files
       action: copy src={{item}} dest=/{{item}} mode=644
       with_items:
