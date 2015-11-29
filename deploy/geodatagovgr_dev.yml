@@ -390,6 +390,9 @@
       with_items:
         - var/local/ckan/default/pyenv/src/ckan/development.ini
 
+    - name: Create link to config.ini
+      shell: ln -s /var/local/ckan/default/pyenv/src/ckan/development.ini /var/local/ckan/default/pyenv/src/ckan/config.ini
+
     - name: Change owner of source folder
       shell: chown -R ckaner:users /var/local/ckan/default/pyenv/src
 
@@ -477,10 +480,16 @@
     - name: Change owner of temp folder
       shell: chown -R ckaner:www-data /var/local/ckan/default/tmp/mapclient
 
+    - name: Change permissions of temp folder
+      shell: chmod g+w /var/local/ckan/default/tmp/mapclient
+
     - name: Copy MapClient configuration files
       action: copy src={{item}} dest=/{{item}} mode=644
       with_items:
         - var/local/ckan/default/pyenv/src/mapclient/development.ini
+
+    - name: Create link to config.ini
+      shell: ln -s /var/local/ckan/default/pyenv/src/mapclient/development.ini /var/local/ckan/default/pyenv/src/mapclient/config.ini
 
     - name: Initialize cached data for MapClient
       shell: /var/local/ckan/default/pyenv/bin/python /var/local/ckan/default/pyenv/src/mapclient/bin/pm-resource-gen.py -o /var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data -g /var/local/ckan/default/pyenv/src/mapclient/mapclient/public/data/topics.csv -c http://localhost/ -t 10 -e http://localhost/maps/ -d postgresql://ckaner:ckaner@localhost/mapclient
