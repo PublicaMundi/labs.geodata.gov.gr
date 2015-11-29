@@ -402,7 +402,7 @@
       action: command chdir=/var/local/ckan/default/pyenv/src/ckan/ ../../bin/paster datastore set-permissions postgres -c development.ini
 
     - name: Initialize ckanext-publicamundi extension
-      action: command chdir=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/ ../../bin/paster publicamundi-setup -c /var/local/ckan/default/pyenv/src/ckan/development.ini
+      action: command chdir=/var/local/ckan/default/pyenv/src/ckanext-publicamundi/ ../../bin/paster publicamundi -c /var/local/ckan/default/pyenv/src/ckan/development.ini setup
       sudo: yes
       sudo_user: ckaner
 
