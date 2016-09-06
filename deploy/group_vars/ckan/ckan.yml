@@ -137,7 +137,7 @@ ckanext:
         username: admin
         workspace: publicamundi
         url: '{{geoserver.url}}'
-        rest_url: '{{geoserver.api_url}}'
+        api_url: '{{geoserver.api_url}}'
         reload_url: '{{geoserver.reload_url}}'
 
     rasterstorer:

@@ -30,6 +30,7 @@ postgres:
     - 'samehost' 
     - 'admin-publicamundi'
     - '{{groups["ckan"]}}'
+    - '{{groups["geoserver"]}}'
   
   - name: 'rasdaman'
     allowed_addresses:
@@ -42,12 +43,6 @@ postgres:
     - 'samehost' 
     - 'admin-publicamundi'
     - '{{groups["rasdaman"]}}' 
-  
-  - name: 'geoserver'
-    allowed_addresses:
-    - 'samehost' 
-    - 'admin-publicamundi'
-    - '{{groups["geoserver"]}}' 
   
   - name: 'collectd'
     trusted: true
@@ -72,7 +67,7 @@ postgres:
     tablespace: tablespace_1
     owner: 'ckan_datastorer'
     extensions: [postgis]
-    readers: ['ckan_datareader','geoserver', 'ckaner']
+    readers: ['ckan_datareader', 'ckaner']
     initialize:
     - local_path: files/groups/database/ckan_data/set-permissions.sql
       single_transaction: yes
@@ -81,7 +76,7 @@ postgres:
     tablespace: tablespace_1
     owner: 'ckan_datastorer'
     extensions: [postgis]
-    readers: ['ckan_datareader', 'geoserver', 'ckaner']
+    readers: ['ckan_datareader', 'ckaner']
     initialize:
     - local_path: files/groups/database/ckan_data/set-permissions.sql
       single_transaction: yes

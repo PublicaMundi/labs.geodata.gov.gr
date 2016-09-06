@@ -1,0 +1,14 @@
+---
+
+ - hosts: internal
+   remote_user: root
+
+   roles:
+   - role: collectd-node
+     when: not canonical_name is defined
+
+ - hosts: monitor
+   remote_user: root
+ 
+   roles:
+   - role: collectd-server
