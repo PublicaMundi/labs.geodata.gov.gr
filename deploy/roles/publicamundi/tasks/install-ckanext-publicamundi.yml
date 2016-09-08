@@ -56,7 +56,7 @@
    sudo_user: ckaner
    shell: >
      . '{{ckan.pyenv_dir}}/bin/activate' 
-     && paster --plugin=ckanext-publicamundi publicamundi-setup -c '{{ckan.config_name}}.ini'
+     && paster --plugin=ckanext-publicamundi publicamundi -c '{{ckan.config_name}}.ini' setup
    args:
      chdir: '{{ckan.pyenv_dir}}/src/ckan'
 
