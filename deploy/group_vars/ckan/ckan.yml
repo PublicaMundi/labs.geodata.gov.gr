@@ -119,7 +119,7 @@ ckanext:
         version: '{{publicamundi.github_repos.ckanext_publicamundi.version}}' 
     plugins:
     - 'publicamundi_errorware'
-    - 'publicamundi_dataset_with_spatial'
+    - 'publicamundi_multilingual_dataset'
     - 'publicamundi_package'
     - 'publicamundi_vector'
     #- 'publicamundi_raster'
